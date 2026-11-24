@@ -17,6 +17,40 @@ python3 eng/verify.py --profile r0
 
 可用 `--evidence-root <父目录>` 和 `--work-root <父目录>` 指定两个输出位置。默认由系统临时目录分别分配。可归档证据位于证据父目录下当次唯一的 `r0-*` 目录，临时源码、Release 产物、提取器构建和 NuGet 缓存位于工作父目录下当次唯一的 `r0-work-*` 目录。分开指定这两个父目录可让 CI 直接上传当次证据目录。
 
+## 统一入口验收记录
+
+2026-11-24，本地与 GitHub Actions 各完成一次 `python3 eng/verify.py --profile r0`，退出码均为 0，报告的 12 个阶段全部通过。GitHub 执行来自 `main` 的 push，检出并验证了主仓提交 `2196d8653f1612a8b646dd6be99194876fc4eb2d`。第 1 次尝试的 `macos-26` 作业 `138302714838` 先通过 Python 自检（17 个有效、0 跳过），随后获取框架历史、安装 SDK、执行完整复验并上传产物。[GitHub Actions 运行](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45352670125) · [作业及步骤](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45352670125/job/138302714838)
+
+本地成功报告的 `HEAD` 为 `dfe1a2f6be6d1d714e37b408d411842cfc01e250`，执行时包含新文件 `eng/verify.py` 和已修改的 `reproduce.zsh`、`inventory.py`。两份报告在执行前后记录的 13 项复验输入 SHA-256 均相同，并与 CI 提交中的 13 个 Git blob 内容核对一致。输入涵盖 `.gitmodules`、复验入口、四个脚本及 API 工具文件、发行基线、NuGet 清单和五份 API 基线。两次运行的框架 gitlink 与子模块实际检出均为 `d08617b51bb7c7e5d0bea942e7e10b2677240c35`。参与还原、构建和测试的固定 R0 框架对象均为 `6c4580c5e7ea41154696c071a53fd200059a768b`，源码树为 `77ebbd3dbd293fff4c57b5e741919407995579e8`。历史主仓输入 `cf1420d6dc967fe2b34b52c0409e8407140e917e` 继续用于追溯原始基线。
+
+| 实测项 | 本地 | GitHub Actions |
+| --- | --- | --- |
+| macOS、Python | 27.2.1、3.14.7 | 26.7.2、3.12.10 |
+| 架构、宿主 RID | ARM64、`osx-arm64` | ARM64、`osx-arm64` |
+| .NET SDK、MSBuild | `9.0.306`、`17.14.28+09c1be848` | `9.0.306`、`17.14.28+09c1be848` |
+| `dotnet --info` 的 Host | `10.0.15` | `9.0.10` |
+| 回归目标、.NET 与 ASP.NET Core 运行时、VSTest | `net9.0`、均为 `9.0.10`、`17.14.1 (arm64)` | `net9.0`、均为 `9.0.10`、`17.14.1 (arm64)` |
+
+- 两次执行各有独立的工作和结果目录。每次将固定 R0 源码分别物化到 `primary` 和 `repeat`，使用各自新建的空 NuGet 包目录、仅启用 nuget.org 的独立配置以及 `--no-http-cache`。四份实际还原清单均与基线一致，覆盖 11 个项目和 11 个未设置 RID 的 `net9.0` 目标，包括项目引用、直接及传递包版本、来源和内容哈希。每次三方比较通过后，沿用该次 `primary` 还原做 Release 构建、API 和回归，`repeat` 仅复验还原。
+- 两次实际 MSBuild 求值中，五个 `PackageId` 与对应的 `AssemblyName` 均保持原版名称，包版本均为 `10.5.1`。根命名空间、目标框架和内部引用均与基线一致，其中 `Abp.EntityFramework.Common` 的根命名空间为 `Abp.EntityFramework`。在各次 `TargetPath` 定位 DLL，使用版本 1 的提取器分别提取两次，每个 DLL 的两份清单逐字节一致。两次构建的程序集身份、可见类型及成员签名、清单资源名与基线一致。
+- 六份原始 TRX 逐套件核对，1315 条用例的名称与结果逐项一致。两次各为 **1313 通过、0 失败、2 跳过**，套件分别为 `1105/0/2`、`150/0/0`、`58/0/0`。核心套件的 2 条 `NotExecuted` 明细与基线完整测试名及原因相符，汇总仍为 `notExecuted=0`，与原始 R0 两份核心 TRX 的已知差异一致。另有 42 个重复发现 ID。两次 EF Core 测试均使用内存 SQLite，实际 Provider 为 `Microsoft.EntityFrameworkCore.Sqlite 9.0.18`、`Microsoft.Data.Sqlite 9.0.18`、`SQLitePCLRaw.lib.e_sqlite3 2.1.10`。两次报告的 `runtimes/osx-arm64/native/libe_sqlite3.dylib` SHA-256 均为 `86fbe7c2ffce12292d243301f6be5c9e51270aa07f36db5f8f0c731817e16970`。
+
+| Release DLL | 本地 SHA-256 | GitHub Actions SHA-256 |
+| --- | --- | --- |
+| `Abp.dll` | `d573111e265ed4bf086c34b4c61050d6434417a0591eb22d30789bf2cbc642d3` | `f272ab4aaf49338062643debbc75da6311cda26960a71cee5ae267cf360c897e` |
+| `Abp.AspNetCore.dll` | `42ba3da3206fd74693c4aaa2d3b062f34143cdd312327d806e3bd1cd356dcdf1` | `3049d554b383452fadc977238af22eeb919581ab67b82a2849a6ab0a3c81de7b` |
+| `Abp.EntityFramework.Common.dll` | `2d7084eff2438633af4252ed1cea99e2c532fd78958049b928ba1faa59c23022` | `0c75dd1f50203b4869c96dc5493c60cde6125a9310fc9b539c3160bbff0f540c` |
+| `Abp.EntityFrameworkCore.dll` | `43cf073e30168b0795f86fc7980634b6c3f0ebb10986a9c2fadf5eb361c155a5` | `772324c907cc29db81350124191a714eca3eaa8ea3483ab55d6db81672f2669a` |
+| `Abp.Web.Common.dll` | `89ec0cf930df529346e71b8fe0c3b16bef4b76d303bfe806c0d8db7c3464cbb4` | `74d15068fb01cefed171b429791812d39e59a9f6d124605cb524ac6fbd1304a6` |
+
+五个 DLL 的摘要在两次独立构建间均有差异。摘要标识各自产物，结构对照以 API 清单为准。上表可在两次报告的 `stages.api_compare.assemblies` 及对应 `api/<程序集>.json` 回查，本地还从五个实际 DLL 重新算得相同摘要。CI 证据包 `verify-r0-1`（产物 ID `14900783289`）的原始 ZIP SHA-256 为 `e27eb5205440d7e9501985c37c203c242c6bb5bc3b8232ba38d5e3b4b56eef77`，下载后与远端登记的摘要一致。[GitHub Actions 产物下载](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45352670125)
+
+可在运行页下载归档，或运行 `gh run download 45352670125 --repo dusdong/du.aspnetboilerplate --name verify-r0-1 --dir r0-ci-evidence` 下载并解包。归档根目录含 `python-self-check.log`、`framework-checkout.log` 和 `verify-r0.log`，`r0-f0_rh43g/` 内含 `report.json`、`{primary,repeat}-restore-inventory.json`、`restore-*.log`、MSBuild 求值、`api/` 和 `trx/`。本地成功原件的报告标识为 `r0-bspud948/report.json`。新克隆可先用 `git submodule update --init --no-recommend-shallow -- aspnetboilerplate` 取得框架历史，再按[统一入口](#统一入口)生成自己的配对证据。可用下方的 `compare-restore`、`compare-api` 命令核对两份归档中的原始清单。
+
+本地首次完整调用因中文 VSTest 版本行未被解析而退出 1，虽然三条测试命令均完成并生成 TRX。修正版本行解析并通过中英文定向用例后，本地第二次调用成功。针对实际清单副本的传递包版本变异在三方比较处退出 1，构建、API 和回归显示为未执行。API 参数变异定位到 `Abp.Application.Features.Feature.RemoveChildFeature` 的 `System.String` 到 `System.Int32` 签名变化并退出 1。Python 夹具另覆盖对象或 SDK 不符、产物缺失、TRX 异常和有效测试数门禁。工作流定义模拟验证了自检失败、零用例和全部跳过会阻断完整命令并留存自检日志，以及完整命令失败时传播退出状态并留存部分证据。真实 GitHub 作业验证的是成功路径。
+
+本次覆盖 macOS ARM64、原版 R0 源码和内存 SQLite。未执行 Windows、Linux、其他数据库 Provider、AutoMapper 或 Angular 消费组合、Samples 专项、候选包还原与发布，以及 R1 补丁和完整模板的验收。
+
 ## 来源与还原
 
 在主仓根目录执行。先从主仓提交查询 gitlink，再用子模块对象核对引用。三个上游标签可直接查询，Angular 参考版本以库清单的 Git 对象为准。
