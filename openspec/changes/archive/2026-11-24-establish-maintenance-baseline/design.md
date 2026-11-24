@@ -2,7 +2,7 @@
 
 ## Context
 
-主仓当前固定的框架提交为 `6c4580c5e7ea41154696c071a53fd200059a768b`，对应上游 `v10.5.1`。首批后端源码项目均声明 `net9.0`，本机在框架目录解析到 .NET SDK `9.0.306`。SDK 解析规则见 [global.json](../../../aspnetboilerplate/global.json)，阶段范围见[首版维护路线](../../../docs/maintenance/fork-roadmap.md)。
+主仓当前固定的框架提交为 `6c4580c5e7ea41154696c071a53fd200059a768b`，对应上游 `v10.5.1`。首批后端源码项目均声明 `net9.0`，本机在框架目录解析到 .NET SDK `9.0.306`。SDK 解析规则见 [global.json](../../../../aspnetboilerplate/global.json)，阶段范围见[首版维护路线](../../../../docs/maintenance/fork-roadmap.md)。
 
 按当前 `ProjectReference`，`Abp.AspNetCore` 经 `Abp.Web.Common` 依赖 `Abp`，`Abp.EntityFrameworkCore` 经 `Abp.EntityFramework.Common` 依赖 `Abp`。目标闭包因此包含这五个框架包。
 

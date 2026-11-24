@@ -7,6 +7,8 @@
 | 目录 | 文档 | 内容 |
 | --- | --- | --- |
 | `maintenance/` | [维护型 fork 路线](maintenance/fork-roadmap.md) | 兼容性约束、上游基线、维护范围和发布门禁 |
+| `maintenance/` | [R0 维护基线](maintenance/release-baseline.json) | 已验收的上游提交、首批五包、依赖闭包与实测结果 |
+| `maintenance/` | [R0 基线复验手册](maintenance/baseline-evidence/README.md) | 还原、Release 构建、公共 API 比较和回归的复验步骤 |
 | `maintenance/` | [ASP.NET Boilerplate fork 调研](maintenance/fork-references.md) | .NET 迁移、上游补丁与独立发包的参考实现 |
 | `compatibility/` | [AutoMapper 兼容维护](compatibility/automapper.md) | 映射行为、Collection 依赖、安全修复和消费项目回归 |
 | `compatibility/` | [Angular 生态维护](compatibility/angular-ecosystem.md) | Angular 适配器、Web Resources、免费模板的版本组合和集成验证 |
@@ -30,6 +32,8 @@
 ## OpenSpec
 
 主仓使用 `openspec-cn` 的 `spec-driven` 工作流。项目约束和制品规则见 [OpenSpec 配置](../openspec/config.yaml)。
+
+R0 已验收。长期维护要求见 [维护基线规范](../openspec/specs/maintenance-baseline/spec.md)，提案、设计与实施任务见 [R0 归档](../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)。
 
 - 新能力、重大行为变化或跨子模块架构调整，先核对 `openspec/specs/` 和 `openspec/changes/`。可用 `openspec-cn list --specs` 和 `openspec-cn list` 查看。
 - 用 `openspec-cn new change <name>` 创建变更，在 `openspec/changes/<name>/` 中完成提案、增量规范、设计和任务清单。
