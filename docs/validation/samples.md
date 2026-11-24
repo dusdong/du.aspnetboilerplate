@@ -1,5 +1,13 @@
 # ASP.NET Boilerplate Samples：Fork 取舍与兼容验收样例规划
 
+## 当前状态（2026-11-24）
+
+主仓已接入 Samples 参考 fork，固定源码为 `e53d60895d354eb066c39d73c9e38c0c133fc69b`。首批候选是 `MultipleDbContextEfCoreDemo` 与 `InterceptionDemo`，维护范围以选定并验收的场景为准。[子模块地址](../../.gitmodules) · [R0 样例参考和状态](../maintenance/release-baseline.json)
+
+已核对多 DbContext 示例的两个上下文注册，以及拦截器示例的同步与异步实现。迁移精选样例、还原和运行候选 `Du.Abp.*` 包、验证多个上下文和拦截器的行为仍待执行。[上下文注册源码][R06] · [拦截器注册源码][R08] · [R0 验证范围](../maintenance/release-baseline.json)
+
+**下文保留原调研建议和当时的实施状态。**
+
 > 更新日期：2026-11-23（Asia/Shanghai）。  
 > 对象：aspnetboilerplate/aspnetboilerplate-samples。  
 > 适用目标：长期维护和发行经典 ASP.NET Boilerplate，同时控制支持范围。  

@@ -1,5 +1,13 @@
 # 有参考价值的 ASP.NET Boilerplate Fork 项目
 
+## 当前采用记录（2026-11-24）
+
+下文是 2026-11-21 的参考研究，项目活跃度、版本、CI 与安全记录均以当时的核查时点和固定来源为准。
+
+本项目已完成的 R0 以官方 `v10.5.1` 建立 .NET 9 源码对照，R1 首项补丁从官方上游 #7219 单独接入并在该环境完成回归。两项均已归档。第三方 fork 继续用于对比工程方案，.NET 10 / EF Core 10 迁移仍待实施。[R0 基线](release-baseline.json) · [R1 首项验收记录](r1-efcore-query-filter.md) · [维护路线](fork-roadmap.md)
+
+**原调研说明**
+
 > 核查日期：2026-11-21。研究对象是经典 ASP.NET Boilerplate（`aspnetboilerplate/aspnetboilerplate`），不是使用 `Volo.Abp.*` 的新 ABP Framework。
 >
 > 本文用于为用户自己的维护型 fork 选择补丁、工程实践和研究方向。参考项目的名称、版本和维护承诺均属于各自维护者；`Du.Abp.*` 是用户未来发行的包身份，不是这些项目的名称。

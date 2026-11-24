@@ -1,5 +1,12 @@
 # 参考 Silo：一条适合维护型 fork 的路线
 
+## 当前阶段（2026-11-24）
+
+- R0 已验收并归档。上游 `v10.5.1` 的首批五包源码基线记录了公共 API、还原图和三套回归，实测环境为 macOS ARM64、.NET 9，EF Core 关系型用例使用 SQLite。[R0 基线](release-baseline.json) · [R0 归档](../../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)
+- R1 首项已验收并归档，在同一 .NET 9 环境接入上游 EF Core 查询过滤修复 #7219。运行时迁移至 .NET 10 / EF Core 10 仍待实施，首批候选包与完整模板的消费验收分别属于后续 R2、R3。[R1 首项验收记录](r1-efcore-query-filter.md) · [R1 首项归档](../../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/)
+
+**原路线与研究说明**
+
 > 适用对象：基于经典 ASP.NET Boilerplate（`aspnetboilerplate/aspnetboilerplate`）维护并独立发行的项目。  
 > 文档版本：1.0。编制与证据核查日期：2026-11-21。  
 > 状态：维护路线与发布审查基线；各阶段的完成状态以项目实际实施记录为准。  

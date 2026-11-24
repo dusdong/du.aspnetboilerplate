@@ -2,6 +2,14 @@
 
 ## abp-ng2-module、abp-web-resources 与 module-zero-core-template
 
+## 当前状态（2026-11-24）
+
+- 适配器与免费启动模板已接入主仓。主仓 `8dcdca6f5aaa892225bcef74846eefce24f4f0d0` 固定的适配器源码声明 `13.0.0`、Angular peer `^21.0.0`。固定模板声明 Angular `^19.2.1`、适配器 `12.1.0` 和资源包 `^6.1.0`。已为模板选定适配器 `12.1.0` 的独立参考提交，其 peer 为 `^19.1.7`。[组件参考与模板依赖](../maintenance/release-baseline.json) · [gitlink 核对方法](../README.md#子模块分工)
+- Web Resources 源码随框架子模块维护，位于 `src/Abp.Web.Resources/Abp/Framework`。历史分发快照声明 npm `abp-web-resources 6.1.0`，旧提取配置指向 NuGet `Abp.Web.Resources 5.1.0`。[资源分发清单][R10] · [旧提取配置][R11]
+- 项目已有上述源码声明和模板后端依赖盘点。适配器与资源包的实际安装和构建、完整模板的依赖闭合与应用集成、浏览器端到端消费验证仍待执行。[R0 验证范围](../maintenance/release-baseline.json) · [R3 维护路线](../maintenance/fork-roadmap.md)
+
+**下文保留原调研证据和当时的组合判断。**
+
 > 更新日期：2026-11-23（Asia/Shanghai）。  
 > 适用目标：长期维护、独立发行经典 ASP.NET Boilerplate，并兼容现有 Angular 消费项目。  
 > 文档形式：一份综合指南，三个项目各有独立章节，共用版本、兼容与发行规则。  
