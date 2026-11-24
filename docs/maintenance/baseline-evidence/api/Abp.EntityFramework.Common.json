@@ -1,0 +1,68 @@
+{
+  "extractorVersion": 1,
+  "sha256": "8bc5700e8ee9ac898e0072d7a141add4ab9953cdaf74efcdb45221cbcdd59ee7",
+  "assembly": {
+    "name": "Abp.EntityFramework.Common",
+    "version": "10.5.1.0",
+    "culture": "neutral",
+    "publicKeyToken": null
+  },
+  "types": {
+    "Abp.EntityFramework.AbpEfDbContextInitializationContext": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Domain.Uow.IUnitOfWork unitOfWork) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_UnitOfWork() -> [Abp]Abp.Domain.Uow.IUnitOfWork [Default]",
+      "property [get_UnitOfWork: Public] UnitOfWork() -> [Abp]Abp.Domain.Uow.IUnitOfWork"
+    ],
+    "Abp.EntityFramework.AbpEntityFrameworkCommonModule": [
+      "type [Public, BeforeFieldInit] : [Abp]Abp.Modules.AbpModule",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] Initialize() -> System.Void [Default]"
+    ],
+    "Abp.EntityFramework.DbContextTypeMatcher`1": [
+      "type [Public, Abstract, BeforeFieldInit]<TBaseDbContext [None]> : [System.Runtime]System.Object implements Abp.EntityFramework.IDbContextTypeMatcher, [Abp]Abp.Dependency.ISingletonDependency",
+      "method [Family, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Domain.Uow.ICurrentUnitOfWorkProvider currentUnitOfWorkProvider) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] Populate([System.Runtime]System.Type[] dbContextTypes) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetConcreteType([System.Runtime]System.Type sourceDbContextType) -> [System.Runtime]System.Type [Default]"
+    ],
+    "Abp.EntityFramework.DefaultDbContextAttribute": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Attribute",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]"
+    ],
+    "Abp.EntityFramework.IDbContextEntityFinder": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetEntityTypeInfos([System.Runtime]System.Type dbContextType) -> [System.Runtime]System.Collections.Generic.IEnumerable`1<[Abp]Abp.Domain.Entities.EntityTypeInfo> [Default]"
+    ],
+    "Abp.EntityFramework.IDbContextTypeMatcher": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetConcreteType([System.Runtime]System.Type sourceDbContextType) -> [System.Runtime]System.Type [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Populate([System.Runtime]System.Type[] dbContextTypes) -> System.Void [Default]"
+    ],
+    "Abp.EntityFramework.IShouldInitializeDcontext": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Initialize(Abp.EntityFramework.AbpEfDbContextInitializationContext initializationContext) -> System.Void [Default]"
+    ],
+    "Abp.EntityFramework.Repositories.EfGenericRepositoryRegistrar": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.EntityFramework.Repositories.IEfGenericRepositoryRegistrar, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] RegisterForDbContext([System.Runtime]System.Type dbContextType, [Abp]Abp.Dependency.IIocManager iocManager, [Abp]Abp.Domain.Repositories.AutoRepositoryTypesAttribute defaultAutoRepositoryTypesAttribute) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] RegisterForEntity([System.Runtime]System.Type dbContextType, [System.Runtime]System.Type entityType, [Abp]Abp.Dependency.IIocManager iocManager, [Abp]Abp.Domain.Repositories.AutoRepositoryTypesAttribute defaultAutoRepositoryTypesAttribute) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.EntityFramework.IDbContextEntityFinder dbContextEntityFinder) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Logger() -> [Castle.Core]Castle.Core.Logging.ILogger [Default]",
+      "method [Public, HideBySig, SpecialName] set_Logger([Castle.Core]Castle.Core.Logging.ILogger value) -> System.Void [Default]",
+      "property [get_Logger: Public, set_Logger: Public] Logger() -> [Castle.Core]Castle.Core.Logging.ILogger"
+    ],
+    "Abp.EntityFramework.Repositories.IEfGenericRepositoryRegistrar": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] RegisterForDbContext([System.Runtime]System.Type dbContextType, [Abp]Abp.Dependency.IIocManager iocManager, [Abp]Abp.Domain.Repositories.AutoRepositoryTypesAttribute defaultAutoRepositoryTypesAttribute) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] RegisterForEntity([System.Runtime]System.Type dbContextType, [System.Runtime]System.Type entityType, [Abp]Abp.Dependency.IIocManager iocManager, [Abp]Abp.Domain.Repositories.AutoRepositoryTypesAttribute defaultAutoRepositoryTypesAttribute) -> System.Void [Default]"
+    ],
+    "Abp.EntityFramework.SecondaryOrmRegistrarBase": [
+      "type [Public, Abstract, BeforeFieldInit] : [System.Runtime]System.Object implements [Abp]Abp.Orm.ISecondaryOrmRegistrar",
+      "method [Family, HideBySig, SpecialName, RTSpecialName] .ctor([System.Runtime]System.Type dbContextType, Abp.EntityFramework.IDbContextEntityFinder dbContextEntityFinder) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_OrmContextKey() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] RegisterRepositories([Abp]Abp.Dependency.IIocManager iocManager, [Abp]Abp.Domain.Repositories.AutoRepositoryTypesAttribute defaultRepositoryTypes) -> System.Void [Default]",
+      "property [get_OrmContextKey: Public] OrmContextKey() -> System.String"
+    ]
+  },
+  "resources": []
+}

@@ -1,0 +1,423 @@
+{
+  "extractorVersion": 1,
+  "sha256": "3d884257154dd2cc8336afa98da2d6a857e931f480c3f7a34b2126a96f3da119",
+  "assembly": {
+    "name": "Abp.EntityFrameworkCore",
+    "version": "10.5.1.0",
+    "culture": "neutral",
+    "publicKeyToken": null
+  },
+  "types": {
+    "Abp.EntityFrameworkCore.AbpCompiledQueryCacheKeyGenerator": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.ICompiledQueryCacheKeyGenerator",
+      "method [Family, HideBySig, SpecialName] get_CurrentContext() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.ICurrentDbContext [Default]",
+      "method [Family, HideBySig, SpecialName] get_InnerCompiledQueryCacheKeyGenerator() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.ICompiledQueryCacheKeyGenerator [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.ICompiledQueryCacheKeyGenerator innerCompiledQueryCacheKeyGenerator, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.ICurrentDbContext currentContext) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GenerateCacheKey([System.Linq.Expressions]System.Linq.Expressions.Expression query, System.Boolean async) -> System.Object [Default]",
+      "property [get_CurrentContext: Family] CurrentContext() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.ICurrentDbContext",
+      "property [get_InnerCompiledQueryCacheKeyGenerator: Family] InnerCompiledQueryCacheKeyGenerator() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.ICompiledQueryCacheKeyGenerator"
+    ],
+    "Abp.EntityFrameworkCore.AbpDbContext": [
+      "type [Public, Abstract, BeforeFieldInit] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext implements [Abp.EntityFramework.Common]Abp.EntityFramework.IShouldInitializeDcontext, [Abp]Abp.Dependency.ITransientDependency",
+      "field [Family, InitOnly] DbContextOptions : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContextOptions",
+      "field [Family, Static, Literal, HasDefault] DbFunctionNotSupportedExceptionMessage : System.String = \"Your EF Core database provider does not support \\u0027User-defined function mapping\\u0027.Please set \\u0027UseAbpQueryCompiler\\u0027 of \\u0027IAbpEfCoreConfiguration\\u0027 to false to disable it.See https://learn.microsoft.com/en-us/ef/core/querying/user-defined-function-mapping for more information.\"",
+      "method [Family, HideBySig, SpecialName, RTSpecialName] .ctor([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContextOptions options) -> System.Void [Default]",
+      "method [Family, HideBySig] ConfigureGlobalFilters<TEntity [ReferenceTypeConstraint]>([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType) -> System.Void [Default]",
+      "method [Family, HideBySig] ConfigureGlobalValueConverter<TEntity [ReferenceTypeConstraint]>([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] AddDomainEvents([System.Collections]System.Collections.Generic.List`1<[Abp]Abp.Events.Bus.Entities.DomainEventEntry> domainEvents, System.Object entityAsObj) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] ApplyAbpConcepts() -> [Abp]Abp.Events.Bus.Entities.EntityChangeReport [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] ApplyAbpConcepts([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry, [System.Runtime]System.Nullable`1<System.Int64> userId, [Abp]Abp.Events.Bus.Entities.EntityChangeReport changeReport) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] ApplyAbpConceptsForAddedEntity([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry, [System.Runtime]System.Nullable`1<System.Int64> userId, [Abp]Abp.Events.Bus.Entities.EntityChangeReport changeReport) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] ApplyAbpConceptsForDeletedEntity([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry, [System.Runtime]System.Nullable`1<System.Int64> userId, [Abp]Abp.Events.Bus.Entities.EntityChangeReport changeReport) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] ApplyAbpConceptsForModifiedEntity([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry, [System.Runtime]System.Nullable`1<System.Int64> userId, [Abp]Abp.Events.Bus.Entities.EntityChangeReport changeReport) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] CancelDeletionForSoftDelete([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] CascadeSoftDelete() -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] CheckAndSetId([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] CheckAndSetMayHaveTenantIdProperty(System.Object entityAsObj) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] CheckAndSetMustHaveTenantIdProperty(System.Object entityAsObj) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] CollectCascadeSoftDeleteChildren([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.NavigationEntry navigationEntry, [System.Collections]System.Collections.Generic.List`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry> children) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] CombineExpressions<T [None]>([System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!!0, System.Boolean>> expression1, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!!0, System.Boolean>> expression2) -> [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!!0, System.Boolean>> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] CreateFilterExpression<TEntity [ReferenceTypeConstraint]>([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder) -> [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!!0, System.Boolean>> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetAuditUserId() -> [System.Runtime]System.Nullable`1<System.Int64> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetCascadeSoftDeleteChildren([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry parentEntry) -> [System.Runtime]System.Collections.Generic.IEnumerable`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetCurrentTenantIdOrNull() -> [System.Runtime]System.Nullable`1<System.Int32> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] IsHardDeleteEntity([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry) -> System.Boolean [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] SeedCascadeSoftDeleteQueue([System.Collections]System.Collections.Generic.Queue`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry> queue) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] SetCreationAuditProperties(System.Object entityAsObj, [System.Runtime]System.Nullable`1<System.Int64> userId) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] SetDeletionAuditProperties(System.Object entityAsObj, [System.Runtime]System.Nullable`1<System.Int64> userId) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] SetModificationAuditProperties(System.Object entityAsObj, [System.Runtime]System.Nullable`1<System.Int64> userId) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] ShouldFilterEntity<TEntity [ReferenceTypeConstraint]>([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType) -> System.Boolean [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] ShouldFollowCascadeSoftDeleteNavigation([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.NavigationEntry navigationEntry) -> System.Boolean [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] TrySetCascadeSoftDeleteChildAsDeleted([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry childEntry) -> System.Boolean [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] UseAbpQueryCompiler() -> System.Boolean [Default]",
+      "method [Family, Virtual, HideBySig] OnModelCreating([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_AbpEfCoreConfiguration() -> Abp.EntityFrameworkCore.Configuration.IAbpEfCoreConfiguration [Default]",
+      "method [Public, HideBySig, SpecialName] get_AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession [Default]",
+      "method [Public, HideBySig, SpecialName] get_CurrentUnitOfWorkProvider() -> [Abp]Abp.Domain.Uow.ICurrentUnitOfWorkProvider [Default]",
+      "method [Public, HideBySig, SpecialName] get_EntityChangeEventHelper() -> [Abp]Abp.Events.Bus.Entities.IEntityChangeEventHelper [Default]",
+      "method [Public, HideBySig, SpecialName] get_EventBus() -> [Abp]Abp.Events.Bus.IEventBus [Default]",
+      "method [Public, HideBySig, SpecialName] get_GuidGenerator() -> [Abp]Abp.IGuidGenerator [Default]",
+      "method [Public, HideBySig, SpecialName] get_Logger() -> [Castle.Core]Castle.Core.Logging.ILogger [Default]",
+      "method [Public, HideBySig, SpecialName] get_MultiTenancyConfig() -> [Abp]Abp.Configuration.Startup.IMultiTenancyConfig [Default]",
+      "method [Public, HideBySig, SpecialName] set_AbpEfCoreConfiguration(Abp.EntityFrameworkCore.Configuration.IAbpEfCoreConfiguration value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_AbpSession([Abp]Abp.Runtime.Session.IAbpSession value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_CurrentUnitOfWorkProvider([Abp]Abp.Domain.Uow.ICurrentUnitOfWorkProvider value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_EntityChangeEventHelper([Abp]Abp.Events.Bus.Entities.IEntityChangeEventHelper value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_EventBus([Abp]Abp.Events.Bus.IEventBus value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_GuidGenerator([Abp]Abp.IGuidGenerator value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Logger([Castle.Core]Castle.Core.Logging.ILogger value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_MultiTenancyConfig([Abp]Abp.Configuration.Startup.IMultiTenancyConfig value) -> System.Void [Default]",
+      "method [Public, Static, HideBySig] MayHaveTenantFilter([System.Runtime]System.Nullable`1<System.Int32> tenantId, [System.Runtime]System.Nullable`1<System.Int32> currentTenantId, System.Boolean boolParam) -> System.Boolean [Default]",
+      "method [Public, Static, HideBySig] MustHaveTenantFilter(System.Int32 tenantId, [System.Runtime]System.Nullable`1<System.Int32> currentTenantId, System.Boolean boolParam) -> System.Boolean [Default]",
+      "method [Public, Static, HideBySig] SoftDeleteFilter(System.Boolean isDeleted, System.Boolean boolParam) -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_CurrentTenantId() -> [System.Runtime]System.Nullable`1<System.Int32> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_IsMayHaveTenantFilterEnabled() -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_IsMustHaveTenantFilterEnabled() -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_IsSoftDeleteCascadeEnabled() -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_IsSoftDeleteFilterEnabled() -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_SuppressAutoSetTenantId() -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_SuppressAutoSetTenantId(System.Boolean value) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetCompiledQueryCacheKey() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] Initialize([Abp.EntityFramework.Common]Abp.EntityFramework.AbpEfDbContextInitializationContext initializationContext) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] SaveChanges() -> System.Int32 [Default]",
+      "method [Public, Virtual, HideBySig] SaveChangesAsync([System.Runtime]System.Threading.CancellationToken cancellationToken [Optional, HasDefault] = null) -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int32> [Default]",
+      "property [get_AbpEfCoreConfiguration: Public, set_AbpEfCoreConfiguration: Public] AbpEfCoreConfiguration() -> Abp.EntityFrameworkCore.Configuration.IAbpEfCoreConfiguration",
+      "property [get_AbpSession: Public, set_AbpSession: Public] AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession",
+      "property [get_CurrentTenantId: Public] CurrentTenantId() -> [System.Runtime]System.Nullable`1<System.Int32>",
+      "property [get_CurrentUnitOfWorkProvider: Public, set_CurrentUnitOfWorkProvider: Public] CurrentUnitOfWorkProvider() -> [Abp]Abp.Domain.Uow.ICurrentUnitOfWorkProvider",
+      "property [get_EntityChangeEventHelper: Public, set_EntityChangeEventHelper: Public] EntityChangeEventHelper() -> [Abp]Abp.Events.Bus.Entities.IEntityChangeEventHelper",
+      "property [get_EventBus: Public, set_EventBus: Public] EventBus() -> [Abp]Abp.Events.Bus.IEventBus",
+      "property [get_GuidGenerator: Public, set_GuidGenerator: Public] GuidGenerator() -> [Abp]Abp.IGuidGenerator",
+      "property [get_IsMayHaveTenantFilterEnabled: Public] IsMayHaveTenantFilterEnabled() -> System.Boolean",
+      "property [get_IsMustHaveTenantFilterEnabled: Public] IsMustHaveTenantFilterEnabled() -> System.Boolean",
+      "property [get_IsSoftDeleteCascadeEnabled: Public] IsSoftDeleteCascadeEnabled() -> System.Boolean",
+      "property [get_IsSoftDeleteFilterEnabled: Public] IsSoftDeleteFilterEnabled() -> System.Boolean",
+      "property [get_Logger: Public, set_Logger: Public] Logger() -> [Castle.Core]Castle.Core.Logging.ILogger",
+      "property [get_MultiTenancyConfig: Public, set_MultiTenancyConfig: Public] MultiTenancyConfig() -> [Abp]Abp.Configuration.Startup.IMultiTenancyConfig",
+      "property [get_SuppressAutoSetTenantId: Public, set_SuppressAutoSetTenantId: Public] SuppressAutoSetTenantId() -> System.Boolean"
+    ],
+    "Abp.EntityFrameworkCore.AbpDbContextOptionsExtension": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.IDbContextOptionsExtension",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_Info() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.DbContextOptionsExtensionInfo [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] ApplyServices([Microsoft.Extensions.DependencyInjection.Abstractions]Microsoft.Extensions.DependencyInjection.IServiceCollection services) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] Validate([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.IDbContextOptions options) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "property [get_Info: Public] Info() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.DbContextOptionsExtensionInfo"
+    ],
+    "Abp.EntityFrameworkCore.AbpEfCoreCurrentDbContext": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Context() -> Abp.EntityFrameworkCore.AbpDbContext [Default]",
+      "method [Public, HideBySig] Use(Abp.EntityFrameworkCore.AbpDbContext context) -> [System.Runtime]System.IDisposable [Default]",
+      "property [get_Context: Public] Context() -> Abp.EntityFrameworkCore.AbpDbContext"
+    ],
+    "Abp.EntityFrameworkCore.AbpEfCoreServiceCollectionExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] AddAbpDbContext<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>([Microsoft.Extensions.DependencyInjection.Abstractions]Microsoft.Extensions.DependencyInjection.IServiceCollection services, [System.Runtime]System.Action`1<Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!!0>> action) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.AbpEntityFrameworkCoreModule": [
+      "type [Public, BeforeFieldInit] : [Abp]Abp.Modules.AbpModule",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Reflection.ITypeFinder typeFinder) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] Initialize() -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] PreInitialize() -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.AbpEntityQueryProvider": [
+      "type [Public, BeforeFieldInit] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider",
+      "method [Family, HideBySig, SpecialName] get_AbpEfCoreCurrentDbContext() -> Abp.EntityFrameworkCore.AbpEfCoreCurrentDbContext [Default]",
+      "method [Family, HideBySig, SpecialName] get_CurrentDbContext() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.ICurrentDbContext [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.Internal.IQueryCompiler queryCompiler, Abp.EntityFrameworkCore.AbpEfCoreCurrentDbContext abpEfCoreCurrentDbContext, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.ICurrentDbContext currentDbContext) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] Execute([System.Linq.Expressions]System.Linq.Expressions.Expression expression) -> System.Object [Default]",
+      "method [Public, Virtual, HideBySig] Execute<TResult [None]>([System.Linq.Expressions]System.Linq.Expressions.Expression expression) -> !!0 [Default]",
+      "method [Public, Virtual, HideBySig] ExecuteAsync<TResult [None]>([System.Linq.Expressions]System.Linq.Expressions.Expression expression, [System.Runtime]System.Threading.CancellationToken cancellationToken [Optional, HasDefault] = null) -> !!0 [Default]",
+      "property [get_AbpEfCoreCurrentDbContext: Family] AbpEfCoreCurrentDbContext() -> Abp.EntityFrameworkCore.AbpEfCoreCurrentDbContext",
+      "property [get_CurrentDbContext: Family] CurrentDbContext() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.ICurrentDbContext"
+    ],
+    "Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1": [
+      "type [Public, BeforeFieldInit]<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String connectionString, [System.Data.Common]System.Data.Common.DbConnection existingConnection) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_ConnectionString() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_DbContextOptions() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContextOptionsBuilder`1<!0> [Default]",
+      "method [Public, HideBySig, SpecialName] get_ExistingConnection() -> [System.Data.Common]System.Data.Common.DbConnection [Default]",
+      "property [get_ConnectionString: Public] ConnectionString() -> System.String",
+      "property [get_DbContextOptions: Public] DbContextOptions() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContextOptionsBuilder`1<!0>",
+      "property [get_ExistingConnection: Public] ExistingConnection() -> [System.Data.Common]System.Data.Common.DbConnection"
+    ],
+    "Abp.EntityFrameworkCore.Configuration.AbpDbContextConfigurerAction`1": [
+      "type [Public, BeforeFieldInit]<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> : [System.Runtime]System.Object implements Abp.EntityFrameworkCore.Configuration.IAbpDbContextConfigurer`1<!0>",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] Configure(Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!0> configuration) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([System.Runtime]System.Action`1<Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!0>> action) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Action() -> [System.Runtime]System.Action`1<Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!0>> [Default]",
+      "method [Public, HideBySig, SpecialName] set_Action([System.Runtime]System.Action`1<Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!0>> value) -> System.Void [Default]",
+      "property [get_Action: Public, set_Action: Public] Action() -> [System.Runtime]System.Action`1<Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!0>>"
+    ],
+    "Abp.EntityFrameworkCore.Configuration.AbpEfCoreConfiguration": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.EntityFrameworkCore.Configuration.IAbpEfCoreConfiguration",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_EnableSoftDeleteCascade() -> System.Boolean [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_UseAbpQueryCompiler() -> System.Boolean [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_EnableSoftDeleteCascade(System.Boolean value) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_UseAbpQueryCompiler(System.Boolean value) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] AddDbContext<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>([System.Runtime]System.Action`1<Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!!0>> action) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Dependency.IIocManager iocManager) -> System.Void [Default]",
+      "property [get_EnableSoftDeleteCascade: Public, set_EnableSoftDeleteCascade: Public] EnableSoftDeleteCascade() -> System.Boolean",
+      "property [get_UseAbpQueryCompiler: Public, set_UseAbpQueryCompiler: Public] UseAbpQueryCompiler() -> System.Boolean"
+    ],
+    "Abp.EntityFrameworkCore.Configuration.AbpEfCoreConfigurationExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] AbpEfCore([Abp]Abp.Configuration.Startup.IModuleConfigurations configurations) -> Abp.EntityFrameworkCore.Configuration.IAbpEfCoreConfiguration [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Configuration.IAbpDbContextConfigurer`1": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Configure(Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!0> configuration) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Configuration.IAbpEfCoreConfiguration": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_EnableSoftDeleteCascade() -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_UseAbpQueryCompiler() -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_EnableSoftDeleteCascade(System.Boolean value) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_UseAbpQueryCompiler(System.Boolean value) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] AddDbContext<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>([System.Runtime]System.Action`1<Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!!0>> action) -> System.Void [Default]",
+      "property [get_EnableSoftDeleteCascade: Public, set_EnableSoftDeleteCascade: Public] EnableSoftDeleteCascade() -> System.Boolean",
+      "property [get_UseAbpQueryCompiler: Public, set_UseAbpQueryCompiler: Public] UseAbpQueryCompiler() -> System.Boolean"
+    ],
+    "Abp.EntityFrameworkCore.Configuration.NullAbpEfCoreConfiguration": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.EntityFrameworkCore.Configuration.IAbpEfCoreConfiguration",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_EnableSoftDeleteCascade() -> System.Boolean [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_UseAbpQueryCompiler() -> System.Boolean [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_EnableSoftDeleteCascade(System.Boolean value) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_UseAbpQueryCompiler(System.Boolean value) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] AddDbContext<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>([System.Runtime]System.Action`1<Abp.EntityFrameworkCore.Configuration.AbpDbContextConfiguration`1<!!0>> action) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, Static, HideBySig, SpecialName] get_Instance() -> Abp.EntityFrameworkCore.Configuration.NullAbpEfCoreConfiguration [Default]",
+      "property [get_EnableSoftDeleteCascade: Public, set_EnableSoftDeleteCascade: Public] EnableSoftDeleteCascade() -> System.Boolean",
+      "property [get_Instance: Public] Instance() -> Abp.EntityFrameworkCore.Configuration.NullAbpEfCoreConfiguration",
+      "property [get_UseAbpQueryCompiler: Public, set_UseAbpQueryCompiler: Public] UseAbpQueryCompiler() -> System.Boolean"
+    ],
+    "Abp.EntityFrameworkCore.DatabaseFacadeExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] IsRelational([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade database) -> System.Boolean [Default]"
+    ],
+    "Abp.EntityFrameworkCore.DbContextTypeMatcher": [
+      "type [Public, BeforeFieldInit] : [Abp.EntityFramework.Common]Abp.EntityFramework.DbContextTypeMatcher`1<Abp.EntityFrameworkCore.AbpDbContext>",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Domain.Uow.ICurrentUnitOfWorkProvider currentUnitOfWorkProvider) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.DefaultDbContextResolver": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.EntityFrameworkCore.IDbContextResolver, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] CreateOptions<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>(System.String connectionString, [System.Data.Common]System.Data.Common.DbConnection existingConnection) -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContextOptions`1<!!0> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] Resolve<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>(System.String connectionString, [System.Data.Common]System.Data.Common.DbConnection existingConnection) -> !!0 [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Dependency.IIocResolver iocResolver, [Abp.EntityFramework.Common]Abp.EntityFramework.IDbContextTypeMatcher dbContextTypeMatcher) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.EfCoreActiveTransactionProvider": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements [Abp]Abp.Data.IActiveTransactionProvider, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetActiveConnection([Abp]Abp.Data.ActiveTransactionProviderArgs args) -> [System.Data.Common]System.Data.IDbConnection [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetActiveConnectionAsync([Abp]Abp.Data.ActiveTransactionProviderArgs args) -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Data.Common]System.Data.IDbConnection> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetActiveTransaction([Abp]Abp.Data.ActiveTransactionProviderArgs args) -> [System.Data.Common]System.Data.IDbTransaction [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetActiveTransactionAsync([Abp]Abp.Data.ActiveTransactionProviderArgs args) -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Data.Common]System.Data.IDbTransaction> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Dependency.IIocResolver iocResolver) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.EfCoreBasedSecondaryOrmRegistrar": [
+      "type [Public, BeforeFieldInit] : [Abp.EntityFramework.Common]Abp.EntityFramework.SecondaryOrmRegistrarBase",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([System.Runtime]System.Type dbContextType, [Abp.EntityFramework.Common]Abp.EntityFramework.IDbContextEntityFinder dbContextEntityFinder) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, SpecialName] get_OrmContextKey() -> System.String [Default]",
+      "property [get_OrmContextKey: Public] OrmContextKey() -> System.String"
+    ],
+    "Abp.EntityFrameworkCore.Extensions.DbContextOptionsBuilderExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] AddAbpDbContextOptionsExtension([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContextOptionsBuilder optionsBuilder) -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContextOptionsBuilder [Default]",
+      "method [Public, Static, HideBySig] AddAbpDbContextOptionsExtension<TContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContextOptionsBuilder`1<!!0> optionsBuilder) -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContextOptionsBuilder`1<!!0> [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Extensions.EntityEntryExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] CheckOwnedEntityChange([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry) -> System.Boolean [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Extensions.ModelBuilderExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] ConfigureMayHaveTenantDbFunction([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder, [System.Runtime]System.Reflection.MethodInfo methodInfo, Abp.EntityFrameworkCore.AbpEfCoreCurrentDbContext abpEfCoreCurrentDbContext) -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder [Default]",
+      "method [Public, Static, HideBySig] ConfigureMustHaveTenantDbFunction([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder, [System.Runtime]System.Reflection.MethodInfo methodInfo, Abp.EntityFrameworkCore.AbpEfCoreCurrentDbContext abpEfCoreCurrentDbContext) -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder [Default]",
+      "method [Public, Static, HideBySig] ConfigureSoftDeleteDbFunction([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder, [System.Runtime]System.Reflection.MethodInfo methodInfo, Abp.EntityFrameworkCore.AbpEfCoreCurrentDbContext abpEfCoreCurrentDbContext) -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.ModelBuilder [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Extensions.QueryableExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] IncludeIf<T [ReferenceTypeConstraint], TProperty [None]>([System.Linq.Expressions]System.Linq.IQueryable`1<!!0> source, System.Boolean condition, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!!0, !!1>> path) -> [System.Linq.Expressions]System.Linq.IQueryable`1<!!0> [Default]",
+      "method [Public, Static, HideBySig] IncludeIf<T [ReferenceTypeConstraint]>([System.Linq.Expressions]System.Linq.IQueryable`1<!!0> source, System.Boolean condition, System.String path) -> [System.Linq.Expressions]System.Linq.IQueryable`1<!!0> [Default]",
+      "method [Public, Static, HideBySig] IncludeIf<T [ReferenceTypeConstraint]>([System.Linq.Expressions]System.Linq.IQueryable`1<!!0> source, System.Boolean condition, [System.Runtime]System.Func`2<[System.Linq.Expressions]System.Linq.IQueryable`1<!!0>, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.IIncludableQueryable`2<!!0, System.Object>> include) -> [System.Linq.Expressions]System.Linq.IQueryable`1<!!0> [Default]"
+    ],
+    "Abp.EntityFrameworkCore.IDbContextProvider`1": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetDbContext() -> !0 [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetDbContext([System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide) -> !0 [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetDbContextAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<!0> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetDbContextAsync([System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide) -> [System.Runtime]System.Threading.Tasks.Task`1<!0> [Default]"
+    ],
+    "Abp.EntityFrameworkCore.IDbContextResolver": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Resolve<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>(System.String connectionString, [System.Data.Common]System.Data.Common.DbConnection existingConnection) -> !!0 [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Linq.EfCoreAsyncQueryableExecuter": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements [Abp]Abp.Dependency.ISingletonDependency, [Abp]Abp.Linq.IAsyncQueryableExecuter",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] AnyAsync<T [None]>([System.Linq.Expressions]System.Linq.IQueryable`1<!!0> queryable, [System.Runtime]System.Threading.CancellationToken cancellationToken [Optional, HasDefault] = null) -> [System.Runtime]System.Threading.Tasks.Task`1<System.Boolean> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] CountAsync<T [None]>([System.Linq.Expressions]System.Linq.IQueryable`1<!!0> queryable, [System.Runtime]System.Threading.CancellationToken cancellationToken [Optional, HasDefault] = null) -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int32> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] FirstOrDefaultAsync<T [None]>([System.Linq.Expressions]System.Linq.IQueryable`1<!!0> queryable, [System.Runtime]System.Threading.CancellationToken cancellationToken [Optional, HasDefault] = null) -> [System.Runtime]System.Threading.Tasks.Task`1<!!0> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] ToListAsync<T [None]>([System.Linq.Expressions]System.Linq.IQueryable`1<!!0> queryable, [System.Runtime]System.Threading.CancellationToken cancellationToken [Optional, HasDefault] = null) -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Collections]System.Collections.Generic.List`1<!!0>> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Threading.ICancellationTokenProvider cancellationTokenProvider) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Repositories.EfCoreAutoRepositoryTypes": [
+      "type [Public, Abstract, Sealed] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig, SpecialName] get_Default() -> [Abp]Abp.Domain.Repositories.AutoRepositoryTypesAttribute [Default]",
+      "property [get_Default: Public] Default() -> [Abp]Abp.Domain.Repositories.AutoRepositoryTypesAttribute"
+    ],
+    "Abp.EntityFrameworkCore.Repositories.EfCoreRepositoryBase`2": [
+      "type [Public, BeforeFieldInit]<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext, TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<System.Int32>> : Abp.EntityFrameworkCore.Repositories.EfCoreRepositoryBase`3<!0, !1, System.Int32> implements [Abp]Abp.Dependency.ITransientDependency, [Abp]Abp.Domain.Repositories.IRepository, [Abp]Abp.Domain.Repositories.IRepository`1<!1>, [Abp]Abp.Domain.Repositories.IRepository`2<!1, System.Int32>",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.EntityFrameworkCore.IDbContextProvider`1<!0> dbContextProvider) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Repositories.EfCoreRepositoryBase`3": [
+      "type [Public, BeforeFieldInit]<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext, TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<!2>, TPrimaryKey [None]> : [Abp]Abp.Domain.Repositories.AbpRepositoryBase`2<!1, !2> implements Abp.EntityFrameworkCore.Repositories.IRepositoryWithDbContext, [Abp]Abp.Domain.Repositories.ISupportsExplicitLoading`2<!1, !2>",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] AttachIfNot(!1 entity) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetQueryable() -> [System.Linq.Expressions]System.Linq.IQueryable`1<!1> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetQueryableAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Linq.Expressions]System.Linq.IQueryable`1<!1>> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] EnsureCollectionLoaded<TProperty [ReferenceTypeConstraint]>(!1 entity, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, [System.Runtime]System.Collections.Generic.IEnumerable`1<!!0>>> collectionExpression, [System.Runtime]System.Threading.CancellationToken cancellationToken) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] EnsureCollectionLoadedAsync<TProperty [ReferenceTypeConstraint]>(!1 entity, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, [System.Runtime]System.Collections.Generic.IEnumerable`1<!!0>>> collectionExpression, [System.Runtime]System.Threading.CancellationToken cancellationToken) -> [System.Runtime]System.Threading.Tasks.Task [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] EnsurePropertyLoaded<TProperty [ReferenceTypeConstraint]>(!1 entity, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, !!0>> propertyExpression, [System.Runtime]System.Threading.CancellationToken cancellationToken) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] EnsurePropertyLoadedAsync<TProperty [ReferenceTypeConstraint]>(!1 entity, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, !!0>> propertyExpression, [System.Runtime]System.Threading.CancellationToken cancellationToken) -> [System.Runtime]System.Threading.Tasks.Task [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContext() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContextAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.EntityFrameworkCore.IDbContextProvider`1<!0> dbContextProvider) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_TransactionProvider([Abp]Abp.Data.IActiveTransactionProvider value) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetConnection() -> [System.Data.Common]System.Data.Common.DbConnection [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetConnectionAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Data.Common]System.Data.Common.DbConnection> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetContext() -> !0 [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetContextAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<!0> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetDbQueryTable() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbSet`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetDbQueryTableAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbSet`1<!1>> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetTable() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbSet`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetTableAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbSet`1<!1>> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetTransaction() -> [System.Data.Common]System.Data.Common.DbTransaction [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetTransactionAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Data.Common]System.Data.Common.DbTransaction> [Default]",
+      "method [Public, Virtual, HideBySig] CountAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int32> [Default]",
+      "method [Public, Virtual, HideBySig] CountAsync([System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, System.Boolean>> predicate) -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int32> [Default]",
+      "method [Public, Virtual, HideBySig] Delete(!1 entity) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] Delete(!2 id) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] FirstOrDefaultAsync(!2 id) -> [System.Runtime]System.Threading.Tasks.Task`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig] FirstOrDefaultAsync([System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, System.Boolean>> predicate) -> [System.Runtime]System.Threading.Tasks.Task`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig] GetAll() -> [System.Linq.Expressions]System.Linq.IQueryable`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig] GetAllAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Linq.Expressions]System.Linq.IQueryable`1<!1>> [Default]",
+      "method [Public, Virtual, HideBySig] GetAllIncluding([System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, System.Object>>[] propertySelectors) -> [System.Linq.Expressions]System.Linq.IQueryable`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig] GetAllIncludingAsync([System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, System.Object>>[] propertySelectors) -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Linq.Expressions]System.Linq.IQueryable`1<!1>> [Default]",
+      "method [Public, Virtual, HideBySig] GetAllListAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Collections]System.Collections.Generic.List`1<!1>> [Default]",
+      "method [Public, Virtual, HideBySig] GetAllListAsync([System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, System.Boolean>> predicate) -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Collections]System.Collections.Generic.List`1<!1>> [Default]",
+      "method [Public, Virtual, HideBySig] GetAllReadonly() -> [System.Linq.Expressions]System.Linq.IQueryable`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig] GetAllReadonlyAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[System.Linq.Expressions]System.Linq.IQueryable`1<!1>> [Default]",
+      "method [Public, Virtual, HideBySig] GetAllReadonlyIncluding([System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, System.Object>>[] propertySelectors) -> [System.Linq.Expressions]System.Linq.IQueryable`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig] Insert(!1 entity) -> !1 [Default]",
+      "method [Public, Virtual, HideBySig] InsertAndGetId(!1 entity) -> !2 [Default]",
+      "method [Public, Virtual, HideBySig] InsertAndGetIdAsync(!1 entity) -> [System.Runtime]System.Threading.Tasks.Task`1<!2> [Default]",
+      "method [Public, Virtual, HideBySig] InsertAsync(!1 entity) -> [System.Runtime]System.Threading.Tasks.Task`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig] InsertOrUpdateAndGetId(!1 entity) -> !2 [Default]",
+      "method [Public, Virtual, HideBySig] InsertOrUpdateAndGetIdAsync(!1 entity) -> [System.Runtime]System.Threading.Tasks.Task`1<!2> [Default]",
+      "method [Public, Virtual, HideBySig] LongCountAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int64> [Default]",
+      "method [Public, Virtual, HideBySig] LongCountAsync([System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, System.Boolean>> predicate) -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int64> [Default]",
+      "method [Public, Virtual, HideBySig] SingleAsync([System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!1, System.Boolean>> predicate) -> [System.Runtime]System.Threading.Tasks.Task`1<!1> [Default]",
+      "method [Public, Virtual, HideBySig] Update(!1 entity) -> !1 [Default]",
+      "method [Public, Virtual, HideBySig] UpdateAsync(!1 entity) -> [System.Runtime]System.Threading.Tasks.Task`1<!1> [Default]",
+      "property [set_TransactionProvider: Public] TransactionProvider() -> [Abp]Abp.Data.IActiveTransactionProvider"
+    ],
+    "Abp.EntityFrameworkCore.Repositories.EfCoreRepositoryExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] BatchDeleteAsync<TEntity [None] : [Abp]Abp.Domain.Entities.Entity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!!0, System.Boolean>> predicate) -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int32> [Default]",
+      "method [Public, Static, HideBySig] BatchDeleteAsync<TEntity [None] : [Abp]Abp.Domain.Entities.Entity`1<System.Int32>>([Abp]Abp.Domain.Repositories.IRepository`1<!!0> repository, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!!0, System.Boolean>> predicate) -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int32> [Default]",
+      "method [Public, Static, HideBySig] BatchUpdateAsync<TEntity [None] : [Abp]Abp.Domain.Entities.Entity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.SetPropertyCalls`1<!!0>, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.SetPropertyCalls`1<!!0>>> updateExpression, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!!0, System.Boolean>> predicate) -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int32> [Default]",
+      "method [Public, Static, HideBySig] BatchUpdateAsync<TEntity [None] : [Abp]Abp.Domain.Entities.Entity`1<System.Int32>>([Abp]Abp.Domain.Repositories.IRepository`1<!!0> repository, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.SetPropertyCalls`1<!!0>, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Query.SetPropertyCalls`1<!!0>>> updateExpression, [System.Linq.Expressions]System.Linq.Expressions.Expression`1<[System.Runtime]System.Func`2<!!0, System.Boolean>> predicate) -> [System.Runtime]System.Threading.Tasks.Task`1<System.Int32> [Default]",
+      "method [Public, Static, HideBySig] DetachFromDbContext<TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository, !!0 entity) -> System.Void [Default]",
+      "method [Public, Static, HideBySig] GetDbContext<TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository) -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext [Default]",
+      "method [Public, Static, HideBySig] InsertRange<TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository, !!0[] entities) -> System.Void [Default]",
+      "method [Public, Static, HideBySig] InsertRange<TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository, [System.Runtime]System.Collections.Generic.IEnumerable`1<!!0> entities) -> System.Void [Default]",
+      "method [Public, Static, HideBySig] InsertRangeAsync<TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository, !!0[] entities) -> [System.Runtime]System.Threading.Tasks.Task [Default]",
+      "method [Public, Static, HideBySig] InsertRangeAsync<TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository, [System.Runtime]System.Collections.Generic.IEnumerable`1<!!0> entities) -> [System.Runtime]System.Threading.Tasks.Task [Default]",
+      "method [Public, Static, HideBySig] RemoveRange<TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository, !!0[] entities) -> System.Void [Default]",
+      "method [Public, Static, HideBySig] RemoveRange<TEntity [ReferenceTypeConstraint] : [Abp]Abp.Domain.Entities.IEntity`1<!!1>, TPrimaryKey [None]>([Abp]Abp.Domain.Repositories.IRepository`2<!!0, !!1> repository, [System.Runtime]System.Collections.Generic.IEnumerable`1<!!0> entities) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Repositories.IRepositoryWithDbContext": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetDbContext() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetDbContextAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> [Default]"
+    ],
+    "Abp.EntityFrameworkCore.SimpleDbContextProvider`1": [
+      "type [Public, Sealed, BeforeFieldInit]<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> : [System.Runtime]System.Object implements Abp.EntityFrameworkCore.IDbContextProvider`1<!0>",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContext() -> !0 [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContext([System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide) -> !0 [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContextAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<!0> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContextAsync([System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide) -> [System.Runtime]System.Threading.Tasks.Task`1<!0> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(!0 dbContext) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_DbContext() -> !0 [Default]",
+      "property [get_DbContext: Public] DbContext() -> !0"
+    ],
+    "Abp.EntityFrameworkCore.Uow.ActiveTransactionInfo": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction dbContextTransaction, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext starterDbContext) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_AttendedDbContexts() -> [System.Collections]System.Collections.Generic.List`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> [Default]",
+      "method [Public, HideBySig, SpecialName] get_DbContextTransaction() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction [Default]",
+      "method [Public, HideBySig, SpecialName] get_StarterDbContext() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext [Default]",
+      "property [get_AttendedDbContexts: Public] AttendedDbContexts() -> [System.Collections]System.Collections.Generic.List`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>",
+      "property [get_DbContextTransaction: Public] DbContextTransaction() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction",
+      "property [get_StarterDbContext: Public] StarterDbContext() -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext"
+    ],
+    "Abp.EntityFrameworkCore.Uow.DbContextEfCoreTransactionStrategy": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.EntityFrameworkCore.Uow.IEfCoreTransactionStrategy, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Family, HideBySig, SpecialName] get_ActiveTransactions() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, Abp.EntityFrameworkCore.Uow.ActiveTransactionInfo> [Default]",
+      "method [Family, HideBySig, SpecialName] get_Options() -> [Abp]Abp.Domain.Uow.UnitOfWorkOptions [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] Commit() -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] CreateDbContext<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>(System.String connectionString, Abp.EntityFrameworkCore.IDbContextResolver dbContextResolver) -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] CreateDbContextAsync<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>(System.String connectionString, Abp.EntityFrameworkCore.IDbContextResolver dbContextResolver) -> [System.Runtime]System.Threading.Tasks.Task`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] Dispose([Abp]Abp.Dependency.IIocResolver iocResolver) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] InitOptions([Abp]Abp.Domain.Uow.UnitOfWorkOptions options) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "property [get_ActiveTransactions: Family] ActiveTransactions() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, Abp.EntityFrameworkCore.Uow.ActiveTransactionInfo>",
+      "property [get_Options: Family] Options() -> [Abp]Abp.Domain.Uow.UnitOfWorkOptions"
+    ],
+    "Abp.EntityFrameworkCore.Uow.EfCoreUnitOfWork": [
+      "type [Public, BeforeFieldInit] : [Abp]Abp.Domain.Uow.UnitOfWorkBase implements [Abp]Abp.Dependency.ITransientDependency",
+      "method [Family, HideBySig, SpecialName] get_ActiveDbContexts() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> [Default]",
+      "method [Family, HideBySig, SpecialName] get_IocResolver() -> [Abp]Abp.Dependency.IIocResolver [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] Release([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext dbContext) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] SaveChangesInDbContext([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext dbContext) -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] SaveChangesInDbContextAsync([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext dbContext) -> [System.Runtime]System.Threading.Tasks.Task [Default]",
+      "method [Family, Virtual, HideBySig] BeginUow() -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig] CompleteUow() -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig] CompleteUowAsync() -> [System.Runtime]System.Threading.Tasks.Task [Default]",
+      "method [Family, Virtual, HideBySig] DisposeUow() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Dependency.IIocResolver iocResolver, [Abp]Abp.Domain.Uow.IConnectionStringResolver connectionStringResolver, [Abp]Abp.Domain.Uow.IUnitOfWorkFilterExecuter filterExecuter, Abp.EntityFrameworkCore.IDbContextResolver dbContextResolver, [Abp]Abp.Domain.Uow.IUnitOfWorkDefaultOptions defaultOptions, [Abp.EntityFramework.Common]Abp.EntityFramework.IDbContextTypeMatcher dbContextTypeMatcher, Abp.EntityFrameworkCore.Uow.IEfCoreTransactionStrategy transactionStrategy) -> System.Void [Default]",
+      "method [Public, HideBySig] GetAllActiveDbContexts() -> [System.Runtime]System.Collections.Generic.IReadOnlyList`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetOrCreateDbContext<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>([System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide [Optional, HasDefault] = null, System.String name [Optional, HasDefault] = null) -> !!0 [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetOrCreateDbContextAsync<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>([System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide [Optional, HasDefault] = null, System.String name [Optional, HasDefault] = null) -> [System.Runtime]System.Threading.Tasks.Task`1<!!0> [Default]",
+      "method [Public, Virtual, HideBySig] SaveChanges() -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] SaveChangesAsync() -> [System.Runtime]System.Threading.Tasks.Task [Default]",
+      "property [get_ActiveDbContexts: Family] ActiveDbContexts() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>",
+      "property [get_IocResolver: Family] IocResolver() -> [Abp]Abp.Dependency.IIocResolver"
+    ],
+    "Abp.EntityFrameworkCore.Uow.IEfCoreTransactionStrategy": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Commit() -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] CreateDbContext<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>(System.String connectionString, Abp.EntityFrameworkCore.IDbContextResolver dbContextResolver) -> [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] CreateDbContextAsync<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>(System.String connectionString, Abp.EntityFrameworkCore.IDbContextResolver dbContextResolver) -> [System.Runtime]System.Threading.Tasks.Task`1<[Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Dispose([Abp]Abp.Dependency.IIocResolver iocResolver) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] InitOptions([Abp]Abp.Domain.Uow.UnitOfWorkOptions options) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Uow.UnitOfWorkDbContextProvider`1": [
+      "type [Public, BeforeFieldInit]<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext> : [System.Runtime]System.Object implements Abp.EntityFrameworkCore.IDbContextProvider`1<!0>",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContext() -> !0 [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContext([System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide) -> !0 [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContextAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<!0> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetDbContextAsync([System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide) -> [System.Runtime]System.Threading.Tasks.Task`1<!0> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Domain.Uow.ICurrentUnitOfWorkProvider currentUnitOfWorkProvider) -> System.Void [Default]"
+    ],
+    "Abp.EntityFrameworkCore.Uow.UnitOfWorkExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] GetDbContext<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>([Abp]Abp.Domain.Uow.IActiveUnitOfWork unitOfWork, [System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide [Optional, HasDefault] = null, System.String name [Optional, HasDefault] = null) -> !!0 [Default]",
+      "method [Public, Static, HideBySig] GetDbContextAsync<TDbContext [None] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.DbContext>([Abp]Abp.Domain.Uow.IActiveUnitOfWork unitOfWork, [System.Runtime]System.Nullable`1<[Abp]Abp.MultiTenancy.MultiTenancySides> multiTenancySide [Optional, HasDefault] = null, System.String name [Optional, HasDefault] = null) -> [System.Runtime]System.Threading.Tasks.Task`1<!!0> [Default]"
+    ],
+    "Abp.EntityFrameworkCore.ValueConverters.AbpDateTimeValueConverter": [
+      "type [Public, BeforeFieldInit] : [Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter`2<[System.Runtime]System.Nullable`1<[System.Runtime]System.DateTime>, [System.Runtime]System.Nullable`1<[System.Runtime]System.DateTime>>",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Microsoft.EntityFrameworkCore]Microsoft.EntityFrameworkCore.Storage.ValueConversion.ConverterMappingHints mappingHints [Optional, HasDefault] = null) -> System.Void [Default]"
+    ]
+  },
+  "resources": []
+}

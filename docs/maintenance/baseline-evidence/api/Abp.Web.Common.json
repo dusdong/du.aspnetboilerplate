@@ -1,0 +1,884 @@
+{
+  "extractorVersion": 1,
+  "sha256": "505a8a2d9788e80a09325d74109deae7c001797c2583c0d63fdafbd92d757b2d",
+  "assembly": {
+    "name": "Abp.Web.Common",
+    "version": "10.5.1.0",
+    "culture": "neutral",
+    "publicKeyToken": null
+  },
+  "types": {
+    "Abp.Configuration.Startup.AbpWebConfigurationExtensions": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] AbpWebCommon([Abp]Abp.Configuration.Startup.IModuleConfigurations configurations) -> Abp.Web.Configuration.IAbpWebCommonModuleConfiguration [Default]"
+    ],
+    "Abp.Dependency.IPerWebRequestDependency": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]"
+    ],
+    "Abp.Web.AbpWebCommonModule": [
+      "type [Public, BeforeFieldInit] : [Abp]Abp.Modules.AbpModule",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] Initialize() -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig] PreInitialize() -> System.Void [Default]"
+    ],
+    "Abp.Web.AbpWebConsts": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "field [Public, Static, Literal, HasDefault] LocalizationSourceName : System.String = \"AbpWeb\""
+    ],
+    "Abp.Web.Api.Modeling.ActionApiDescriptionModel": [
+      "type [Public, Serializable, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String name, Abp.Web.Api.Modeling.ReturnValueApiDescriptionModel returnValue, System.String url, System.String httpMethod [Optional, HasDefault] = null) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_HttpMethod() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Name() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Parameters() -> [System.Runtime]System.Collections.Generic.IList`1<Abp.Web.Api.Modeling.ParameterApiDescriptionModel> [Default]",
+      "method [Public, HideBySig, SpecialName] get_ReturnValue() -> Abp.Web.Api.Modeling.ReturnValueApiDescriptionModel [Default]",
+      "method [Public, HideBySig, SpecialName] get_Url() -> System.String [Default]",
+      "method [Public, HideBySig] AddParameter(Abp.Web.Api.Modeling.ParameterApiDescriptionModel parameter) -> Abp.Web.Api.Modeling.ParameterApiDescriptionModel [Default]",
+      "property [get_HttpMethod: Public] HttpMethod() -> System.String",
+      "property [get_Name: Public] Name() -> System.String",
+      "property [get_Parameters: Public] Parameters() -> [System.Runtime]System.Collections.Generic.IList`1<Abp.Web.Api.Modeling.ParameterApiDescriptionModel>",
+      "property [get_ReturnValue: Public] ReturnValue() -> Abp.Web.Api.Modeling.ReturnValueApiDescriptionModel",
+      "property [get_Url: Public] Url() -> System.String"
+    ],
+    "Abp.Web.Api.Modeling.ApplicationApiDescriptionModel": [
+      "type [Public, Serializable, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Modules() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, Abp.Web.Api.Modeling.ModuleApiDescriptionModel> [Default]",
+      "method [Public, HideBySig] AddModule(Abp.Web.Api.Modeling.ModuleApiDescriptionModel module) -> Abp.Web.Api.Modeling.ModuleApiDescriptionModel [Default]",
+      "method [Public, HideBySig] CreateSubModel(System.String[] modules [Optional, HasDefault] = null, System.String[] controllers [Optional, HasDefault] = null, System.String[] actions [Optional, HasDefault] = null) -> Abp.Web.Api.Modeling.ApplicationApiDescriptionModel [Default]",
+      "method [Public, HideBySig] GetOrAddModule(System.String name) -> Abp.Web.Api.Modeling.ModuleApiDescriptionModel [Default]",
+      "property [get_Modules: Public] Modules() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, Abp.Web.Api.Modeling.ModuleApiDescriptionModel>"
+    ],
+    "Abp.Web.Api.Modeling.ControllerApiDescriptionModel": [
+      "type [Public, Serializable, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String name) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Actions() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, Abp.Web.Api.Modeling.ActionApiDescriptionModel> [Default]",
+      "method [Public, HideBySig, SpecialName] get_Name() -> System.String [Default]",
+      "method [Public, HideBySig] AddAction(Abp.Web.Api.Modeling.ActionApiDescriptionModel action) -> Abp.Web.Api.Modeling.ActionApiDescriptionModel [Default]",
+      "method [Public, HideBySig] CreateSubModel(System.String[] actions) -> Abp.Web.Api.Modeling.ControllerApiDescriptionModel [Default]",
+      "property [get_Actions: Public] Actions() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, Abp.Web.Api.Modeling.ActionApiDescriptionModel>",
+      "property [get_Name: Public] Name() -> System.String"
+    ],
+    "Abp.Web.Api.Modeling.IApiDescriptionModelProvider": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] CreateModel() -> Abp.Web.Api.Modeling.ApplicationApiDescriptionModel [Default]"
+    ],
+    "Abp.Web.Api.Modeling.ModuleApiDescriptionModel": [
+      "type [Public, Serializable, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String name) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Controllers() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, Abp.Web.Api.Modeling.ControllerApiDescriptionModel> [Default]",
+      "method [Public, HideBySig, SpecialName] get_Name() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] set_Name(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig] AddController(Abp.Web.Api.Modeling.ControllerApiDescriptionModel controller) -> Abp.Web.Api.Modeling.ControllerApiDescriptionModel [Default]",
+      "method [Public, HideBySig] CreateSubModel(System.String[] controllers, System.String[] actions) -> Abp.Web.Api.Modeling.ModuleApiDescriptionModel [Default]",
+      "method [Public, HideBySig] GetOrAddController(System.String name) -> Abp.Web.Api.Modeling.ControllerApiDescriptionModel [Default]",
+      "property [get_Controllers: Public] Controllers() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, Abp.Web.Api.Modeling.ControllerApiDescriptionModel>",
+      "property [get_Name: Public, set_Name: Public] Name() -> System.String"
+    ],
+    "Abp.Web.Api.Modeling.ParameterApiDescriptionModel": [
+      "type [Public, Serializable, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String name, System.String nameOnMethod, [System.Runtime]System.Type type, System.Boolean isOptional [Optional, HasDefault] = false, System.Object defaultValue [Optional, HasDefault] = null, System.String[] constraintTypes [Optional, HasDefault] = null, System.String bindingSourceId [Optional, HasDefault] = null) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_BindingSourceId() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_ConstraintTypes() -> System.String[] [Default]",
+      "method [Public, HideBySig, SpecialName] get_DefaultValue() -> System.Object [Default]",
+      "method [Public, HideBySig, SpecialName] get_IsOptional() -> System.Boolean [Default]",
+      "method [Public, HideBySig, SpecialName] get_Name() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_NameOnMethod() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Type() -> [System.Runtime]System.Type [Default]",
+      "method [Public, HideBySig, SpecialName] get_TypeAsString() -> System.String [Default]",
+      "property [get_BindingSourceId: Public] BindingSourceId() -> System.String",
+      "property [get_ConstraintTypes: Public] ConstraintTypes() -> System.String[]",
+      "property [get_DefaultValue: Public] DefaultValue() -> System.Object",
+      "property [get_IsOptional: Public] IsOptional() -> System.Boolean",
+      "property [get_Name: Public] Name() -> System.String",
+      "property [get_NameOnMethod: Public] NameOnMethod() -> System.String",
+      "property [get_Type: Public] Type() -> [System.Runtime]System.Type",
+      "property [get_TypeAsString: Public] TypeAsString() -> System.String"
+    ],
+    "Abp.Web.Api.Modeling.ReturnValueApiDescriptionModel": [
+      "type [Public, Serializable, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([System.Runtime]System.Type type) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Type() -> [System.Runtime]System.Type [Default]",
+      "method [Public, HideBySig, SpecialName] get_TypeAsString() -> System.String [Default]",
+      "property [get_Type: Public] Type() -> [System.Runtime]System.Type",
+      "property [get_TypeAsString: Public] TypeAsString() -> System.String"
+    ],
+    "Abp.Web.Api.ProxyScripting.ApiProxyGenerationOptions": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String generatorType, System.Boolean useCache [Optional, HasDefault] = true) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Actions() -> System.String[] [Default]",
+      "method [Public, HideBySig, SpecialName] get_Controllers() -> System.String[] [Default]",
+      "method [Public, HideBySig, SpecialName] get_GeneratorType() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Modules() -> System.String[] [Default]",
+      "method [Public, HideBySig, SpecialName] get_Properties() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, System.String> [Default]",
+      "method [Public, HideBySig, SpecialName] get_UseCache() -> System.Boolean [Default]",
+      "method [Public, HideBySig, SpecialName] set_Actions(System.String[] value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Controllers(System.String[] value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_GeneratorType(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Modules(System.String[] value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Properties([System.Runtime]System.Collections.Generic.IDictionary`2<System.String, System.String> value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_UseCache(System.Boolean value) -> System.Void [Default]",
+      "method [Public, HideBySig] IsPartialRequest() -> System.Boolean [Default]",
+      "property [get_Actions: Public, set_Actions: Public] Actions() -> System.String[]",
+      "property [get_Controllers: Public, set_Controllers: Public] Controllers() -> System.String[]",
+      "property [get_GeneratorType: Public, set_GeneratorType: Public] GeneratorType() -> System.String",
+      "property [get_Modules: Public, set_Modules: Public] Modules() -> System.String[]",
+      "property [get_Properties: Public, set_Properties: Public] Properties() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, System.String>",
+      "property [get_UseCache: Public, set_UseCache: Public] UseCache() -> System.Boolean"
+    ],
+    "Abp.Web.Api.ProxyScripting.ApiProxyScriptManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Api.ProxyScripting.IApiProxyScriptManager, [Abp]Abp.Dependency.ISingletonDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetScript(Abp.Web.Api.ProxyScripting.ApiProxyGenerationOptions options) -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.Web.Api.Modeling.IApiDescriptionModelProvider modelProvider, Abp.Web.Api.ProxyScripting.Configuration.IApiProxyScriptingConfiguration configuration, [Abp]Abp.Dependency.IIocResolver iocResolver) -> System.Void [Default]"
+    ],
+    "Abp.Web.Api.ProxyScripting.Configuration.ApiProxyScriptingConfiguration": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Api.ProxyScripting.Configuration.IApiProxyScriptingConfiguration",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_Generators() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, [System.Runtime]System.Type> [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_RemoveAsyncPostfixOnProxyGeneration() -> System.Boolean [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_RemoveAsyncPostfixOnProxyGeneration(System.Boolean value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "property [get_Generators: Public] Generators() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, [System.Runtime]System.Type>",
+      "property [get_RemoveAsyncPostfixOnProxyGeneration: Public, set_RemoveAsyncPostfixOnProxyGeneration: Public] RemoveAsyncPostfixOnProxyGeneration() -> System.Boolean"
+    ],
+    "Abp.Web.Api.ProxyScripting.Configuration.IApiProxyScriptingConfiguration": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_Generators() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, [System.Runtime]System.Type> [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_RemoveAsyncPostfixOnProxyGeneration() -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_RemoveAsyncPostfixOnProxyGeneration(System.Boolean value) -> System.Void [Default]",
+      "property [get_Generators: Public] Generators() -> [System.Runtime]System.Collections.Generic.IDictionary`2<System.String, [System.Runtime]System.Type>",
+      "property [get_RemoveAsyncPostfixOnProxyGeneration: Public, set_RemoveAsyncPostfixOnProxyGeneration: Public] RemoveAsyncPostfixOnProxyGeneration() -> System.Boolean"
+    ],
+    "Abp.Web.Api.ProxyScripting.Generators.IProxyScriptGenerator": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] CreateScript(Abp.Web.Api.Modeling.ApplicationApiDescriptionModel model) -> System.String [Default]"
+    ],
+    "Abp.Web.Api.ProxyScripting.Generators.JQuery.JQueryProxyScriptGenerator": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Api.ProxyScripting.Generators.IProxyScriptGenerator, [Abp]Abp.Dependency.ITransientDependency",
+      "field [Public, Static, Literal, HasDefault] Name : System.String = \"jquery\"",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] CreateScript(Abp.Web.Api.Modeling.ApplicationApiDescriptionModel model) -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]"
+    ],
+    "Abp.Web.Api.ProxyScripting.Generators.ParameterBindingSources": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "field [Public, Static, Literal, HasDefault] Body : System.String = \"Body\"",
+      "field [Public, Static, Literal, HasDefault] Custom : System.String = \"Custom\"",
+      "field [Public, Static, Literal, HasDefault] Form : System.String = \"Form\"",
+      "field [Public, Static, Literal, HasDefault] Header : System.String = \"Header\"",
+      "field [Public, Static, Literal, HasDefault] ModelBinding : System.String = \"ModelBinding\"",
+      "field [Public, Static, Literal, HasDefault] Path : System.String = \"Path\"",
+      "field [Public, Static, Literal, HasDefault] Query : System.String = \"Query\"",
+      "field [Public, Static, Literal, HasDefault] Services : System.String = \"Services\""
+    ],
+    "Abp.Web.Api.ProxyScripting.Generators.ProxyScriptingHelper": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "field [Public, Static, Literal, HasDefault] DefaultHttpVerb : System.String = \"POST\"",
+      "method [Public, Static, HideBySig] GenerateBody(Abp.Web.Api.Modeling.ActionApiDescriptionModel action) -> System.String [Default]",
+      "method [Public, Static, HideBySig] GenerateFormPostData(Abp.Web.Api.Modeling.ActionApiDescriptionModel action, System.Int32 indent [Optional, HasDefault] = 0) -> System.String [Default]",
+      "method [Public, Static, HideBySig] GenerateHeaders(Abp.Web.Api.Modeling.ActionApiDescriptionModel action, System.Int32 indent [Optional, HasDefault] = 0) -> System.String [Default]",
+      "method [Public, Static, HideBySig] GenerateUrlWithParameters(Abp.Web.Api.Modeling.ActionApiDescriptionModel action) -> System.String [Default]",
+      "method [Public, Static, HideBySig] GetConventionalVerbForMethodName(System.String methodName) -> System.String [Default]"
+    ],
+    "Abp.Web.Api.ProxyScripting.Generators.ProxyScriptingJsFuncHelper": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] CreateJsObjectLiteral(Abp.Web.Api.Modeling.ParameterApiDescriptionModel[] parameters, System.Int32 indent [Optional, HasDefault] = 0) -> System.String [Default]",
+      "method [Public, Static, HideBySig] GenerateJsFuncParameterList(Abp.Web.Api.Modeling.ActionApiDescriptionModel action, System.String ajaxParametersName) -> System.String [Default]",
+      "method [Public, Static, HideBySig] GetParamNameInJsFunc(Abp.Web.Api.Modeling.ParameterApiDescriptionModel parameterInfo) -> System.String [Default]",
+      "method [Public, Static, HideBySig] NormalizeJsVariableName(System.String name, System.String additionalChars [Optional, HasDefault] = \"\") -> System.String [Default]",
+      "method [Public, Static, HideBySig] WrapWithBracketsOrWithDotPrefix(System.String name) -> System.String [Default]"
+    ],
+    "Abp.Web.Api.ProxyScripting.IApiProxyScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScript(Abp.Web.Api.ProxyScripting.ApiProxyGenerationOptions options) -> System.String [Default]"
+    ],
+    "Abp.Web.Authorization.AuthorizationScriptManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Authorization.IAuthorizationScriptManager, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetScriptAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.String> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Authorization.IPermissionManager permissionManager) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession [Default]",
+      "method [Public, HideBySig, SpecialName] get_PermissionChecker() -> [Abp]Abp.Authorization.IPermissionChecker [Default]",
+      "method [Public, HideBySig, SpecialName] set_AbpSession([Abp]Abp.Runtime.Session.IAbpSession value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_PermissionChecker([Abp]Abp.Authorization.IPermissionChecker value) -> System.Void [Default]",
+      "property [get_AbpSession: Public, set_AbpSession: Public] AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession",
+      "property [get_PermissionChecker: Public, set_PermissionChecker: Public] PermissionChecker() -> [Abp]Abp.Authorization.IPermissionChecker"
+    ],
+    "Abp.Web.Authorization.IAuthorizationScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScriptAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.String> [Default]"
+    ],
+    "Abp.Web.Configuration.AbpUserConfigurationBuilder": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements [Abp]Abp.Dependency.ITransientDependency",
+      "method [Family, HideBySig, SpecialName] get_AbpAntiForgeryConfiguration() -> Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration [Default]",
+      "method [Family, HideBySig, SpecialName] get_AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession [Default]",
+      "method [Family, HideBySig, SpecialName] get_CustomDataConfig() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.Object> [Default]",
+      "method [Family, HideBySig, SpecialName] get_FeatureChecker() -> [Abp]Abp.Application.Features.IFeatureChecker [Default]",
+      "method [Family, HideBySig, SpecialName] get_FeatureManager() -> [Abp]Abp.Application.Features.IFeatureManager [Default]",
+      "method [Family, HideBySig, SpecialName] get_LanguageManager() -> [Abp]Abp.Localization.ILanguageManager [Default]",
+      "method [Family, HideBySig, SpecialName] get_LocalizationManager() -> [Abp]Abp.Localization.ILocalizationManager [Default]",
+      "method [Family, HideBySig, SpecialName] get_MultiTenancyConfig() -> [Abp]Abp.Configuration.Startup.IMultiTenancyConfig [Default]",
+      "method [Family, HideBySig, SpecialName] get_PermissionChecker() -> [Abp]Abp.Authorization.IPermissionChecker [Default]",
+      "method [Family, HideBySig, SpecialName] get_PermissionManager() -> [Abp]Abp.Authorization.IPermissionManager [Default]",
+      "method [Family, HideBySig, SpecialName] get_SettingDefinitionManager() -> [Abp]Abp.Configuration.ISettingDefinitionManager [Default]",
+      "method [Family, HideBySig, SpecialName] get_SettingManager() -> [Abp]Abp.Configuration.ISettingManager [Default]",
+      "method [Family, HideBySig, SpecialName] get_UserNavigationManager() -> [Abp]Abp.Application.Navigation.IUserNavigationManager [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserAuthConfig() -> [System.Runtime]System.Threading.Tasks.Task`1<Abp.Web.Models.AbpUserConfiguration.AbpUserAuthConfigDto> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserClockConfig() -> Abp.Web.Models.AbpUserConfiguration.AbpUserClockConfigDto [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserFeaturesConfig() -> [System.Runtime]System.Threading.Tasks.Task`1<Abp.Web.Models.AbpUserConfiguration.AbpUserFeatureConfigDto> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserLocalizationConfig() -> Abp.Web.Models.AbpUserConfiguration.AbpUserLocalizationConfigDto [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserMultiTenancyConfig() -> Abp.Web.Models.AbpUserConfiguration.AbpMultiTenancyConfigDto [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserNavConfig() -> [System.Runtime]System.Threading.Tasks.Task`1<Abp.Web.Models.AbpUserConfiguration.AbpUserNavConfigDto> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserSecurityConfig() -> Abp.Web.Models.AbpUserConfiguration.AbpUserSecurityConfigDto [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserSessionConfig() -> Abp.Web.Models.AbpUserConfiguration.AbpUserSessionConfigDto [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserSettingConfig() -> [System.Runtime]System.Threading.Tasks.Task`1<Abp.Web.Models.AbpUserConfiguration.AbpUserSettingConfigDto> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetUserTimingConfig() -> [System.Runtime]System.Threading.Tasks.Task`1<Abp.Web.Models.AbpUserConfiguration.AbpUserTimingConfigDto> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Configuration.Startup.IMultiTenancyConfig multiTenancyConfig, [Abp]Abp.Localization.ILanguageManager languageManager, [Abp]Abp.Localization.ILocalizationManager localizationManager, [Abp]Abp.Application.Features.IFeatureManager featureManager, [Abp]Abp.Application.Features.IFeatureChecker featureChecker, [Abp]Abp.Authorization.IPermissionManager permissionManager, [Abp]Abp.Application.Navigation.IUserNavigationManager userNavigationManager, [Abp]Abp.Configuration.ISettingDefinitionManager settingDefinitionManager, [Abp]Abp.Configuration.ISettingManager settingManager, Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration abpAntiForgeryConfiguration, [Abp]Abp.Runtime.Session.IAbpSession abpSession, [Abp]Abp.Authorization.IPermissionChecker permissionChecker, [Abp]Abp.Dependency.IIocResolver iocResolver, [Abp]Abp.Configuration.Startup.IAbpStartupConfiguration startupConfiguration) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GetAll() -> [System.Runtime]System.Threading.Tasks.Task`1<Abp.Web.Models.AbpUserConfiguration.AbpUserConfigurationDto> [Default]",
+      "property [get_AbpAntiForgeryConfiguration: Family] AbpAntiForgeryConfiguration() -> Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration",
+      "property [get_AbpSession: Family] AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession",
+      "property [get_CustomDataConfig: Family] CustomDataConfig() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.Object>",
+      "property [get_FeatureChecker: Family] FeatureChecker() -> [Abp]Abp.Application.Features.IFeatureChecker",
+      "property [get_FeatureManager: Family] FeatureManager() -> [Abp]Abp.Application.Features.IFeatureManager",
+      "property [get_LanguageManager: Family] LanguageManager() -> [Abp]Abp.Localization.ILanguageManager",
+      "property [get_LocalizationManager: Family] LocalizationManager() -> [Abp]Abp.Localization.ILocalizationManager",
+      "property [get_MultiTenancyConfig: Family] MultiTenancyConfig() -> [Abp]Abp.Configuration.Startup.IMultiTenancyConfig",
+      "property [get_PermissionChecker: Family] PermissionChecker() -> [Abp]Abp.Authorization.IPermissionChecker",
+      "property [get_PermissionManager: Family] PermissionManager() -> [Abp]Abp.Authorization.IPermissionManager",
+      "property [get_SettingDefinitionManager: Family] SettingDefinitionManager() -> [Abp]Abp.Configuration.ISettingDefinitionManager",
+      "property [get_SettingManager: Family] SettingManager() -> [Abp]Abp.Configuration.ISettingManager",
+      "property [get_UserNavigationManager: Family] UserNavigationManager() -> [Abp]Abp.Application.Navigation.IUserNavigationManager"
+    ],
+    "Abp.Web.Configuration.CustomConfigScriptManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Configuration.ICustomConfigScriptManager, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetScript() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Configuration.Startup.IAbpStartupConfiguration abpStartupConfiguration) -> System.Void [Default]"
+    ],
+    "Abp.Web.Configuration.IAbpWebCommonModuleConfiguration": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_AntiForgery() -> Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_ApiProxyScripting() -> Abp.Web.Api.ProxyScripting.Configuration.IApiProxyScriptingConfiguration [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_EmbeddedResources() -> Abp.Web.Configuration.IWebEmbeddedResourcesConfiguration [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_MultiTenancy() -> Abp.Web.MultiTenancy.IWebMultiTenancyConfiguration [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_SendAllExceptionsToClients() -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_WrapResultFilters() -> Abp.Web.Results.Filters.WrapResultFilterCollection [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_SendAllExceptionsToClients(System.Boolean value) -> System.Void [Default]",
+      "property [get_AntiForgery: Public] AntiForgery() -> Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration",
+      "property [get_ApiProxyScripting: Public] ApiProxyScripting() -> Abp.Web.Api.ProxyScripting.Configuration.IApiProxyScriptingConfiguration",
+      "property [get_EmbeddedResources: Public] EmbeddedResources() -> Abp.Web.Configuration.IWebEmbeddedResourcesConfiguration",
+      "property [get_MultiTenancy: Public] MultiTenancy() -> Abp.Web.MultiTenancy.IWebMultiTenancyConfiguration",
+      "property [get_SendAllExceptionsToClients: Public, set_SendAllExceptionsToClients: Public] SendAllExceptionsToClients() -> System.Boolean",
+      "property [get_WrapResultFilters: Public] WrapResultFilters() -> Abp.Web.Results.Filters.WrapResultFilterCollection"
+    ],
+    "Abp.Web.Configuration.ICustomConfigScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScript() -> System.String [Default]"
+    ],
+    "Abp.Web.Configuration.IWebEmbeddedResourcesConfiguration": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_IgnoredFileExtensions() -> [System.Collections]System.Collections.Generic.HashSet`1<System.String> [Default]",
+      "property [get_IgnoredFileExtensions: Public] IgnoredFileExtensions() -> [System.Collections]System.Collections.Generic.HashSet`1<System.String>"
+    ],
+    "Abp.Web.Features.FeaturesScriptManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Features.IFeaturesScriptManager, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetScriptAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.String> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Application.Features.IFeatureManager featureManager, [Abp]Abp.Application.Features.IFeatureChecker featureChecker) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession [Default]",
+      "method [Public, HideBySig, SpecialName] set_AbpSession([Abp]Abp.Runtime.Session.IAbpSession value) -> System.Void [Default]",
+      "property [get_AbpSession: Public, set_AbpSession: Public] AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession"
+    ],
+    "Abp.Web.Features.IFeaturesScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScriptAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.String> [Default]"
+    ],
+    "Abp.Web.Http.HttpEncode": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig, SpecialName] get_JavaScriptEncodeAmpersand() -> System.Boolean [Default]",
+      "method [Public, Static, HideBySig, SpecialName] set_JavaScriptEncodeAmpersand(System.Boolean value) -> System.Void [Default]",
+      "method [Public, Static, HideBySig] JavaScriptStringEncode(System.String value) -> System.String [Default]",
+      "property [get_JavaScriptEncodeAmpersand: Public, set_JavaScriptEncodeAmpersand: Public] JavaScriptEncodeAmpersand() -> System.Boolean"
+    ],
+    "Abp.Web.HttpVerb": [
+      "type [Public, Sealed] : [System.Runtime]System.Enum",
+      "field [Public, SpecialName, RTSpecialName] value__ : System.Int32",
+      "field [Public, Static, Literal, HasDefault] Delete : Abp.Web.HttpVerb = 3",
+      "field [Public, Static, Literal, HasDefault] Get : Abp.Web.HttpVerb = 0",
+      "field [Public, Static, Literal, HasDefault] Head : Abp.Web.HttpVerb = 6",
+      "field [Public, Static, Literal, HasDefault] Options : Abp.Web.HttpVerb = 4",
+      "field [Public, Static, Literal, HasDefault] Patch : Abp.Web.HttpVerb = 7",
+      "field [Public, Static, Literal, HasDefault] Post : Abp.Web.HttpVerb = 1",
+      "field [Public, Static, Literal, HasDefault] Put : Abp.Web.HttpVerb = 2",
+      "field [Public, Static, Literal, HasDefault] Trace : Abp.Web.HttpVerb = 5"
+    ],
+    "Abp.Web.HttpVerbHelper": [
+      "type [Public, Abstract, Sealed, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, Static, HideBySig] Create(System.String httpMethod) -> Abp.Web.HttpVerb [Default]"
+    ],
+    "Abp.Web.Localization.ILocalizationScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScript() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScript([System.Runtime]System.Globalization.CultureInfo cultureInfo) -> System.String [Default]"
+    ],
+    "Abp.Web.Minifier.IJavaScriptMinifier": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Minify(System.String javaScriptCode) -> System.String [Default]"
+    ],
+    "Abp.Web.Minifier.NUglifyJavaScriptMinifier": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Minifier.IJavaScriptMinifier",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] Minify(System.String javaScriptCode) -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Logger() -> [Castle.Core]Castle.Core.Logging.ILogger [Default]",
+      "method [Public, HideBySig, SpecialName] set_Logger([Castle.Core]Castle.Core.Logging.ILogger value) -> System.Void [Default]",
+      "property [get_Logger: Public, set_Logger: Public] Logger() -> [Castle.Core]Castle.Core.Logging.ILogger"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpLocalizationSourceDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Name() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Type() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] set_Name(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Type(System.String value) -> System.Void [Default]",
+      "property [get_Name: Public, set_Name: Public] Name() -> System.String",
+      "property [get_Type: Public, set_Type: Public] Type() -> System.String"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpMultiTenancyConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_IgnoreFeatureCheckForHostUsers() -> System.Boolean [Default]",
+      "method [Public, HideBySig, SpecialName] get_IsEnabled() -> System.Boolean [Default]",
+      "method [Public, HideBySig, SpecialName] get_Sides() -> Abp.Web.Models.AbpUserConfiguration.AbpMultiTenancySidesConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] set_IgnoreFeatureCheckForHostUsers(System.Boolean value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_IsEnabled(System.Boolean value) -> System.Void [Default]",
+      "property [get_IgnoreFeatureCheckForHostUsers: Public, set_IgnoreFeatureCheckForHostUsers: Public] IgnoreFeatureCheckForHostUsers() -> System.Boolean",
+      "property [get_IsEnabled: Public, set_IsEnabled: Public] IsEnabled() -> System.Boolean",
+      "property [get_Sides: Public] Sides() -> Abp.Web.Models.AbpUserConfiguration.AbpMultiTenancySidesConfigDto"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpMultiTenancySidesConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Host() -> [Abp]Abp.MultiTenancy.MultiTenancySides [Default]",
+      "method [Public, HideBySig, SpecialName] get_Tenant() -> [Abp]Abp.MultiTenancy.MultiTenancySides [Default]",
+      "property [get_Host: Public] Host() -> [Abp]Abp.MultiTenancy.MultiTenancySides",
+      "property [get_Tenant: Public] Tenant() -> [Abp]Abp.MultiTenancy.MultiTenancySides"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpStringValueDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Value() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] set_Value(System.String value) -> System.Void [Default]",
+      "property [get_Value: Public, set_Value: Public] Value() -> System.String"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserAntiForgeryConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_TokenCookieName() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_TokenHeaderName() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] set_TokenCookieName(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_TokenHeaderName(System.String value) -> System.Void [Default]",
+      "property [get_TokenCookieName: Public, set_TokenCookieName: Public] TokenCookieName() -> System.String",
+      "property [get_TokenHeaderName: Public, set_TokenHeaderName: Public] TokenHeaderName() -> System.String"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserAuthConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_AllPermissions() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String> [Default]",
+      "method [Public, HideBySig, SpecialName] get_GrantedPermissions() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String> [Default]",
+      "method [Public, HideBySig, SpecialName] set_AllPermissions([System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String> value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_GrantedPermissions([System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String> value) -> System.Void [Default]",
+      "property [get_AllPermissions: Public, set_AllPermissions: Public] AllPermissions() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String>",
+      "property [get_GrantedPermissions: Public, set_GrantedPermissions: Public] GrantedPermissions() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String>"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserClockConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Provider() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] set_Provider(System.String value) -> System.Void [Default]",
+      "property [get_Provider: Public, set_Provider: Public] Provider() -> System.String"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserConfigurationDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Auth() -> Abp.Web.Models.AbpUserConfiguration.AbpUserAuthConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_Clock() -> Abp.Web.Models.AbpUserConfiguration.AbpUserClockConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_Custom() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.Object> [Default]",
+      "method [Public, HideBySig, SpecialName] get_Features() -> Abp.Web.Models.AbpUserConfiguration.AbpUserFeatureConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_Localization() -> Abp.Web.Models.AbpUserConfiguration.AbpUserLocalizationConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_MultiTenancy() -> Abp.Web.Models.AbpUserConfiguration.AbpMultiTenancyConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_Nav() -> Abp.Web.Models.AbpUserConfiguration.AbpUserNavConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_Security() -> Abp.Web.Models.AbpUserConfiguration.AbpUserSecurityConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_Session() -> Abp.Web.Models.AbpUserConfiguration.AbpUserSessionConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_Setting() -> Abp.Web.Models.AbpUserConfiguration.AbpUserSettingConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_Timing() -> Abp.Web.Models.AbpUserConfiguration.AbpUserTimingConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] set_Auth(Abp.Web.Models.AbpUserConfiguration.AbpUserAuthConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Clock(Abp.Web.Models.AbpUserConfiguration.AbpUserClockConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Custom([System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.Object> value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Features(Abp.Web.Models.AbpUserConfiguration.AbpUserFeatureConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Localization(Abp.Web.Models.AbpUserConfiguration.AbpUserLocalizationConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_MultiTenancy(Abp.Web.Models.AbpUserConfiguration.AbpMultiTenancyConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Nav(Abp.Web.Models.AbpUserConfiguration.AbpUserNavConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Security(Abp.Web.Models.AbpUserConfiguration.AbpUserSecurityConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Session(Abp.Web.Models.AbpUserConfiguration.AbpUserSessionConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Setting(Abp.Web.Models.AbpUserConfiguration.AbpUserSettingConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Timing(Abp.Web.Models.AbpUserConfiguration.AbpUserTimingConfigDto value) -> System.Void [Default]",
+      "property [get_Auth: Public, set_Auth: Public] Auth() -> Abp.Web.Models.AbpUserConfiguration.AbpUserAuthConfigDto",
+      "property [get_Clock: Public, set_Clock: Public] Clock() -> Abp.Web.Models.AbpUserConfiguration.AbpUserClockConfigDto",
+      "property [get_Custom: Public, set_Custom: Public] Custom() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.Object>",
+      "property [get_Features: Public, set_Features: Public] Features() -> Abp.Web.Models.AbpUserConfiguration.AbpUserFeatureConfigDto",
+      "property [get_Localization: Public, set_Localization: Public] Localization() -> Abp.Web.Models.AbpUserConfiguration.AbpUserLocalizationConfigDto",
+      "property [get_MultiTenancy: Public, set_MultiTenancy: Public] MultiTenancy() -> Abp.Web.Models.AbpUserConfiguration.AbpMultiTenancyConfigDto",
+      "property [get_Nav: Public, set_Nav: Public] Nav() -> Abp.Web.Models.AbpUserConfiguration.AbpUserNavConfigDto",
+      "property [get_Security: Public, set_Security: Public] Security() -> Abp.Web.Models.AbpUserConfiguration.AbpUserSecurityConfigDto",
+      "property [get_Session: Public, set_Session: Public] Session() -> Abp.Web.Models.AbpUserConfiguration.AbpUserSessionConfigDto",
+      "property [get_Setting: Public, set_Setting: Public] Setting() -> Abp.Web.Models.AbpUserConfiguration.AbpUserSettingConfigDto",
+      "property [get_Timing: Public, set_Timing: Public] Timing() -> Abp.Web.Models.AbpUserConfiguration.AbpUserTimingConfigDto"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserCurrentCultureConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_DisplayName() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Name() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] set_DisplayName(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Name(System.String value) -> System.Void [Default]",
+      "property [get_DisplayName: Public, set_DisplayName: Public] DisplayName() -> System.String",
+      "property [get_Name: Public, set_Name: Public] Name() -> System.String"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserFeatureConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_AllFeatures() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, Abp.Web.Models.AbpUserConfiguration.AbpStringValueDto> [Default]",
+      "method [Public, HideBySig, SpecialName] set_AllFeatures([System.Collections]System.Collections.Generic.Dictionary`2<System.String, Abp.Web.Models.AbpUserConfiguration.AbpStringValueDto> value) -> System.Void [Default]",
+      "property [get_AllFeatures: Public, set_AllFeatures: Public] AllFeatures() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, Abp.Web.Models.AbpUserConfiguration.AbpStringValueDto>"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserIanaTimeZoneConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_TimeZoneId() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] set_TimeZoneId(System.String value) -> System.Void [Default]",
+      "property [get_TimeZoneId: Public, set_TimeZoneId: Public] TimeZoneId() -> System.String"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserLocalizationConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_CurrentCulture() -> Abp.Web.Models.AbpUserConfiguration.AbpUserCurrentCultureConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_CurrentLanguage() -> [Abp]Abp.Localization.LanguageInfo [Default]",
+      "method [Public, HideBySig, SpecialName] get_Languages() -> [System.Collections]System.Collections.Generic.List`1<[Abp]Abp.Localization.LanguageInfo> [Default]",
+      "method [Public, HideBySig, SpecialName] get_Sources() -> [System.Collections]System.Collections.Generic.List`1<Abp.Web.Models.AbpUserConfiguration.AbpLocalizationSourceDto> [Default]",
+      "method [Public, HideBySig, SpecialName] get_Values() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String>> [Default]",
+      "method [Public, HideBySig, SpecialName] set_CurrentCulture(Abp.Web.Models.AbpUserConfiguration.AbpUserCurrentCultureConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_CurrentLanguage([Abp]Abp.Localization.LanguageInfo value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Languages([System.Collections]System.Collections.Generic.List`1<[Abp]Abp.Localization.LanguageInfo> value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Sources([System.Collections]System.Collections.Generic.List`1<Abp.Web.Models.AbpUserConfiguration.AbpLocalizationSourceDto> value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Values([System.Collections]System.Collections.Generic.Dictionary`2<System.String, [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String>> value) -> System.Void [Default]",
+      "property [get_CurrentCulture: Public, set_CurrentCulture: Public] CurrentCulture() -> Abp.Web.Models.AbpUserConfiguration.AbpUserCurrentCultureConfigDto",
+      "property [get_CurrentLanguage: Public, set_CurrentLanguage: Public] CurrentLanguage() -> [Abp]Abp.Localization.LanguageInfo",
+      "property [get_Languages: Public, set_Languages: Public] Languages() -> [System.Collections]System.Collections.Generic.List`1<[Abp]Abp.Localization.LanguageInfo>",
+      "property [get_Sources: Public, set_Sources: Public] Sources() -> [System.Collections]System.Collections.Generic.List`1<Abp.Web.Models.AbpUserConfiguration.AbpLocalizationSourceDto>",
+      "property [get_Values: Public, set_Values: Public] Values() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String>>"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserNavConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Menus() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, [Abp]Abp.Application.Navigation.UserMenu> [Default]",
+      "method [Public, HideBySig, SpecialName] set_Menus([System.Collections]System.Collections.Generic.Dictionary`2<System.String, [Abp]Abp.Application.Navigation.UserMenu> value) -> System.Void [Default]",
+      "property [get_Menus: Public, set_Menus: Public] Menus() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, [Abp]Abp.Application.Navigation.UserMenu>"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserSecurityConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_AntiForgery() -> Abp.Web.Models.AbpUserConfiguration.AbpUserAntiForgeryConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] set_AntiForgery(Abp.Web.Models.AbpUserConfiguration.AbpUserAntiForgeryConfigDto value) -> System.Void [Default]",
+      "property [get_AntiForgery: Public, set_AntiForgery: Public] AntiForgery() -> Abp.Web.Models.AbpUserConfiguration.AbpUserAntiForgeryConfigDto"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserSessionConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_ImpersonatorTenantId() -> [System.Runtime]System.Nullable`1<System.Int32> [Default]",
+      "method [Public, HideBySig, SpecialName] get_ImpersonatorUserId() -> [System.Runtime]System.Nullable`1<System.Int64> [Default]",
+      "method [Public, HideBySig, SpecialName] get_MultiTenancySide() -> [Abp]Abp.MultiTenancy.MultiTenancySides [Default]",
+      "method [Public, HideBySig, SpecialName] get_TenantId() -> [System.Runtime]System.Nullable`1<System.Int32> [Default]",
+      "method [Public, HideBySig, SpecialName] get_UserId() -> [System.Runtime]System.Nullable`1<System.Int64> [Default]",
+      "method [Public, HideBySig, SpecialName] set_ImpersonatorTenantId([System.Runtime]System.Nullable`1<System.Int32> value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_ImpersonatorUserId([System.Runtime]System.Nullable`1<System.Int64> value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_MultiTenancySide([Abp]Abp.MultiTenancy.MultiTenancySides value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_TenantId([System.Runtime]System.Nullable`1<System.Int32> value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_UserId([System.Runtime]System.Nullable`1<System.Int64> value) -> System.Void [Default]",
+      "property [get_ImpersonatorTenantId: Public, set_ImpersonatorTenantId: Public] ImpersonatorTenantId() -> [System.Runtime]System.Nullable`1<System.Int32>",
+      "property [get_ImpersonatorUserId: Public, set_ImpersonatorUserId: Public] ImpersonatorUserId() -> [System.Runtime]System.Nullable`1<System.Int64>",
+      "property [get_MultiTenancySide: Public, set_MultiTenancySide: Public] MultiTenancySide() -> [Abp]Abp.MultiTenancy.MultiTenancySides",
+      "property [get_TenantId: Public, set_TenantId: Public] TenantId() -> [System.Runtime]System.Nullable`1<System.Int32>",
+      "property [get_UserId: Public, set_UserId: Public] UserId() -> [System.Runtime]System.Nullable`1<System.Int64>"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserSettingConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Values() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String> [Default]",
+      "method [Public, HideBySig, SpecialName] set_Values([System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String> value) -> System.Void [Default]",
+      "property [get_Values: Public, set_Values: Public] Values() -> [System.Collections]System.Collections.Generic.Dictionary`2<System.String, System.String>"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserTimeZoneConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Iana() -> Abp.Web.Models.AbpUserConfiguration.AbpUserIanaTimeZoneConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] get_Windows() -> Abp.Web.Models.AbpUserConfiguration.AbpUserWindowsTimeZoneConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] set_Iana(Abp.Web.Models.AbpUserConfiguration.AbpUserIanaTimeZoneConfigDto value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Windows(Abp.Web.Models.AbpUserConfiguration.AbpUserWindowsTimeZoneConfigDto value) -> System.Void [Default]",
+      "property [get_Iana: Public, set_Iana: Public] Iana() -> Abp.Web.Models.AbpUserConfiguration.AbpUserIanaTimeZoneConfigDto",
+      "property [get_Windows: Public, set_Windows: Public] Windows() -> Abp.Web.Models.AbpUserConfiguration.AbpUserWindowsTimeZoneConfigDto"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserTimingConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_TimeZoneInfo() -> Abp.Web.Models.AbpUserConfiguration.AbpUserTimeZoneConfigDto [Default]",
+      "method [Public, HideBySig, SpecialName] set_TimeZoneInfo(Abp.Web.Models.AbpUserConfiguration.AbpUserTimeZoneConfigDto value) -> System.Void [Default]",
+      "property [get_TimeZoneInfo: Public, set_TimeZoneInfo: Public] TimeZoneInfo() -> Abp.Web.Models.AbpUserConfiguration.AbpUserTimeZoneConfigDto"
+    ],
+    "Abp.Web.Models.AbpUserConfiguration.AbpUserWindowsTimeZoneConfigDto": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_BaseUtcOffsetInMilliseconds() -> System.Double [Default]",
+      "method [Public, HideBySig, SpecialName] get_CurrentUtcOffsetInMilliseconds() -> System.Double [Default]",
+      "method [Public, HideBySig, SpecialName] get_IsDaylightSavingTimeNow() -> System.Boolean [Default]",
+      "method [Public, HideBySig, SpecialName] get_TimeZoneId() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] set_BaseUtcOffsetInMilliseconds(System.Double value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_CurrentUtcOffsetInMilliseconds(System.Double value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_IsDaylightSavingTimeNow(System.Boolean value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_TimeZoneId(System.String value) -> System.Void [Default]",
+      "property [get_BaseUtcOffsetInMilliseconds: Public, set_BaseUtcOffsetInMilliseconds: Public] BaseUtcOffsetInMilliseconds() -> System.Double",
+      "property [get_CurrentUtcOffsetInMilliseconds: Public, set_CurrentUtcOffsetInMilliseconds: Public] CurrentUtcOffsetInMilliseconds() -> System.Double",
+      "property [get_IsDaylightSavingTimeNow: Public, set_IsDaylightSavingTimeNow: Public] IsDaylightSavingTimeNow() -> System.Boolean",
+      "property [get_TimeZoneId: Public, set_TimeZoneId: Public] TimeZoneId() -> System.String"
+    ],
+    "Abp.Web.Models.AjaxResponse": [
+      "type [Public, Serializable, BeforeFieldInit] : Abp.Web.Models.AjaxResponse`1<System.Object>",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.Web.Models.ErrorInfo error, System.Boolean unAuthorizedRequest [Optional, HasDefault] = false) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.Boolean success) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.Object result) -> System.Void [Default]"
+    ],
+    "Abp.Web.Models.AjaxResponseBase": [
+      "type [Public, Abstract, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Family, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Error() -> Abp.Web.Models.ErrorInfo [Default]",
+      "method [Public, HideBySig, SpecialName] get_Success() -> System.Boolean [Default]",
+      "method [Public, HideBySig, SpecialName] get_TargetUrl() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_UnAuthorizedRequest() -> System.Boolean [Default]",
+      "method [Public, HideBySig, SpecialName] get___abp() -> System.Boolean [Default]",
+      "method [Public, HideBySig, SpecialName] set_Error(Abp.Web.Models.ErrorInfo value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Success(System.Boolean value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_TargetUrl(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_UnAuthorizedRequest(System.Boolean value) -> System.Void [Default]",
+      "property [get_Error: Public, set_Error: Public] Error() -> Abp.Web.Models.ErrorInfo",
+      "property [get_Success: Public, set_Success: Public] Success() -> System.Boolean",
+      "property [get_TargetUrl: Public, set_TargetUrl: Public] TargetUrl() -> System.String",
+      "property [get_UnAuthorizedRequest: Public, set_UnAuthorizedRequest: Public] UnAuthorizedRequest() -> System.Boolean",
+      "property [get___abp: Public] __abp() -> System.Boolean"
+    ],
+    "Abp.Web.Models.AjaxResponse`1": [
+      "type [Public, Serializable, BeforeFieldInit]<TResult [None]> : Abp.Web.Models.AjaxResponseBase",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(!0 result) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.Web.Models.ErrorInfo error, System.Boolean unAuthorizedRequest [Optional, HasDefault] = false) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.Boolean success) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Result() -> !0 [Default]",
+      "method [Public, HideBySig, SpecialName] set_Result(!0 value) -> System.Void [Default]",
+      "property [get_Result: Public, set_Result: Public] Result() -> !0"
+    ],
+    "Abp.Web.Models.ErrorInfo": [
+      "type [Public, Serializable, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.Int32 code) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.Int32 code, System.String message) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.Int32 code, System.String message, System.String details) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String message) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String message, System.String details) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Code() -> System.Int32 [Default]",
+      "method [Public, HideBySig, SpecialName] get_Details() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Message() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_ValidationErrors() -> Abp.Web.Models.ValidationErrorInfo[] [Default]",
+      "method [Public, HideBySig, SpecialName] set_Code(System.Int32 value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Details(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Message(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_ValidationErrors(Abp.Web.Models.ValidationErrorInfo[] value) -> System.Void [Default]",
+      "property [get_Code: Public, set_Code: Public] Code() -> System.Int32",
+      "property [get_Details: Public, set_Details: Public] Details() -> System.String",
+      "property [get_Message: Public, set_Message: Public] Message() -> System.String",
+      "property [get_ValidationErrors: Public, set_ValidationErrors: Public] ValidationErrors() -> Abp.Web.Models.ValidationErrorInfo[]"
+    ],
+    "Abp.Web.Models.ErrorInfoBuilder": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Models.IErrorInfoBuilder, [Abp]Abp.Dependency.ISingletonDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] AddExceptionConverter(Abp.Web.Models.IExceptionToErrorInfoConverter converter) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] BuildForException([System.Runtime]System.Exception exception) -> Abp.Web.Models.ErrorInfo [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.Web.Configuration.IAbpWebCommonModuleConfiguration configuration, [Abp]Abp.Localization.ILocalizationManager localizationManager) -> System.Void [Default]"
+    ],
+    "Abp.Web.Models.IErrorInfoBuilder": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] AddExceptionConverter(Abp.Web.Models.IExceptionToErrorInfoConverter converter) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] BuildForException([System.Runtime]System.Exception exception) -> Abp.Web.Models.ErrorInfo [Default]"
+    ],
+    "Abp.Web.Models.IExceptionToErrorInfoConverter": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_Next(Abp.Web.Models.IExceptionToErrorInfoConverter value) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Convert([System.Runtime]System.Exception exception) -> Abp.Web.Models.ErrorInfo [Default]",
+      "property [set_Next: Public] Next() -> Abp.Web.Models.IExceptionToErrorInfoConverter"
+    ],
+    "Abp.Web.Models.ValidationErrorInfo": [
+      "type [Public, Serializable, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String message) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String message, System.String member) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(System.String message, System.String[] members) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Members() -> System.String[] [Default]",
+      "method [Public, HideBySig, SpecialName] get_Message() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] set_Members(System.String[] value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Message(System.String value) -> System.Void [Default]",
+      "property [get_Members: Public, set_Members: Public] Members() -> System.String[]",
+      "property [get_Message: Public, set_Message: Public] Message() -> System.String"
+    ],
+    "Abp.Web.MultiTenancy.IMultiTenancyScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScript() -> System.String [Default]"
+    ],
+    "Abp.Web.MultiTenancy.IWebMultiTenancyConfiguration": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_DomainFormat() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_DomainFormat(System.String value) -> System.Void [Default]",
+      "property [get_DomainFormat: Public, set_DomainFormat: Public] DomainFormat() -> System.String"
+    ],
+    "Abp.Web.MultiTenancy.MultiTenancyScriptManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.MultiTenancy.IMultiTenancyScriptManager, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetScript() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Configuration.Startup.IMultiTenancyConfig multiTenancyConfig) -> System.Void [Default]"
+    ],
+    "Abp.Web.MultiTenancy.WebMultiTenancyConfiguration": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.MultiTenancy.IWebMultiTenancyConfiguration",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_DomainFormat() -> System.String [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_DomainFormat(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "property [get_DomainFormat: Public, set_DomainFormat: Public] DomainFormat() -> System.String"
+    ],
+    "Abp.Web.Mvc.Alerts.AlertDisplayType": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "field [Public, Static] PageAlert : System.String",
+      "field [Public, Static] Toastr : System.String",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]"
+    ],
+    "Abp.Web.Mvc.Alerts.AlertList": [
+      "type [Public, BeforeFieldInit] : [System.Collections]System.Collections.Generic.List`1<Abp.Web.Mvc.Alerts.AlertMessage>",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig] Add(Abp.Web.Mvc.Alerts.AlertType type, System.String text, System.String title [Optional, HasDefault] = null, System.Boolean dismissible [Optional, HasDefault] = true, System.String displayType [Optional, HasDefault] = null) -> System.Void [Default]",
+      "method [Public, HideBySig] Danger(System.String text, System.String title [Optional, HasDefault] = null, System.Boolean dismissible [Optional, HasDefault] = true, System.String displayType [Optional, HasDefault] = null) -> System.Void [Default]",
+      "method [Public, HideBySig] Info(System.String text, System.String title [Optional, HasDefault] = null, System.Boolean dismissible [Optional, HasDefault] = true, System.String displayType [Optional, HasDefault] = null) -> System.Void [Default]",
+      "method [Public, HideBySig] Success(System.String text, System.String title [Optional, HasDefault] = null, System.Boolean dismissible [Optional, HasDefault] = true, System.String displayType [Optional, HasDefault] = null) -> System.Void [Default]",
+      "method [Public, HideBySig] Warning(System.String text, System.String title [Optional, HasDefault] = null, System.Boolean dismissible [Optional, HasDefault] = true, System.String displayType [Optional, HasDefault] = null) -> System.Void [Default]"
+    ],
+    "Abp.Web.Mvc.Alerts.AlertManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Dependency.IPerWebRequestDependency, Abp.Web.Mvc.Alerts.IAlertManager",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_Alerts() -> Abp.Web.Mvc.Alerts.AlertList [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "property [get_Alerts: Public] Alerts() -> Abp.Web.Mvc.Alerts.AlertList"
+    ],
+    "Abp.Web.Mvc.Alerts.AlertMessage": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.Web.Mvc.Alerts.AlertType type, System.String text, System.String title [Optional, HasDefault] = null, System.Boolean dismissible [Optional, HasDefault] = true, System.String displayType [Optional, HasDefault] = null) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_Dismissible() -> System.Boolean [Default]",
+      "method [Public, HideBySig, SpecialName] get_DisplayType() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Text() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Title() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName] get_Type() -> Abp.Web.Mvc.Alerts.AlertType [Default]",
+      "method [Public, HideBySig, SpecialName] set_Dismissible(System.Boolean value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_DisplayType(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Text(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Title(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Type(Abp.Web.Mvc.Alerts.AlertType value) -> System.Void [Default]",
+      "property [get_Dismissible: Public, set_Dismissible: Public] Dismissible() -> System.Boolean",
+      "property [get_DisplayType: Public, set_DisplayType: Public] DisplayType() -> System.String",
+      "property [get_Text: Public, set_Text: Public] Text() -> System.String",
+      "property [get_Title: Public, set_Title: Public] Title() -> System.String",
+      "property [get_Type: Public, set_Type: Public] Type() -> Abp.Web.Mvc.Alerts.AlertType"
+    ],
+    "Abp.Web.Mvc.Alerts.AlertMessageRendererManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Mvc.Alerts.IAlertMessageRendererManager, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] Render(System.String alertDisplayType) -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([System.Runtime]System.Collections.Generic.IEnumerable`1<Abp.Web.Mvc.Alerts.IAlertMessageRenderer> alertMessageRenderers, Abp.Web.Mvc.Alerts.IAlertManager AlertManager) -> System.Void [Default]"
+    ],
+    "Abp.Web.Mvc.Alerts.AlertType": [
+      "type [Public, Sealed] : [System.Runtime]System.Enum",
+      "field [Public, SpecialName, RTSpecialName] value__ : System.Int32",
+      "field [Public, Static, Literal, HasDefault] Danger : Abp.Web.Mvc.Alerts.AlertType = 1",
+      "field [Public, Static, Literal, HasDefault] Info : Abp.Web.Mvc.Alerts.AlertType = 3",
+      "field [Public, Static, Literal, HasDefault] Success : Abp.Web.Mvc.Alerts.AlertType = 0",
+      "field [Public, Static, Literal, HasDefault] Warning : Abp.Web.Mvc.Alerts.AlertType = 2"
+    ],
+    "Abp.Web.Mvc.Alerts.IAlertManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_Alerts() -> Abp.Web.Mvc.Alerts.AlertList [Default]",
+      "property [get_Alerts: Public] Alerts() -> Abp.Web.Mvc.Alerts.AlertList"
+    ],
+    "Abp.Web.Mvc.Alerts.IAlertMessageRenderer": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit] implements [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_DisplayType() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Render([System.Collections]System.Collections.Generic.List`1<Abp.Web.Mvc.Alerts.AlertMessage> alertList) -> System.String [Default]",
+      "property [get_DisplayType: Public] DisplayType() -> System.String"
+    ],
+    "Abp.Web.Mvc.Alerts.IAlertMessageRendererManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit] implements [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] Render(System.String alertDisplayType) -> System.String [Default]"
+    ],
+    "Abp.Web.Mvc.Alerts.PageAlertMessageRenderer": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Mvc.Alerts.IAlertMessageRenderer, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_DisplayType() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] Render([System.Collections]System.Collections.Generic.List`1<Abp.Web.Mvc.Alerts.AlertMessage> alertList) -> System.String [Default]",
+      "property [get_DisplayType: Public] DisplayType() -> System.String"
+    ],
+    "Abp.Web.Mvc.Alerts.ToastrAlertMessageRenderer": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Mvc.Alerts.IAlertMessageRenderer, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_DisplayType() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] Render([System.Collections]System.Collections.Generic.List`1<Abp.Web.Mvc.Alerts.AlertMessage> alertList) -> System.String [Default]",
+      "property [get_DisplayType: Public] DisplayType() -> System.String"
+    ],
+    "Abp.Web.Mvc.Models.ErrorViewModel": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.Web.Models.ErrorInfo errorInfo, [System.Runtime]System.Exception exception [Optional, HasDefault] = null) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_ErrorInfo() -> Abp.Web.Models.ErrorInfo [Default]",
+      "method [Public, HideBySig, SpecialName] get_Exception() -> [System.Runtime]System.Exception [Default]",
+      "method [Public, HideBySig, SpecialName] set_ErrorInfo(Abp.Web.Models.ErrorInfo value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Exception([System.Runtime]System.Exception value) -> System.Void [Default]",
+      "property [get_ErrorInfo: Public, set_ErrorInfo: Public] ErrorInfo() -> Abp.Web.Models.ErrorInfo",
+      "property [get_Exception: Public, set_Exception: Public] Exception() -> [System.Runtime]System.Exception"
+    ],
+    "Abp.Web.Navigation.INavigationScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScriptAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.String> [Default]"
+    ],
+    "Abp.Web.Results.Filters.IWrapResultFilter": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] HasFilterForWrapOnError(System.String url, System.Boolean& wrapOnError [Out]) -> System.Boolean [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] HasFilterForWrapOnSuccess(System.String url, System.Boolean& wrapOnSuccess [Out]) -> System.Boolean [Default]"
+    ],
+    "Abp.Web.Results.Filters.WrapResultFilterCollection": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Collections.ObjectModel.Collection`1<Abp.Web.Results.Filters.IWrapResultFilter>",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig] HasFilterForWrapOnError(System.String url, System.Boolean& wrapOnError [Out]) -> System.Boolean [Default]",
+      "method [Public, HideBySig] HasFilterForWrapOnSuccess(System.String url, System.Boolean& wrapOnSuccess [Out]) -> System.Boolean [Default]"
+    ],
+    "Abp.Web.Security.AntiForgery.AbpAntiForgeryConfiguration": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_AuthorizationCookieApplicationScheme() -> System.String [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_AuthorizationCookieName() -> System.String [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_TokenCookieName() -> System.String [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_TokenHeaderName() -> System.String [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_AuthorizationCookieApplicationScheme(System.String value) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_AuthorizationCookieName(System.String value) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_TokenCookieName(System.String value) -> System.Void [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] set_TokenHeaderName(System.String value) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "property [get_AuthorizationCookieApplicationScheme: Public, set_AuthorizationCookieApplicationScheme: Public] AuthorizationCookieApplicationScheme() -> System.String",
+      "property [get_AuthorizationCookieName: Public, set_AuthorizationCookieName: Public] AuthorizationCookieName() -> System.String",
+      "property [get_TokenCookieName: Public, set_TokenCookieName: Public] TokenCookieName() -> System.String",
+      "property [get_TokenHeaderName: Public, set_TokenHeaderName: Public] TokenHeaderName() -> System.String"
+    ],
+    "Abp.Web.Security.AntiForgery.AbpAntiForgeryManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Security.AntiForgery.IAbpAntiForgeryManager, Abp.Web.Security.AntiForgery.IAbpAntiForgeryValidator, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Family, HideBySig, SpecialName] get_Logger() -> [Castle.Core]Castle.Core.Logging.ILogger [Default]",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName] get_Configuration() -> Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor(Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration configuration) -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] set_Logger([Castle.Core]Castle.Core.Logging.ILogger value) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] GenerateToken() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask] IsValid(System.String cookieValue, System.String tokenValue) -> System.Boolean [Default]",
+      "property [get_Configuration: Public] Configuration() -> Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration",
+      "property [get_Logger: Family, set_Logger: Public] Logger() -> [Castle.Core]Castle.Core.Logging.ILogger"
+    ],
+    "Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_AuthorizationCookieApplicationScheme() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_AuthorizationCookieName() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_TokenCookieName() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_TokenHeaderName() -> System.String [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_AuthorizationCookieApplicationScheme(System.String value) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_AuthorizationCookieName(System.String value) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_TokenCookieName(System.String value) -> System.Void [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] set_TokenHeaderName(System.String value) -> System.Void [Default]",
+      "property [get_AuthorizationCookieApplicationScheme: Public, set_AuthorizationCookieApplicationScheme: Public] AuthorizationCookieApplicationScheme() -> System.String",
+      "property [get_AuthorizationCookieName: Public, set_AuthorizationCookieName: Public] AuthorizationCookieName() -> System.String",
+      "property [get_TokenCookieName: Public, set_TokenCookieName: Public] TokenCookieName() -> System.String",
+      "property [get_TokenHeaderName: Public, set_TokenHeaderName: Public] TokenHeaderName() -> System.String"
+    ],
+    "Abp.Web.Security.AntiForgery.IAbpAntiForgeryManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract, SpecialName] get_Configuration() -> Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration [Default]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GenerateToken() -> System.String [Default]",
+      "property [get_Configuration: Public] Configuration() -> Abp.Web.Security.AntiForgery.IAbpAntiForgeryConfiguration"
+    ],
+    "Abp.Web.Security.AntiForgery.IAbpAntiForgeryValidator": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] IsValid(System.String cookieValue, System.String tokenValue) -> System.Boolean [Default]"
+    ],
+    "Abp.Web.Security.ISecurityScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScript() -> System.String [Default]"
+    ],
+    "Abp.Web.Sessions.ISessionScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScript() -> System.String [Default]"
+    ],
+    "Abp.Web.Sessions.SessionScriptManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Sessions.ISessionScriptManager, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetScript() -> System.String [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor() -> System.Void [Default]",
+      "method [Public, HideBySig, SpecialName] get_AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession [Default]",
+      "method [Public, HideBySig, SpecialName] set_AbpSession([Abp]Abp.Runtime.Session.IAbpSession value) -> System.Void [Default]",
+      "property [get_AbpSession: Public, set_AbpSession: Public] AbpSession() -> [Abp]Abp.Runtime.Session.IAbpSession"
+    ],
+    "Abp.Web.Settings.ISettingScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScriptAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.String> [Default]"
+    ],
+    "Abp.Web.Settings.SettingScriptManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Settings.ISettingScriptManager, [Abp]Abp.Dependency.ISingletonDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetScriptAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.String> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Configuration.ISettingDefinitionManager settingDefinitionManager, [Abp]Abp.Configuration.ISettingManager settingManager, [Abp]Abp.Runtime.Session.IAbpSession abpSession, [Abp]Abp.Dependency.IIocResolver iocResolver) -> System.Void [Default]"
+    ],
+    "Abp.Web.Timing.ITimingScriptManager": [
+      "type [Public, ClassSemanticsMask, Abstract, BeforeFieldInit]",
+      "method [Public, Virtual, HideBySig, VtableLayoutMask, Abstract] GetScriptAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.String> [Default]"
+    ],
+    "Abp.Web.Timing.TimingScriptManager": [
+      "type [Public, BeforeFieldInit] : [System.Runtime]System.Object implements Abp.Web.Timing.ITimingScriptManager, [Abp]Abp.Dependency.ITransientDependency",
+      "method [Public, Final, Virtual, HideBySig, VtableLayoutMask] GetScriptAsync() -> [System.Runtime]System.Threading.Tasks.Task`1<System.String> [Default]",
+      "method [Public, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Configuration.ISettingManager settingManager) -> System.Void [Default]"
+    ],
+    "Abp.Web.Validation.ActionInvocationValidatorBase": [
+      "type [Public, Abstract, BeforeFieldInit] : [Abp]Abp.Runtime.Validation.Interception.MethodInvocationValidator",
+      "method [Family, HideBySig, SpecialName, RTSpecialName] .ctor([Abp]Abp.Configuration.Startup.IValidationConfiguration configuration, [Abp]Abp.Dependency.IIocResolver iocResolver) -> System.Void [Default]",
+      "method [Family, HideBySig, SpecialName] get_ValidatorsToSkip() -> [System.Runtime]System.Collections.Generic.IList`1<[System.Runtime]System.Type> [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask, Abstract] GetParameterValue(System.String parameterName) -> System.Object [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask, Abstract] SetDataAnnotationAttributeErrors() -> System.Void [Default]",
+      "method [Family, Virtual, HideBySig, VtableLayoutMask] GetParameterValues([System.Runtime]System.Reflection.MethodInfo method) -> System.Object[] [Default]",
+      "method [Family, Virtual, HideBySig] ShouldValidateUsingValidator(System.Object validatingObject, [System.Runtime]System.Type validatorType) -> System.Boolean [Default]",
+      "method [Family, Virtual, HideBySig] ValidateMethodParameter([System.Runtime]System.Reflection.ParameterInfo parameterInfo, System.Object parameterValue) -> System.Void [Default]",
+      "method [Public, HideBySig] Initialize([System.Runtime]System.Reflection.MethodInfo method) -> System.Void [Default]",
+      "property [get_ValidatorsToSkip: Family] ValidatorsToSkip() -> [System.Runtime]System.Collections.Generic.IList`1<[System.Runtime]System.Type>"
+    ]
+  },
+  "resources": [
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-ar.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-ca-ES.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-de.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-es.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-fa.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-fr.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-it.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-lt.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-lv.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-nl.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-pl.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-pt-BR.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-ro.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-ru.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-sv.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-tr.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-uk.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb-zh-Hans.xml",
+    "Abp.Web.Localization.AbpWebXmlSource.AbpWeb.xml"
+  ]
+}

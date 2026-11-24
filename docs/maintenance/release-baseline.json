@@ -1,0 +1,563 @@
+{
+  "schemaVersion": 1,
+  "stage": "R0",
+  "verifiedOn": "2026-11-24",
+  "timezone": "Asia/Shanghai",
+  "superprojectInputCommit": "cf1420d6dc967fe2b34b52c0409e8407140e917e",
+  "frameworkInputCommit": "6c4580c5e7ea41154696c071a53fd200059a768b",
+  "components": [
+    {
+      "path": "aspnetboilerplate",
+      "gitmodulesUrl": "https://github.com/dusdong/aspnetboilerplate.git",
+      "upstreamUrl": "https://github.com/aspnetboilerplate/aspnetboilerplate.git",
+      "gitlinkCommit": "6c4580c5e7ea41154696c071a53fd200059a768b",
+      "reference": {
+        "commit": "6c4580c5e7ea41154696c071a53fd200059a768b",
+        "usage": "框架对照源码与测试入口",
+        "sourceDeclarations": {
+          "common.props": "Version 10.5.1",
+          "global.json": "9.0.100-rc.2.24474.11 / latestFeature"
+        },
+        "verificationStatus": "r0_executed",
+        "version": "v10.5.1",
+        "upstreamTag": "refs/tags/v10.5.1"
+      }
+    },
+    {
+      "path": "AutoMapper",
+      "gitmodulesUrl": "https://github.com/dusdong/AutoMapper.git",
+      "upstreamUrl": "https://github.com/AutoMapper/AutoMapper.git",
+      "gitlinkCommit": "79d10deec5881a617c38e7373f354694044bf83d",
+      "checkoutDeclarations": {
+        "src/AutoMapper/AutoMapper.csproj": "netstandard2.0、net10.0、net11.0，另有条件目标 net471；PackageLicenseFile LICENSE.md",
+        "LICENSE.md": "RPL-1.5 或商业许可"
+      },
+      "reference": {
+        "commit": "bf76a5819e1bad7af7db5382bf0f3a0178048a15",
+        "usage": "现有 Abp.AutoMapper 所声明的映射引擎参考",
+        "sourceDeclarations": {
+          "src/AutoMapper/AutoMapper.csproj": "net8.0，MIT",
+          "aspnetboilerplate/src/Abp.AutoMapper/Abp.AutoMapper.csproj": "AutoMapper 14.0.0"
+        },
+        "verificationStatus": "pending_consumer_validation",
+        "version": "v14.0.0",
+        "upstreamTag": "refs/tags/v14.0.0"
+      }
+    },
+    {
+      "path": "AutoMapper.Collection",
+      "gitmodulesUrl": "https://github.com/dusdong/AutoMapper.Collection.git",
+      "upstreamUrl": "https://github.com/AutoMapper/AutoMapper.Collection.git",
+      "gitlinkCommit": "5301edbc689a9696bdd7c396452669434e75989a",
+      "checkoutDeclarations": {
+        "src/AutoMapper.Collection/AutoMapper.Collection.csproj": "AutoMapper [15.0.1, 17.0.0)"
+      },
+      "reference": {
+        "commit": "eafbf005becf73f989e1b1c0d52e8699439f837c",
+        "usage": "现有 Abp.AutoMapper 所声明的集合映射参考",
+        "sourceDeclarations": {
+          "src/AutoMapper.Collection/AutoMapper.Collection.csproj": "AutoMapper [14.0.0, 15.0.0)",
+          "aspnetboilerplate/src/Abp.AutoMapper/Abp.AutoMapper.csproj": "AutoMapper.Collection 11.0.0"
+        },
+        "verificationStatus": "pending_consumer_validation",
+        "version": "v11.0.0",
+        "upstreamTag": "refs/tags/v11.0.0"
+      }
+    },
+    {
+      "path": "abp-ng2-module",
+      "gitmodulesUrl": "https://github.com/dusdong/abp-ng2-module.git",
+      "upstreamUrl": "https://github.com/aspnetboilerplate/abp-ng2-module.git",
+      "gitlinkCommit": "24adbe2222c0965c3957cc6b45a59f8eb1dd6001",
+      "checkoutDeclarations": {
+        "projects/abp-ng2-module/package.json": "version 13.0.0；@angular/core 与 @angular/common peer ^21.0.0"
+      },
+      "reference": {
+        "commit": "afbd23ea9711e9d94259d0f0b6afcbab9a0617fc",
+        "usage": "免费模板 Angular 19 所声明的适配器参考",
+        "sourceDeclarations": {
+          "projects/abp-ng2-module/package.json": "version 12.1.0；@angular/core 与 @angular/common peer ^19.1.7"
+        },
+        "verificationStatus": "pending_consumer_validation",
+        "version": "12.1.0"
+      }
+    },
+    {
+      "path": "module-zero-core-template",
+      "gitmodulesUrl": "https://github.com/dusdong/module-zero-core-template.git",
+      "upstreamUrl": "https://github.com/aspnetboilerplate/module-zero-core-template.git",
+      "gitlinkCommit": "2e9536872673a7ff1986a19e798c51684d16afe5",
+      "reference": {
+        "commit": "2e9536872673a7ff1986a19e798c51684d16afe5",
+        "usage": "完整应用依赖盘点与 R3 集成验收参考",
+        "sourceDeclarations": {
+          "angular/package.json": "@angular/core ^19.2.1；abp-ng2-module 12.1.0；abp-web-resources ^6.1.0",
+          "aspnet-core": "后端项目直接 ABP 依赖逐项目登记于 templateBackend"
+        },
+        "verificationStatus": "pending_r3"
+      }
+    },
+    {
+      "path": "aspnetboilerplate-samples",
+      "gitmodulesUrl": "https://github.com/dusdong/aspnetboilerplate-samples.git",
+      "upstreamUrl": "https://github.com/aspnetboilerplate/aspnetboilerplate-samples.git",
+      "gitlinkCommit": "e53d60895d354eb066c39d73c9e38c0c133fc69b",
+      "reference": {
+        "commit": "e53d60895d354eb066c39d73c9e38c0c133fc69b",
+        "usage": "EF Core 多 DbContext 与拦截器的专项回归参考",
+        "sourceDeclarations": {
+          "MultipleDbContextEfCoreDemo/aspnet-core/src/MultipleDbContextEfCoreDemo.EntityFrameworkCore": "net8.0，EF Core 8.0.7；注册 MultipleDbContextEfCoreDemoDbContext 和 MultipleDbContextEfCoreDemoSecondDbContext",
+          "InterceptionDemo/aspnet-core/src/InterceptionDemo.Application/Interceptors": "同步与异步拦截器示例源码"
+        },
+        "verificationStatus": "pending_sample_validation"
+      }
+    }
+  ],
+  "initialPackageClosure": {
+    "entryOriginalPackageIds": [
+      "Abp.AspNetCore",
+      "Abp.EntityFrameworkCore"
+    ],
+    "plannedPackageIds": [
+      "Du.Abp",
+      "Du.Abp.AspNetCore",
+      "Du.Abp.EntityFramework.Common",
+      "Du.Abp.EntityFrameworkCore",
+      "Du.Abp.Web.Common"
+    ],
+    "identityAndReferencesVerifiedWith": "dotnet msbuild -p:Configuration=Release -getProperty:PackageId,PackageVersion,AssemblyName,RootNamespace,TargetFramework,TargetFrameworks,RuntimeIdentifier,TargetPath -getItem:ProjectReference",
+    "packageIdStatus": "planned",
+    "packages": [
+      {
+        "project": "src/Abp/Abp.csproj",
+        "originalPackageId": "Abp",
+        "originalPackageVersion": "10.5.1",
+        "plannedPackageId": "Du.Abp",
+        "assemblyName": "Abp",
+        "rootNamespace": "Abp",
+        "targetFrameworks": [
+          "net9.0"
+        ],
+        "runtimeIdentifier": null,
+        "apiInventory": "baseline-evidence/api/Abp.json",
+        "releaseDllSha256": "b139456eba40c5f714647513c15cb1983d944b85d954724895c21e367a9b9e1e",
+        "reproducedDllSha256": "e50da0b9700b32b4bfc7dec6d009cb90699ca2a4f30a22f9d3a6227fc92336a8",
+        "apiCounts": {
+          "types": 808,
+          "memberSignatures": 5647,
+          "manifestResources": 20
+        },
+        "internalProjectReferences": [],
+        "internalDependencies": []
+      },
+      {
+        "project": "src/Abp.AspNetCore/Abp.AspNetCore.csproj",
+        "originalPackageId": "Abp.AspNetCore",
+        "originalPackageVersion": "10.5.1",
+        "plannedPackageId": "Du.Abp.AspNetCore",
+        "assemblyName": "Abp.AspNetCore",
+        "rootNamespace": "Abp",
+        "targetFrameworks": [
+          "net9.0"
+        ],
+        "runtimeIdentifier": null,
+        "apiInventory": "baseline-evidence/api/Abp.AspNetCore.json",
+        "releaseDllSha256": "f0b87a967cec5dcc2a060822106f36aa24fcd835275131a00c88a5f38865eb27",
+        "reproducedDllSha256": "72ded1036a1f1d7695328e139bb7adf4f54e80a631fcb2c5450428db4fa641b6",
+        "apiCounts": {
+          "types": 100,
+          "memberSignatures": 611,
+          "manifestResources": 0
+        },
+        "internalProjectReferences": [
+          "src/Abp.Web.Common/Abp.Web.Common.csproj"
+        ],
+        "internalDependencies": [
+          "Du.Abp.Web.Common"
+        ]
+      },
+      {
+        "project": "src/Abp.EntityFramework.Common/Abp.EntityFramework.Common.csproj",
+        "originalPackageId": "Abp.EntityFramework.Common",
+        "originalPackageVersion": "10.5.1",
+        "plannedPackageId": "Du.Abp.EntityFramework.Common",
+        "assemblyName": "Abp.EntityFramework.Common",
+        "rootNamespace": "Abp.EntityFramework",
+        "targetFrameworks": [
+          "net9.0"
+        ],
+        "runtimeIdentifier": null,
+        "apiInventory": "baseline-evidence/api/Abp.EntityFramework.Common.json",
+        "releaseDllSha256": "8bc5700e8ee9ac898e0072d7a141add4ab9953cdaf74efcdb45221cbcdd59ee7",
+        "reproducedDllSha256": "6f909b19883d4779013ce76749ea44d51186a8007ce377157963560c5fb93b40",
+        "apiCounts": {
+          "types": 10,
+          "memberSignatures": 25,
+          "manifestResources": 0
+        },
+        "internalProjectReferences": [
+          "src/Abp/Abp.csproj"
+        ],
+        "internalDependencies": [
+          "Du.Abp"
+        ]
+      },
+      {
+        "project": "src/Abp.EntityFrameworkCore/Abp.EntityFrameworkCore.csproj",
+        "originalPackageId": "Abp.EntityFrameworkCore",
+        "originalPackageVersion": "10.5.1",
+        "plannedPackageId": "Du.Abp.EntityFrameworkCore",
+        "assemblyName": "Abp.EntityFrameworkCore",
+        "rootNamespace": "Abp",
+        "targetFrameworks": [
+          "net9.0"
+        ],
+        "runtimeIdentifier": null,
+        "apiInventory": "baseline-evidence/api/Abp.EntityFrameworkCore.json",
+        "releaseDllSha256": "3d884257154dd2cc8336afa98da2d6a857e931f480c3f7a34b2126a96f3da119",
+        "reproducedDllSha256": "4e903f7359a352d9117534d727f2003be55f4dab69406273027b7691cfe78c15",
+        "apiCounts": {
+          "types": 39,
+          "memberSignatures": 293,
+          "manifestResources": 0
+        },
+        "internalProjectReferences": [
+          "src/Abp.EntityFramework.Common/Abp.EntityFramework.Common.csproj"
+        ],
+        "internalDependencies": [
+          "Du.Abp.EntityFramework.Common"
+        ]
+      },
+      {
+        "project": "src/Abp.Web.Common/Abp.Web.Common.csproj",
+        "originalPackageId": "Abp.Web.Common",
+        "originalPackageVersion": "10.5.1",
+        "plannedPackageId": "Du.Abp.Web.Common",
+        "assemblyName": "Abp.Web.Common",
+        "rootNamespace": "Abp",
+        "targetFrameworks": [
+          "net9.0"
+        ],
+        "runtimeIdentifier": null,
+        "apiInventory": "baseline-evidence/api/Abp.Web.Common.json",
+        "releaseDllSha256": "505a8a2d9788e80a09325d74109deae7c001797c2583c0d63fdafbd92d757b2d",
+        "reproducedDllSha256": "0e31e5ac4246dabbbd0056c3d882dd2ccf93c7a845f8d8194305ff065129ea10",
+        "apiCounts": {
+          "types": 95,
+          "memberSignatures": 566,
+          "manifestResources": 19
+        },
+        "internalProjectReferences": [
+          "src/Abp/Abp.csproj"
+        ],
+        "internalDependencies": [
+          "Du.Abp"
+        ]
+      }
+    ]
+  },
+  "templateBackend": {
+    "sourceCommit": "2e9536872673a7ff1986a19e798c51684d16afe5",
+    "projects": [
+      {
+        "project": "aspnet-core/src/AbpCompanyName.AbpProjectName.Application/AbpCompanyName.AbpProjectName.Application.csproj",
+        "targetFramework": "net9.0",
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Core/AbpCompanyName.AbpProjectName.Core.csproj"
+        ],
+        "directAbpPackages": []
+      },
+      {
+        "project": "aspnet-core/src/AbpCompanyName.AbpProjectName.Core/AbpCompanyName.AbpProjectName.Core.csproj",
+        "targetFramework": "net9.0",
+        "projectReferences": [],
+        "directAbpPackages": [
+          {
+            "id": "Abp.AutoMapper",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          },
+          {
+            "id": "Abp.ZeroCore.EntityFrameworkCore",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          }
+        ]
+      },
+      {
+        "project": "aspnet-core/src/AbpCompanyName.AbpProjectName.EntityFrameworkCore/AbpCompanyName.AbpProjectName.EntityFrameworkCore.csproj",
+        "targetFramework": "net9.0",
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Core/AbpCompanyName.AbpProjectName.Core.csproj"
+        ],
+        "directAbpPackages": []
+      },
+      {
+        "project": "aspnet-core/src/AbpCompanyName.AbpProjectName.Migrator/AbpCompanyName.AbpProjectName.Migrator.csproj",
+        "targetFramework": "net9.0",
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Core/AbpCompanyName.AbpProjectName.Core.csproj",
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.EntityFrameworkCore/AbpCompanyName.AbpProjectName.EntityFrameworkCore.csproj"
+        ],
+        "directAbpPackages": [
+          {
+            "id": "Abp.Castle.Log4Net",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          }
+        ]
+      },
+      {
+        "project": "aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Core/AbpCompanyName.AbpProjectName.Web.Core.csproj",
+        "targetFramework": "net9.0",
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Application/AbpCompanyName.AbpProjectName.Application.csproj",
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.EntityFrameworkCore/AbpCompanyName.AbpProjectName.EntityFrameworkCore.csproj"
+        ],
+        "directAbpPackages": [
+          {
+            "id": "Abp.AspNetCore",
+            "declaredVersion": "10.2.0",
+            "coverage": "initial_mapping",
+            "plannedPackageId": "Du.Abp.AspNetCore"
+          },
+          {
+            "id": "Abp.AspNetCore.SignalR",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          },
+          {
+            "id": "Abp.ZeroCore",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          }
+        ]
+      },
+      {
+        "project": "aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Host/AbpCompanyName.AbpProjectName.Web.Host.csproj",
+        "targetFramework": "net9.0",
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Core/AbpCompanyName.AbpProjectName.Web.Core.csproj"
+        ],
+        "directAbpPackages": [
+          {
+            "id": "Abp.Castle.Log4Net",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          }
+        ]
+      },
+      {
+        "project": "aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Mvc/AbpCompanyName.AbpProjectName.Web.Mvc.csproj",
+        "targetFramework": "net9.0",
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Core/AbpCompanyName.AbpProjectName.Web.Core.csproj"
+        ],
+        "directAbpPackages": [
+          {
+            "id": "Abp.Castle.Log4Net",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          },
+          {
+            "id": "Abp.HangFire",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          },
+          {
+            "id": "Abp.RedisCache",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          }
+        ]
+      },
+      {
+        "project": "aspnet-core/test/AbpCompanyName.AbpProjectName.Tests/AbpCompanyName.AbpProjectName.Tests.csproj",
+        "targetFramework": "net9.0",
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Application/AbpCompanyName.AbpProjectName.Application.csproj",
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.EntityFrameworkCore/AbpCompanyName.AbpProjectName.EntityFrameworkCore.csproj"
+        ],
+        "directAbpPackages": [
+          {
+            "id": "Abp.TestBase",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          }
+        ]
+      },
+      {
+        "project": "aspnet-core/test/AbpCompanyName.AbpProjectName.Web.Tests/AbpCompanyName.AbpProjectName.Web.Tests.csproj",
+        "targetFramework": "net9.0",
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Mvc/AbpCompanyName.AbpProjectName.Web.Mvc.csproj",
+          "aspnet-core/test/AbpCompanyName.AbpProjectName.Tests/AbpCompanyName.AbpProjectName.Tests.csproj"
+        ],
+        "directAbpPackages": [
+          {
+            "id": "Abp.AspNetCore.TestBase",
+            "declaredVersion": "10.2.0",
+            "coverage": "outside_initial_scope",
+            "plannedPackageId": null
+          }
+        ]
+      }
+    ],
+    "missingInitialPackageMappings": [
+      "Abp.AspNetCore.SignalR",
+      "Abp.AspNetCore.TestBase",
+      "Abp.AutoMapper",
+      "Abp.Castle.Log4Net",
+      "Abp.HangFire",
+      "Abp.RedisCache",
+      "Abp.TestBase",
+      "Abp.ZeroCore",
+      "Abp.ZeroCore.EntityFrameworkCore"
+    ],
+    "dependencyClosureStatus": "pending"
+  },
+  "validation": {
+    "reproductionGuide": "baseline-evidence/README.md",
+    "environment": {
+      "os": "macOS 27.2.1 (26B131)",
+      "architecture": "arm64",
+      "hostRid": "osx-arm64",
+      "dotnetSdk": "9.0.306",
+      "msbuild": "17.14.28+09c1be848",
+      "runtime": "Microsoft.NETCore.App 9.0.10 / Microsoft.AspNetCore.App 9.0.10",
+      "testRunner": "VSTest 17.14.1 (arm64), xUnit 2.9.3, xunit.runner.visualstudio 3.1.5"
+    },
+    "restore": {
+      "workingDirectories": [
+        "<evidence>/primary",
+        "<evidence>/repeat"
+      ],
+      "inputMaterialization": "git archive 固定框架提交，各次使用空源码目录及独立空 NuGet 全局包目录",
+      "command": "dotnet restore R0.sln --configfile <evidence>/<input>.NuGet.Config --no-http-cache --force -p:Configuration=Release --verbosity normal",
+      "effectiveSources": [
+        "https://api.nuget.org/v3/index.json"
+      ],
+      "primaryExitCode": 0,
+      "repeatExitCode": 0,
+      "primaryWarnings": 8,
+      "repeatWarnings": 8,
+      "warningDetails": "NU1504：固定源码重复声明 Microsoft.SourceLink.GitHub 8.0.0 和 10.0.203",
+      "inventory": "baseline-evidence/nuget-restore.json",
+      "repeatComparison": "baseline-evidence/nuget-comparison.json"
+    },
+    "build": {
+      "workingDirectory": "<evidence>/primary",
+      "command": "dotnet build R0.sln --configuration Release --no-restore --verbosity minimal",
+      "exitCode": 0,
+      "warnings": 44,
+      "errors": 0,
+      "warningDetails": "NU1504、SourceLink 无 Git 工作目录、上游和测试源码的过时 API 警告"
+    },
+    "api": {
+      "extractorVersion": 1,
+      "extractorRuntime": ".NET 9 / System.Reflection.Metadata",
+      "command": "dotnet <evidence>/tools/bin/Release/net9.0/ApiInventory.dll <assembly.dll>",
+      "sameDllRepeatByteIdenticalManifests": true,
+      "independentRebuildSameApi": true,
+      "independentRebuildSameDllBytes": false,
+      "rebuildObservation": "两个绝对路径下的 Release DLL 摘要不同；Abp.dll 中的 PDB 路径分别对应各自的构建目录。",
+      "singleParameterMutationComparison": "baseline-evidence/api-mutation-comparison.json",
+      "singleParameterMutationExitCode": 1
+    },
+    "tests": {
+      "workingDirectory": "<evidence>/primary",
+      "command": "dotnet test test/<suite>/<suite>.csproj --configuration Release --no-build --no-restore --logger \"trx;LogFileName=<suite>.trx\" --results-directory <evidence>/trx",
+      "suites": [
+        {
+          "suite": "Abp.Tests",
+          "project": "test/Abp.Tests/Abp.Tests.csproj",
+          "targetFramework": "net9.0",
+          "exitCode": 0,
+          "passed": 1105,
+          "failed": 0,
+          "skipped": 2,
+          "totalReported": 1107,
+          "skippedTests": [
+            {
+              "test": "Abp.Tests.Dependency.Unicode_Naming_Tests.Castle_Should_Register_Unicode_Names_In_Conventions",
+              "reason": "This test is failing because Castle Windsor does not support it"
+            },
+            {
+              "test": "Abp.Tests.Localization.ResourceFileLocalizationSource_Tests.Test_GetAllStrings",
+              "reason": "Waiting for https://github.com/aspnetboilerplate/aspnetboilerplate/issues/1995"
+            }
+          ],
+          "duplicateDiscoveryIdsExcluded": 42
+        },
+        {
+          "suite": "Abp.AspNetCore.Tests",
+          "project": "test/Abp.AspNetCore.Tests/Abp.AspNetCore.Tests.csproj",
+          "targetFramework": "net9.0",
+          "exitCode": 0,
+          "passed": 150,
+          "failed": 0,
+          "skipped": 0,
+          "totalReported": 150,
+          "skippedTests": [],
+          "duplicateDiscoveryIdsExcluded": 0
+        },
+        {
+          "suite": "Abp.EntityFrameworkCore.Tests",
+          "project": "test/Abp.EntityFrameworkCore.Tests/Abp.EntityFrameworkCore.Tests.csproj",
+          "targetFramework": "net9.0",
+          "exitCode": 0,
+          "passed": 58,
+          "failed": 0,
+          "skipped": 0,
+          "totalReported": 58,
+          "skippedTests": [],
+          "duplicateDiscoveryIdsExcluded": 0
+        }
+      ],
+      "sqlite": {
+        "suite": "Abp.EntityFrameworkCore.Tests",
+        "source": "test/Abp.EntityFrameworkCore.Tests/EntityFrameworkCoreTestModule.cs",
+        "configuration": "BloggingDbContext 与 SupportDbContext 均使用 UseSqlite 和打开的 Data Source=:memory: 连接",
+        "providers": {
+          "Microsoft.EntityFrameworkCore.Sqlite": "9.0.18",
+          "Microsoft.Data.Sqlite": "9.0.18",
+          "SQLitePCLRaw.lib.e_sqlite3": "2.1.10"
+        },
+        "nativeRuntimeAsset": "runtimes/osx-arm64/native/libe_sqlite3.dylib"
+      }
+    },
+    "consumerGates": {
+      "R2": {
+        "status": "pending",
+        "consumer": "独立最小后端项目",
+        "directPlannedPackages": [
+          "Du.Abp.AspNetCore",
+          "Du.Abp.EntityFrameworkCore"
+        ],
+        "acceptance": "从候选包源还原并构建最小消费者，框架包集合为五包闭包，核对实际加载的既有程序集及依赖来源。"
+      },
+      "R3": {
+        "status": "pending",
+        "consumer": "免费模板的所选完整入口",
+        "acceptance": "先闭合所选入口的直接及传递框架依赖，再用实际候选包执行还原、应用启动和集成验证。"
+      }
+    },
+    "pendingCoverage": [
+      "Windows",
+      "Linux",
+      "SQLite 以外的数据库 Provider",
+      "映射和 Angular 消费组合",
+      "Samples 专项场景"
+    ]
+  }
+}

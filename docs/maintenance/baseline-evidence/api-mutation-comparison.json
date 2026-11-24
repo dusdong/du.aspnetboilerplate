@@ -1,0 +1,15 @@
+{
+  "assembly": "Abp",
+  "changes": {
+    "types": {
+      "Abp.Application.Features.Feature": {
+        "removed": [
+          "method [Public, HideBySig] RemoveChildFeature(System.String name) -> System.Void [Default]"
+        ],
+        "added": [
+          "method [Public, HideBySig] RemoveChildFeature(System.Int32 name) -> System.Void [Default]"
+        ]
+      }
+    }
+  }
+}
