@@ -164,7 +164,7 @@ R0 已于 2026-11-24 验收。基线范围为官方 `v10.5.1` 源码上的首批
 
 `yopichy` 的 .NET 10、EF Core API、测试宿主和打包改动可以作为直接研究起点；保留原作者和来源 SHA。引入任何依赖大版本时，同时检查许可、API 和行为变化。[A2]、[A5]
 
-**2026-11-24 的开发顺序。** R1 先在 R0 的环境中处理标签之后的 EF Core 查询过滤修复，再迁移运行时。首项 .NET 9 源码候选已完成本地 Release 构建和三套回归。[首项提案](../../openspec/changes/adopt-efcore-query-filter-fix/proposal.md) · [补丁验收记录](r1-efcore-query-filter.md)
+**2026-11-24 首项补丁已验收。** 在 R0 基线的 .NET 9 环境中吸收了上游 #7219，完成 Release 构建和三套回归。框架提交 `d08617b51bb7c7e5d0bea942e7e10b2677240c35` 已推送到 fork 的 `dev`，主仓接入提交为 `9964e312b36499b625bd2b7615da741b87b8f003`。该补丁作为 .NET 10 / EF Core 10 迁移的行为对照。[补丁验收记录](r1-efcore-query-filter.md) · [稳定规范](../../openspec/specs/efcore-query-filters/spec.md) · [首项归档](../../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/)
 
 | 顺序 | 交付物 | 进入下一项的依据 |
 | --- | --- | --- |

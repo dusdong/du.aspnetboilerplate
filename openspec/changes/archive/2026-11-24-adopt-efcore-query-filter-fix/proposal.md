@@ -2,7 +2,7 @@
 
 ## Why
 
-R0 已为上游 `v10.5.1` 的五个后端包建立对照，其中 EF Core 的 SQLite 套件有 58 项通过。上游在该标签之后合入了涉及查询过滤的 #7219。先在相同运行时、依赖和 Provider 上核实并吸收修复，能给 .NET 10 迁移提供经过验证的行为起点。[R0 基线](../../../docs/maintenance/release-baseline.json) · [上游 PR #7219](https://github.com/aspnetboilerplate/aspnetboilerplate/pull/7219)
+R0 已为上游 `v10.5.1` 的五个后端包建立对照，其中 EF Core 的 SQLite 套件有 58 项通过。上游在该标签之后合入了涉及查询过滤的 #7219。先在相同运行时、依赖和 Provider 上核实并吸收修复，能给 .NET 10 迁移提供经过验证的行为起点。[R0 基线](../../../../docs/maintenance/release-baseline.json) · [上游 PR #7219](https://github.com/aspnetboilerplate/aspnetboilerplate/pull/7219)
 
 ## What Changes
 

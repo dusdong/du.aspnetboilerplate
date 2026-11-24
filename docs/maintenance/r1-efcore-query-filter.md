@@ -4,12 +4,18 @@
 
 | 项目 | 核对结果 |
 | --- | --- |
-| 主仓 `main` | `92a31c2974edcfccb1c00817abeb93a23b16c059` |
-| 主仓 gitlink 与框架 `dev` 检出 | 均为 `6c4580c5e7ea41154696c071a53fd200059a768b`，对应 R0 的 `v10.5.1` 对照 |
+| 主仓 R0 归档与补丁接入前的基线 | `92a31c2974edcfccb1c00817abeb93a23b16c059` |
+| 框架 R0 与接入前的 gitlink | 均为 `6c4580c5e7ea41154696c071a53fd200059a768b`，对应上游 `v10.5.1` 对照 |
 | 上游 #7219 | 基底及合并第一父提交为 `b01027b37d2fcd69b754335f73047ce4f2ffa8c0`，合并提交为 `21f57d282f542aa4221fc5cd5a4ac76346d8f5c7` |
 | 上游补丁作者 | maliming，提交 `84eff20013a694f9ed3f6f0ddbb9fb87f620b597` |
 
 上游 PR 基底是框架 R0 的第二父提交。对比两棵 Git 树，差异仅在 `doc/WebSite/Zero/Identity-Server-vNext.md`。R0 已有查询选项扩展、查询提供程序和缓存键装饰，以及显式编译缺少上下文时的保护。#7219 新增关系型 `IDatabase` 装饰和与查询绑定的编译授权，校验服务替换冲突，使解析器按开关注册扩展，并修正软删除列值映射。候选采用上游八个运行时文件和自定义过滤器文档，保留既有回归名称，按上游的新异常消息调整断言，并用本地验收覆盖新增行为。[上游 PR #7219](https://github.com/aspnetboilerplate/aspnetboilerplate/pull/7219) · [R0 基线](release-baseline.json)
+
+## Git 接入
+
+2026-11-24，框架补丁提交 `d08617b51bb7c7e5d0bea942e7e10b2677240c35` 已推送到 fork 的 `dev`，其提交树 `24c938b8d020469537cf69e794478df6436eb28d` 与实测候选一致。主仓接入提交 `9964e312b36499b625bd2b7615da741b87b8f003` 已推送到 `main`，该提交的 gitlink 指向上述框架提交。两处远端分支均已回读核对。[框架补丁提交](https://github.com/dusdong/aspnetboilerplate/commit/d08617b51bb7c7e5d0bea942e7e10b2677240c35) · [主仓接入提交](https://github.com/dusdong/du.aspnetboilerplate/commit/9964e312b36499b625bd2b7615da741b87b8f003)
+
+首项补丁的 7 项任务已完成，验收契约已同步到稳定规范，提案、设计、增量规范与任务已归档。[EF Core 查询过滤规范](../../openspec/specs/efcore-query-filters/spec.md) · [首项归档](../../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/)
 
 ## 升级时的查询配置
 
@@ -73,4 +79,10 @@ API 增量限于 `Abp.EntityFrameworkCore`，既有可见成员没有移除或�
 
 首轮两次定向构建分别遇到测试夹具引用内部类型的 `CS0246` 和缺少扩展命名空间的 `CS1061`。修正后首轮定向回归通过 34 项。第二轮重新构建后，两项 SQLite 用例及两项组件用例的定向回归通过 4 项，随后完成三套完整回归。
 
-原始证据位于主仓 `.git/r1-query-filter-evidence/`，其中 `upstream-objects.log` 保存上游对象核对，`revision-2/` 保存最终候选补丁、构建和测试命令日志、11 份资产文件、五个 DLL 及其摘要、`api/` 中的逐项对照、`trx/` 和 `trx-comparison.json`。本记录对应已完成本机构建和回归的 .NET 9 源码候选。Git 交付、运行时迁移、其他数据库及消费包验证按维护路线开展。
+## 证据范围
+
+新克隆可从本文查阅已提交的验收摘要，包括复验命令、三套回归统计、八个场景与测试的对应关系、API 与依赖差异。独立复核复用同一候选的测试程序集，定向运行两个 SQLite 嵌套用例和两个组件用例，4 项均通过。
+
+原始证据另存于本机主仓的 `.git/r1-query-filter-evidence-2026-11-24.tar.gz`，需从验证机单独取得。包内 `r1-query-filter-evidence/` 下的 `upstream-objects.log` 记录上游对象核对，`revision-2/` 保存最终候选补丁、构建和测试日志、11 份资产文件、五个 DLL 及其摘要、API 逐项对照和三套 TRX。`reviewer-trx/` 保存独立复核的日志与 TRX。上文命令中的 `evidence` 对应该目录下的 `revision-2/`。包内 `R1.sln` 的项目相对路径按证据目录原位于主仓 `.git/` 生成。若在别处复验，可按上述五个清单项目与三套回归项目重新生成解决方案。
+
+实测结论适用于记录中的 .NET 9 源码、macOS ARM64 与 SQLite 组合。.NET 10 / EF Core 10 迁移、其他数据库验证及 `Du.Abp*` 消费包交付分阶段验收。[维护路线](fork-roadmap.md)
