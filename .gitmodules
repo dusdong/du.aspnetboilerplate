@@ -1,0 +1,18 @@
+[submodule "aspnetboilerplate"]
+	path = aspnetboilerplate
+	url = https://github.com/dusdong/aspnetboilerplate.git
+[submodule "abp-ng2-module"]
+	path = abp-ng2-module
+	url = https://github.com/dusdong/abp-ng2-module.git
+[submodule "module-zero-core-template"]
+	path = module-zero-core-template
+	url = https://github.com/dusdong/module-zero-core-template.git
+[submodule "aspnetboilerplate-samples"]
+	path = aspnetboilerplate-samples
+	url = https://github.com/dusdong/aspnetboilerplate-samples.git
+[submodule "AutoMapper"]
+	path = AutoMapper
+	url = https://github.com/dusdong/AutoMapper.git
+[submodule "AutoMapper.Collection"]
+	path = AutoMapper.Collection
+	url = https://github.com/dusdong/AutoMapper.Collection.git
