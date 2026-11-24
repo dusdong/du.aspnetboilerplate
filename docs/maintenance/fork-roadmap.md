@@ -1,0 +1,328 @@
+# 参考 Silo：一条适合维护型 fork 的路线
+
+> 适用对象：基于经典 ASP.NET Boilerplate（`aspnetboilerplate/aspnetboilerplate`）维护并独立发行的项目。  
+> 文档版本：1.0。编制与证据核查日期：2026-11-21。  
+> 状态：维护路线与发布审查基线；各阶段的完成状态以项目实际实施记录为准。  
+> 配套文档：[有参考价值的 ASP.NET Boilerplate fork 项目](fork-references.md)。
+
+## 1. 先固定目标和兼容性硬约束
+
+本项目的目标是形成一个可追溯、可升级、可验证、维护范围明确的 ASP.NET Boilerplate 独立发行版。第一阶段优先处理运行时升级、重要缺陷、依赖维护、发包和消费者迁移；架构重构作为后续独立议题评估。
+
+### 1.1 用户已经确定的长期规则
+
+**本 fork 的既有 `Abp` 及 `Abp.*` 代码命名空间永久保持不变。`Du.` 前缀只用于 NuGet 包名，不进入代码命名空间。此规则是以后所有代码改动、文档示例、迁移方案和发布审查的兼容性硬约束。**
+
+这条规则覆盖后续大版本、运行时升级和新发行线，不能因为重命名品牌、整理目录或替换依赖而自动解除。新增框架模块也应沿用合适的 `Abp.*` 命名空间。嵌入的第三方源码保留其原有命名空间；本规则不要求把业务应用自己的命名空间改成 `Abp.*`。
+
+| 对象 | 规则 | 属性 |
+| --- | --- | --- |
+| 既有框架代码的命名空间 | 保持原来的 `Abp` / `Abp.*`，禁止改为 `Du.Abp.*` | 用户明确的硬约束 |
+| 新增框架代码的命名空间 | 使用适当的 `Abp.*`，不因包前缀引入 `Du.*` | 用户约束的实施规则 |
+| 既有公共类型全名 | 不因品牌或包名变更顺带修改；其他公共 API 变化单独审查和说明 | 配套兼容策略，不等于永久冻结所有 API |
+| NuGet `PackageId` | `Abp` → `Du.Abp`；`Abp.X` → `Du.Abp.X` | 用户确定的发行身份 |
+| 既有 `AssemblyName`、`RootNamespace` | 保留各项目原值，不随 PackageId 批量重命名 | 本路线采用的配套兼容策略 |
+| `AssemblyVersion`、文件版本与包版本 | 单独制定版本政策；不能从“名称不变”推导出“版本号永久不变” | 需明确的发行政策 |
+| 外部协议、配置键、序列化类型名、数据库语义 | 不为改发行品牌而顺带修改；确有功能变更时单独验证和记录 | 兼容性审查范围 |
+
+包映射应明确到每一个正式发行的项目：
+
+| 上游包 | 本项目 NuGet 包 | 既有程序集名 | 代码命名空间 |
+| --- | --- | --- | --- |
+| `Abp` | `Du.Abp` | `Abp` | 保持原有 `Abp` / `Abp.*` |
+| `Abp.AspNetCore` | `Du.Abp.AspNetCore` | `Abp.AspNetCore` | 保持原值 |
+| `Abp.EntityFrameworkCore` | `Du.Abp.EntityFrameworkCore` | `Abp.EntityFrameworkCore` | 保持原值 |
+| `Abp.Web.Common` | `Du.Abp.Web.Common` | `Abp.Web.Common` | 保持原值 |
+| `Abp.ZeroCore` | `Du.Abp.ZeroCore` | `Abp.ZeroCore` | 保持原值 |
+
+**包名不等于命名空间，也不要求与程序集名相同。** `yopichy` 已经通过独立 `AbpLts.*` PackageId、保留 `Abp.*` 程序集和代码名称的方式提供了实际例子；本项目采用的是用户自己的 `Du.Abp*` 包身份，不复用其他维护者的包名。[A2]
+
+核心项目的意图可表达为：
+
+```xml
+<PropertyGroup>
+  <TargetFramework>net10.0</TargetFramework>
+  <AssemblyName>Abp</AssemblyName>
+  <RootNamespace>Abp</RootNamespace>
+  <PackageId>Du.Abp</PackageId>
+</PropertyGroup>
+```
+
+这里的 .NET 10 是首条维护线的建议目标；`PackageId` 映射与命名空间约束则是已经确定的规则。此示例不代表已经发布了相应版本。
+
+### 1.2 “命名空间不变”的能力边界
+
+保持类型名称可以减少源码迁移，并有助于维持使用类型名的集成点，但不能单独保证完整兼容。升级 EF Core、AutoMapper 或运行时仍可能改变方法签名、依赖解析、行为和部署要求。
+
+因此，兼容性至少需要分开验证：
+
+1. **源码兼容：**原有 `using Abp...`、类型引用和受支持的公共 API 能否继续编译。
+2. **二进制兼容：**已编译扩展与实际程序集身份、签名和公共 API 是否匹配；不能凭名称不变直接承诺。
+3. **行为兼容：**租户过滤、权限、UoW、事务、审计和异常处理是否保持预期语义。
+4. **数据兼容：**既有数据库、Blob 名称、缓存值、持久化任务和序列化数据能否继续使用。
+5. **发行兼容：**包依赖、目标框架、安装步骤和部署要求是否清楚且可执行。
+
+## 2. 从 Silo 借鉴什么
+
+Silo 是从 MinIO 派生的独立对象存储项目。其公开宣言把独立交付、兼容协议和已有数据、持续安全维护作为主要方向。我们能借鉴的是它已经公开实现的工程机制；现有证据不足以据此推导出多年治理稳定、所有部署可无风险回退或确定的商业成功。[S1]、[S2]
+
+本次参考的 Silo 源码快照为 `d66020003cb20f07c765f71c0a060c9ef986f545`；最新已核实发行标签为 `RELEASE.2026-11-12T00-00-00Z`，对应构建源码 `44e848fedf8cec3d8c0da4b1aa8422390a2b7a8b`。[S1]、[S7]
+
+| Silo 已公开的做法 | 对本项目的具体启发 | 采用时的边界 |
+| --- | --- | --- |
+| 独立产品与发行身份，同时保留 `MINIO_*`、相关请求头、路径和存储约定 | NuGet 改为 `Du.Abp*`，公共代码契约继续使用 `Abp.*` | S3 协议兼容不能直接证明 .NET 二进制兼容 |
+| 用 rebrand guard 检查哪些旧标识必须保留 | 把命名空间、程序集、公共类型和包名映射规则做成自动检查 | 不能只靠全仓库字符串搜索，更不能全局替换 `Abp` |
+| 旧版本写入、新版本读写、再由旧版本读取的测试 | 对代表性应用建立升级和有条件回退验证 | 只对实际测试的组合负责，不承诺任意版本回退 |
+| 检查发布提交本身的构建和安全结果 | 发布必须绑定实际源码 SHA、对应测试结果和最终包 | PR 临时合并提交或依赖提交成功不等于发行验证 |
+| 服务器、Console、客户端、打包工程形成配套交付 | 同时照顾框架包、模板、迁移说明和真实消费者 | 不必为独立品牌重写所有可继续使用的上游组件 |
+| 公开安全处置记录，包括不受影响与无需新补丁的判断 | 每项重要上游修复、依赖公告都留下适用性、测试和发行记录 | 一次扫描结果只是当时快照 |
+| 明确维护范围与责任，并提供可阅读的贡献和维护说明 | 先支持一条主维护线和有限模块矩阵，说明维护者与支持边界 | 不因使用“LTS”字样就作出无法兑现的期限或 SLA |
+
+上述机制分别可以在宣言、兼容性说明、改名检查器、升级脚本、发布工作流、安全记录和组件规范中核查。[S2]—[S12]
+
+### 2.1 最值得迁移的原则：更改交付身份，保护使用者依赖的契约
+
+Silo 保留旧协议及运维兼容入口，是为了让已有客户端和数据继续工作。本项目需要同样明确地区分“发行身份”与“代码契约”：
+
+- 新身份体现在 NuGet 包、项目说明、维护者、发行记录和支持入口。
+- 原有 `Abp.*` 命名空间及类型名称不随品牌变化。
+- 原有配置项、接口、持久化格式和数据库语义不作无目的的改名。
+- 代码生成器、模板、文档示例和扩展模块也遵守同一规则。
+
+### 2.2 不能直接照搬的部分
+
+Silo 的 `minio-upgrade.sh` 使用 Docker 容器夹具验证固定版本组合，覆盖部分对象、权限和升级场景。用户的应用部署要求是 Linux、macOS、Windows 原生运行，因此这里采用它的验证顺序，改用本机应用进程和受支持的数据服务，不要求引入 Docker、Kubernetes 或虚拟机来运行应用。[S5]
+
+Silo 的升级测试也不是数据库 schema 任意降级的证明。若本项目修改数据库结构或持久化格式，必须分别说明：可原地回退、需要恢复备份，还是该升级不可降级。
+
+Silo 的发行资产包括三平台二进制，但当前 Go 测试工作流主要在 Ubuntu 上运行，并包含交叉编译。三平台产物不等于三平台都完成原生全量测试；本文提出的应用原生验收是本项目需要自行落实的要求。[S7]、[S11]
+
+Silo 的许可证、维护组织和依赖生态与 ASP.NET Boilerplate 不同。工程经验可以复用，许可责任仍应按本项目及具体第三方依赖逐项确认。[A1]、[S1]
+
+### 2.3 用真实消费者验证维护价值
+
+公开下游中，可以核实两种不同层次的采用：RAGFlow 的默认 Compose 配置使用 Silo 镜像，同时保留旧的环境变量和健康检查入口；BuildKit 的具体提交则把 S3 集成测试服务端和客户端切换到 Silo / mcli。[S13]、[S14]
+
+前者是默认部署配置采用，后者是集成测试采用，都不能推导成所有下游用户已经生产迁移。对本项目，更有用的验收证据是一个真实旧 ABP 应用通过实际 `Du.Abp*` 包完成升级，再由另一个独立消费者验证安装和关键路径。
+
+Silo 还明确限定协同维护组件，并继续复用满足要求的上游 SDK。这支持一个适合本项目的选择：维护用户真正依赖的完整组合，同时让可以继续复用的成熟依赖保持独立，不为发行品牌扩大 fork 范围。[S12]
+
+## 3. 用有限范围形成第一个可靠发行版
+
+### 3.1 建议的首版范围
+
+首版围绕“.NET 10、既有 Abp API 使用习惯、重要修复、独立包、可执行迁移”收敛。保留现有模块系统、Castle Windsor 和拦截架构作为起点；核心 DI 重写、全面 NativeAOT、默认对象映射替换分别立项。
+
+| 层次 | 建议范围 | 验收重点 |
+| --- | --- | --- |
+| 框架基础 | 核心、模块加载、DI、UoW、授权、验证、审计 | 初始化、生命周期与拦截语义 |
+| Web | 业务实际使用的 ASP.NET Core 与公共 Web 支持包 | 启动、请求处理、认证授权、错误响应 |
+| 数据访问 | EF Core 及首批真实使用的数据库提供程序 | 事务、迁移、过滤、并发、批量更新 |
+| 多租户与身份 | 若现有应用需要，则纳入 Module Zero / OpenIddict 相关包 | 租户隔离、权限、身份数据保存 |
+| 可选集成 | 按真实消费者需求纳入 Redis、后台任务、邮件、Blob 等 | 包依赖闭包与最小集成用例 |
+| 后续研究 | Mapperly、编译期拦截、其他 ORM 和更多提供程序 | 独立设计、验证与支持决定 |
+
+维护范围应列出具体模块和版本，不能只写“支持旧 ABP 全生态”。保留源码但未正式支持的模块，应明确标注；不要因为源码树中还有项目，就把它列入首版承诺。
+
+### 3.2 单一事实来源
+
+为正式发行的每个项目维护一份包映射与支持清单，至少包含：源码项目、原 PackageId、新 PackageId、AssemblyName、RootNamespace、目标框架、内部依赖、发行状态和消费者测试。
+
+打包脚本、依赖检查和发布说明应读取或核对这份清单，避免三套手工列表逐渐失配。初期可用一份简单的结构化文件完成，无需建设额外平台。
+
+## 4. 分阶段执行路线
+
+下列阶段以验收结果推进，不预先承诺未经容量评估的交付日期。
+
+| 阶段 | 核心工作 | 阶段产物 | 进入下一阶段的条件 |
+| --- | --- | --- | --- |
+| R0 固定基线与规则 | 固定上游 tag/SHA；记录硬约束；盘点包和真实消费者 | 上游记录、包映射、支持矩阵、公共 API 基线 | 能复现基线；迁移范围明确 |
+| R1 维护与升级 | 审查重要上游修复；迁移 .NET 10；处理依赖和 API 变化 | 小而可追溯的提交、回归用例、变更说明 | 核心行为测试通过，重要修复逐项有结论 |
+| R2 独立包交付 | 改 PackageId；转换内部依赖；统一版本；修复打包脚本 | `Du.Abp*` 候选包、符号包、依赖清单 | 命名空间和程序集检查通过，消费者无新旧框架混装 |
+| R3 消费者迁移 | 从包源安装；升级代表性应用；验证数据和回退 | 可运行模板、迁移指南、平台测试结果 | 文档步骤可从干净环境执行 |
+| R4 首次正式发行 | 对最终提交执行门禁；记录源码与产物关系；发布 | tag、NuGet 包、发布说明和支持矩阵 | 发行证据完整，实际发布包完成消费者验证 |
+| R5 持续维护 | 跟踪上游和依赖公告；处理回归；更新支持状态 | 定期补丁、维护记录、下一次候选版本 | 每次补丁重复必要门禁 |
+| R6 有边界地演进 | 评估 Mapperly、Serilog、编译期拦截等 | 可选模块、独立设计与迁移说明 | 不破坏命名空间硬约束，且收益覆盖维护成本 |
+
+### R0：固定可追溯的基线
+
+以官方稳定 tag 为来源，另外记录需要吸收的 tag 之后修复。按本次研究，官方最新已核实版本是 `v10.5.1`；`#7219` 位于该版本之后，需单独审查。[A3]、[A4]
+
+不要把其他 fork 的较大版本号当成“已经包含上游全部修复”。例如 `AbpLts 10.5.3` 是独立发行线，并未自动包含官方 `Abp 10.5.1` 的全部变更；详细差异见配套文档。
+
+建立公共 API 与命名基线时，保存完整类型名、公开方法签名、程序集身份和关键资源名称。基线必须来自固定源码或已确认的包，不用会持续变化的默认分支名称代替。
+
+### R1：先保住重要行为，再处理可选架构变化
+
+将上游修复、运行时升级、依赖升级和本项目功能分别整理成可审查的提交。优先验证多租户、查询过滤、软删除、认证存储、事务、权限和 Webhook 等涉及正确性与隔离的路径。
+
+对于已经包含在选定 tag 中的修复，重点是验证它们经过 EF Core 10 等适配后仍然成立；对于 tag 之后的修复，记录是否移植、如何调整以及测试结果。不要仅凭提交是否出现在祖先图中判断等价补丁是否已经吸收。
+
+`yopichy` 的 .NET 10、EF Core API、测试宿主和打包改动可以作为直接研究起点；保留原作者和来源 SHA。引入任何依赖大版本时，同时检查许可、API 和行为变化。[A2]、[A5]
+
+### R2：完成包依赖整体迁移
+
+只修改顶层 PackageId 不够。正式包的内部依赖应指向本项目对应的 `Du.Abp*` 包，原有框架程序集仍叫 `Abp*`。
+
+必须检查实际 `.nupkg` 的 nuspec 与消费者还原结果：
+
+- 本项目框架包之间的依赖是否全部转换。
+- 第三方插件是否把上游 `Abp*` 或另一发行线 `AbpLts*` 重新带入依赖图。
+- 包是否包含正确的 DLL、目标框架、符号、许可证和源码仓库信息。
+- 生成器和分析器是否按预期供消费者使用。
+- 打包是否依赖本机缓存、私有 feed 或旧 `bin/obj` 产物。
+
+第三方包不能仅因名字包含 `Abp` 就自动改名；对其依赖和兼容性逐项处理。某个插件无法切换到新包身份时，应先确认支持办法，而不是允许两套同名框架程序集无意混装。
+
+### R3：验证升级路径和实际消费者
+
+至少保留一个代表性应用作为迁移样本，分开验证三件事：
+
+1. **安装路径：**从空白项目或干净检出开始，仅通过候选 NuGet 包完成 restore、build、启动和关键请求。
+2. **应用升级：**原应用切换包依赖并升级目标框架，验证公共 API、配置、数据和业务关键路径。
+3. **回退边界：**验证能否切回旧应用；若有 schema 或格式变化，使用明确的备份恢复或迁移策略。
+
+建议使用来自真实业务的最小数据集，至少包含不同租户、软删除记录、权限、持久化任务、认证数据，以及业务实际使用的 Blob 或缓存结构。测试必须避免泄露真实生产个人数据。
+
+三平台验证应让应用在 Windows、Linux、macOS 对应环境中以原生进程运行。数据库可使用支持矩阵中明确的受支持服务实例，不能因为一个提供程序在某个平台可还原，就宣称完整数据库部署也受支持。
+
+### R4：发布绑定精确提交和最终产物
+
+参考 Silo 对发布提交与通过检查之间关系的明确核验，本项目应保存“源码 SHA → 测试记录 → 候选包 → 消费者结果 → 正式发行”的对应关系。[S6]、[S7]
+
+建议流程：
+
+1. 选定固定候选 SHA，冻结本次包清单和版本。
+2. 对该 SHA 执行 Release 构建、必要回归、命名检查和依赖审查。
+3. 生成最终候选包；如签名或重新打包会改变字节，应在变更后记录校验值。
+4. 用这些候选包完成消费者安装、启动和升级验证。
+5. 按已确定的发布授权和流程，发布 tag、包和对应说明。
+6. 对实际发布包做简短的安装核验，保留源码与包之间的溯源信息。
+
+绿色 badge、不同 SHA 的历史测试、自动 dependency submission，均不能替代候选版本的验证。NuGet 包应按不可变发行物管理，出现错误时发布新版本，不用覆盖同一版本来隐藏变化。
+
+### R5：把持续维护控制在可承担的规模内
+
+初期建议只维护一条主发行线，另外保留清晰的上游跟踪引用。只有出现真实消费者需求且有验证能力时，再增加并行维护分支。
+
+建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。
+
+每项重要问题至少留下：来源、适用模块、影响判断、处理决定、修复提交、测试、首次包含该修复的发行版本。对于不受影响、已经修复或暂不升级的情况，也记录理由和复核条件。
+
+同时约定停止维护时的处理方式：公开受影响的版本和范围，保留源码、tag、包映射和最后可用的迁移说明，给出接续维护或迁移入口。Silo 宣言中的发行节奏与退出条件属于其公开承诺，本项目应按自身能力制定，不能照抄为已保证的服务期限。[S2]、[S9]、[S10]
+
+### R6：将架构演进作为可选择的能力
+
+中央包管理和独立日志模块通常可以先以小范围工程变化引入。Mapperly、编译期拦截和替换 Windsor 涉及更多契约，需要单独证明它们对现有应用的收益与迁移成本。
+
+候选模块仍必须保持适当的 `Abp.*` 命名空间，NuGet 包使用 `Du.Abp.<Module>`。发布新包不构成修改既有公共类型命名空间的理由。
+
+## 5. 将兼容性硬约束落实为发布门禁
+
+### 5.1 必须能自动发现的错误
+
+| 检查 | 检查对象 | 不通过的典型情况 |
+| --- | --- | --- |
+| 命名空间检查 | 框架源码及生成代码 | 把 `namespace Abp...` 改成 `namespace Du.Abp...` |
+| 公共类型名比较 | 实际构建的程序集 | 既有公共类型全名因品牌改名而变化 |
+| 程序集名称比较 | 输出 DLL 元数据与包内容 | 既有 `Abp.dll` 被改成 `Du.Abp.dll` |
+| 包映射检查 | 包清单与 nuspec | 首个核心包误命名为 `Du.Abp.Abp`，或遗漏某个内部依赖 |
+| 依赖闭包检查 | 消费者还原的依赖图 | 意外混入原 `Abp*` 与另一发行线的同名程序集 |
+| 源码/二进制兼容检查 | 公共 API 基线与代表性扩展 | 名称虽然保留，但签名或加载行为出现未说明变化 |
+| 消费者测试 | 实际候选包 | 仓库测试通过，用户按文档却缺少生成器或运行依赖 |
+
+命名空间检查宜使用编译器语法或元数据分析识别实际声明。`rg` 可用于快速审查，但单次正则搜索不能覆盖文件作用域命名空间、别名、生成代码和反射字符串的所有情况。
+
+门禁的目标是防止兼容性退化。修复已有错误或更新 API 基线时，必须记录具体理由；**不得通过更新基线把 `Abp.*` → `Du.Abp.*` 的违约改名合法化。**
+
+### 5.2 发布审查清单
+
+- [ ] 既有 `Abp` / `Abp.*` 命名空间保持不变；公共类型全名未因包品牌迁移而变化。
+- [ ] `Du.` 仅作为本项目 NuGet PackageId 前缀，没有进入框架代码命名空间。
+- [ ] 既有 AssemblyName 与 RootNamespace 未因包名映射而变化。
+- [ ] 包映射完整，内部依赖一致，消费者无意外混装。
+- [ ] 目标框架、依赖和公共 API 变化已经记录。
+- [ ] 当前上游重要修复逐项有适用性结论。
+- [ ] 候选 SHA 的 Release 构建、关键回归和必要平台验证完成。
+- [ ] 实际包的安装与升级步骤可以按文档复现。
+- [ ] 回退能力及数据库/持久化格式限制已经写清。
+- [ ] 发布说明、源码 SHA、包清单、支持矩阵和校验信息相互对应。
+
+## 6. 最小文档与维护记录
+
+建议在项目中形成以下少量、职责清楚的文档。文件名可以按仓库现有规范调整，内容应避免重复维护。
+
+| 文档 | 应回答的问题 |
+| --- | --- |
+| 兼容性政策 | 哪些契约永久保留？什么变更需要迁移说明？ |
+| 上游与补丁记录 | 基于哪个 tag/SHA？重要后续修复处理到哪里？ |
+| 包映射与支持矩阵 | 哪些 `Du.Abp*` 包正式支持哪些平台、数据库和模块？ |
+| 升级指南 | 如何替换包引用、升级运行时、处理插件和已有数据？ |
+| 发布说明 | 本版本改变了什么、基于什么、验证了什么、有哪些限制？ |
+| 安全与维护说明 | 如何报告问题、维护哪些版本、如何记录修复和退出维护？ |
+
+首次发布说明至少列出本项目版本、对应上游、额外补丁、运行时和数据库矩阵、包身份映射、公共 API/行为变化、验证范围、已知限制以及回退说明。
+
+贡献与 AI 开发规范中也应重复最核心的一句：**NuGet 改名只改变 PackageId；既有 `Abp.*` 代码命名空间永久不变。** 自动生成代码、批量重命名和迁移脚本都必须接受同一检查。
+
+## 7. 采用顺序与完成标准
+
+建议按以下顺序投入：
+
+1. 固定上游与命名约束，建立包和消费者清单。
+2. 保留重要上游修复并完成 .NET 10 适配。
+3. 完成 `Du.Abp*` 包依赖整体迁移，补齐打包和源码元数据。
+4. 用真实包验证代表性应用、数据和支持平台。
+5. 形成可追溯的首版发行及后续维护记录。
+6. 再评估 Mapperly、编译期拦截和其他架构变化。
+
+首版是否完成，应以“用户能够按说明安装、迁移和确认兼容性，维护者能够解释每个关键差异及其验证结果”判断。仅有 fork 仓库、版本号、绿色 badge 或 NuGet 上传记录，都不能单独证明上述目标已经达到。
+
+## 8. 参考资料与证据边界
+
+以下为一手项目资料。标记为“建议”的内容是针对本项目的工程判断，不是 Silo 或其他维护者对本项目作出的承诺。默认分支、在线网页与包信息可能继续变化；固定 SHA 链接用于复核本次源码观察。
+
+### Silo
+
+- [S1] [Silo 仓库 README（固定源码）](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/README.md)。项目定位、组件与发行入口。
+- [S2] [Silo Manifesto](https://silo.pgsty.com/about/manifesto/)。独立维护、兼容性和维护承诺的公开说明。
+- [S3] [服务器兼容性审计](https://silo.pgsty.com/compatibility/server/) · [迁移说明](https://silo.pgsty.com/compatibility/migration/)。保留的契约、行为变化与迁移边界；网页内容按核查日理解。
+- [S4] [Rebrand guard](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/buildscripts/rebrand-guard/main.go)。将允许改名与必须保留的标识规则变为代码检查。
+- [S5] [升级与回退测试脚本](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/buildscripts/minio-upgrade.sh)。固定旧/新版本组合与特定测试数据，不代表任意部署都能无损回退。
+- [S6] [发布提交检查脚本](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/buildscripts/check-release-commit.sh)。核对指定提交与必要检查结果。
+- [S7] [2026-11-12 发行](https://github.com/pgsty/silo/releases/tag/RELEASE.2026-11-12T00-00-00Z)。实际产物与发行说明。
+- [S8] [发布工作流](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/.github/workflows/release.yml) · [发行测试](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/.github/workflows/test-release.yml) · [发行定稿](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/.github/workflows/finalize-release.yml)。应区分工作流定义、实际运行记录与产物状态。
+- [S9] [安全维护政策](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/SECURITY.md) · [漏洞报告规范](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/VULNERABILITY_REPORT.md)。支持范围与影响判断。
+- [S10] [官方安全账本](https://silo.pgsty.com/about/security-advisories/)。修复、影响边界及无需新增补丁的判断记录。
+- [S11] [Go CI 工作流](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/.github/workflows/go.yml)。实际 runner、检查和交叉编译定义。
+- [S12] [维护与协作规范](https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/AGENTS.md) · [组件版本矩阵](https://silo.pgsty.com/compatibility/versions/)。组件边界和依赖复用政策。
+- [S13] [RAGFlow 采用 Silo 的固定部署配置](https://github.com/infiniflow/ragflow/blob/7d171d2cf3d26264c3bbbdc46122ba45676c90c9/docker/docker-compose-base.yml)。证明该配置采用，不代表所有用户的实际部署。
+- [S14] [BuildKit S3 集成测试切换提交](https://github.com/moby/buildkit/commit/4509d3ac465a62e27de90d4239e34b966c3e3de1)。证明集成测试采用，不代表整个产品的生产存储迁移。
+
+### ASP.NET Boilerplate 与参考 fork
+
+- [A1] [ASP.NET Boilerplate 仓库](https://github.com/aspnetboilerplate/aspnetboilerplate) · [MIT 许可证](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/LICENSE)。本文针对经典 ASP.NET Boilerplate，不是 `abpframework/abp`。
+- [A2] [yopichy 核心项目文件](https://github.com/yopichy/aspnetboilerplate/blob/0e5b06ce33471403da0804d6a948b5794ee31739/src/Abp/Abp.csproj) · [打包脚本](https://github.com/yopichy/aspnetboilerplate/blob/0e5b06ce33471403da0804d6a948b5794ee31739/nupkg/pack.ps1)。独立包身份与既有程序集名称分离的实际例子。
+- [A3] [上游 v10.5.1](https://github.com/aspnetboilerplate/aspnetboilerplate/releases/tag/v10.5.1)。核查基线和包含的修复。
+- [A4] [上游 PR #7219](https://github.com/aspnetboilerplate/aspnetboilerplate/pull/7219)。嵌套 compiled query 过滤状态修复。
+- [A5] [yopichy .NET 10 迁移提交](https://github.com/yopichy/aspnetboilerplate/commit/a5d37de73ff91b40ccaa86db4a2737d60dba2dcf) · [v10.5.3 发行说明](https://github.com/yopichy/aspnetboilerplate/releases/tag/v10.5.3)。迁移工作与维护者报告的验证范围。
+
+[S1]: https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/README.md
+[S2]: https://silo.pgsty.com/about/manifesto/
+[S3]: https://silo.pgsty.com/compatibility/server/
+[S4]: https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/buildscripts/rebrand-guard/main.go
+[S5]: https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/buildscripts/minio-upgrade.sh
+[S6]: https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/buildscripts/check-release-commit.sh
+[S7]: https://github.com/pgsty/silo/releases/tag/RELEASE.2026-11-12T00-00-00Z
+[S8]: https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/.github/workflows/release.yml
+[S9]: https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/SECURITY.md
+[S10]: https://silo.pgsty.com/about/security-advisories/
+[S11]: https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/.github/workflows/go.yml
+[S12]: https://github.com/pgsty/silo/blob/d66020003cb20f07c765f71c0a060c9ef986f545/AGENTS.md
+[S13]: https://github.com/infiniflow/ragflow/blob/7d171d2cf3d26264c3bbbdc46122ba45676c90c9/docker/docker-compose-base.yml
+[S14]: https://github.com/moby/buildkit/commit/4509d3ac465a62e27de90d4239e34b966c3e3de1
+[A1]: https://github.com/aspnetboilerplate/aspnetboilerplate
+[A2]: https://github.com/yopichy/aspnetboilerplate/blob/0e5b06ce33471403da0804d6a948b5794ee31739/src/Abp/Abp.csproj
+[A3]: https://github.com/aspnetboilerplate/aspnetboilerplate/releases/tag/v10.5.1
+[A4]: https://github.com/aspnetboilerplate/aspnetboilerplate/pull/7219
+[A5]: https://github.com/yopichy/aspnetboilerplate/commit/a5d37de73ff91b40ccaa86db4a2737d60dba2dcf
