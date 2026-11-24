@@ -26,3 +26,11 @@
 | `AutoMapper.Collection` | 集合映射扩展及其依赖闭包 |
 
 各专题保留原调研日期和证据范围。后续的兼容组合、构建、发包与真实应用验收进度以实际执行记录为准。
+
+## OpenSpec
+
+主仓使用 `openspec-cn` 的 `spec-driven` 工作流。项目约束和制品规则见 [OpenSpec 配置](../openspec/config.yaml)。
+
+- 新能力、重大行为变化或跨子模块架构调整，先核对 `openspec/specs/` 和 `openspec/changes/`。可用 `openspec-cn list --specs` 和 `openspec-cn list` 查看。
+- 用 `openspec-cn new change <name>` 创建变更，在 `openspec/changes/<name>/` 中完成提案、增量规范、设计和任务清单。
+- 实施后记录子模块提交、实际验证结果及适用的兼容范围。运行 `openspec-cn validate --all --strict --no-interactive`，完成的变更使用 `openspec-cn archive <name>` 归档。
