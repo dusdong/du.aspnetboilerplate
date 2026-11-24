@@ -1,10 +1,10 @@
 # 参考 Silo：一条适合维护型 fork 的路线
 
-## 当前阶段（2026-11-24）
+## 当前阶段（2026-11-25）
 
 - R0 已验收并归档。上游 `v10.5.1` 的首批五包源码基线记录了公共 API、还原图和三套回归，实测环境为 macOS ARM64、.NET 9，EF Core 关系型用例使用 SQLite。[R0 基线](release-baseline.json) · [R0 归档](../../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)
 - R0 统一复验已完成本地与 GitHub Actions 的独立配对验收并归档。两次执行均用 `python3 eng/verify.py --profile r0` 复验固定的原版 R0 源码。[复验手册](baseline-evidence/README.md#统一入口) · [配对验收记录](baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](../../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
-- R1 首项已验收并归档，在同一 .NET 9 环境接入上游 EF Core 查询过滤修复 #7219。运行时迁移至 .NET 10 / EF Core 10 仍待实施，首批候选包与完整模板的消费验收分别属于后续 R2、R3。[R1 首项验收记录](r1-efcore-query-filter.md) · [R1 首项归档](../../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/)
+- R1 首项已验收并归档，在同一 .NET 9 环境接入上游 EF Core 查询过滤修复 #7219。首批 .NET 10 / EF Core 10 源码已通过 macOS ARM64、UTM Windows ARM64 和 GitHub Windows x64 验收，已合入框架 `dev` 并由主仓 gitlink 固定。首批候选包与完整模板的消费验收分别属于后续 R2、R3。[R1 首项验收记录](r1-efcore-query-filter.md) · [R1 运行时迁移验收](r1-dotnet10-runtime-migration.md) · [迁移归档](../../openspec/changes/archive/2026-11-25-migrate-r1-core-to-dotnet10/)
 
 **原路线与研究说明**
 
@@ -173,6 +173,8 @@ R0 已于 2026-11-24 验收。基线范围为官方 `v10.5.1` 源码上的首批
 `yopichy` 的 .NET 10、EF Core API、测试宿主和打包改动可以作为直接研究起点；保留原作者和来源 SHA。引入任何依赖大版本时，同时检查许可、API 和行为变化。[A2]、[A5]
 
 **2026-11-24 首项补丁已验收。** 在 R0 基线的 .NET 9 环境中吸收了上游 #7219，完成 Release 构建和三套回归。框架提交 `d08617b51bb7c7e5d0bea942e7e10b2677240c35` 已推送到 fork 的 `dev`，主仓接入提交为 `9964e312b36499b625bd2b7615da741b87b8f003`。该补丁作为 .NET 10 / EF Core 10 迁移的行为对照。[补丁验收记录](r1-efcore-query-filter.md) · [稳定规范](../../openspec/specs/efcore-query-filters/spec.md) · [首项归档](../../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/)
+
+**2026-11-25 运行时迁移完成 Git 交付与归档。** 三套 .NET 10 核心回归为 1341 通过、0 失败、2 项既有跳过。六个 .NET 9 调用方通过默认目标 Release 构建，定向验收包括 Module Zero 的四项批量更新。默认 Windows 解决方案在 UTM ARM64 和 GitHub x64 各取得 2805 通过、0 失败、9 项既有跳过。框架原样合入实测源码树。[验收与交付记录](r1-dotnet10-runtime-migration.md) · [框架 PR #1](https://github.com/dusdong/aspnetboilerplate/pull/1)
 
 | 顺序 | 交付物 | 进入下一项的依据 |
 | --- | --- | --- |
