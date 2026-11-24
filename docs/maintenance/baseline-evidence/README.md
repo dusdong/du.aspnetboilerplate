@@ -2,6 +2,21 @@
 
 [维护基线记录](../release-baseline.json) 固定主仓输入、框架提交、五个计划包的闭包、模板的源码声明和实测结果。复验使用 .NET SDK `9.0.306`、.NET 9 和 ASP.NET Core 9 运行时、Python 3.10 或以上、zsh、Git、tar、cmp 和 `shasum`。本次在 macOS ARM64 上实测，环境版本见基线记录。
 
+## 统一入口
+
+在主仓根目录运行。框架子模块须已检出，且其 Git 对象库能读取基线指定的 R0 提交和对应源码树。入口在独立物化的 R0 源码目录用 `dotnet --version` 核对实际 SDK。
+
+```sh
+python3 eng/tests/run_verify_r0_tests.py
+python3 eng/verify.py --profile r0
+```
+
+每次完整调用以两个独立的空 NuGet 包目录分别还原 `primary` 和 `repeat`。第二轮覆盖还原复验。与基线三方一致后，主轮沿用自己的源码和还原产物，依次核对项目身份、构建 Release、比较五个 DLL 的 API 并执行三套回归。需要一次独立完整复跑时，再执行同一个完整命令即可取得新的源码、缓存和结果目录。
+
+控制台以 `R0 report:` 显示当次 `report.json` 的绝对路径。报告记录主仓 `HEAD`、框架 gitlink、当前框架检出、固定 R0 提交、输入摘要及每阶段状态。报告目录同时包含两份还原清单、三方对照、MSBuild 求值、五组 API 清单与 DLL 摘要、原始日志和当次 TRX。失败时查看报告中的原因、已取得的证据及标记为 `not_run` 的阶段。
+
+可用 `--evidence-root <父目录>` 和 `--work-root <父目录>` 指定两个输出位置。默认由系统临时目录分别分配。可归档证据位于证据父目录下当次唯一的 `r0-*` 目录，临时源码、Release 产物、提取器构建和 NuGet 缓存位于工作父目录下当次唯一的 `r0-work-*` 目录。分开指定这两个父目录可让 CI 直接上传当次证据目录。
+
 ## 来源与还原
 
 在主仓根目录执行。先从主仓提交查询 gitlink，再用子模块对象核对引用。三个上游标签可直接查询，Angular 参考版本以库清单的 Git 对象为准。
@@ -88,5 +103,7 @@ python3 "$tools/inventory.py" compare-api "$baseline/api/Abp.json" "$evidence/Ab
 | `Abp.EntityFrameworkCore.Tests` | 58 | 0 | 0 |
 
 `Abp.Tests` 的 2 个跳过各有对应的 TRX `NotExecuted` 项，名称和原因详见基线记录。xUnit 在发现阶段另外去重了 42 条重复 ID，运行器报告的 1107 项总数未计入这些重复条目。
+
+统一入口按 `UnitTestResult` 明细和完整测试名核对跳过项，并交叉校验汇总。核心套件的原始 TRX 明细为 1105 个 `Passed`、两个基线中具名的 `NotExecuted`，汇总为 `total=1107`、`executed=1105`、`passed=1105`、`failed=0`、`notExecuted=0`。仅在本套件的完整测试名及其余关键计数均匹配时，报告接受这组 `notExecuted` 差异并单独登记。
 
 `Abp.EntityFrameworkCore.Tests` 的 `BloggingDbContext` 和 `SupportDbContext` 均由 `EntityFrameworkCoreTestModule` 通过 `UseSqlite` 接入已打开的 `Data Source=:memory:` 连接。实际资产包括 `Microsoft.EntityFrameworkCore.Sqlite 9.0.18`、`Microsoft.Data.Sqlite 9.0.18` 和 ARM64 SQLite 原生库。完整模板及候选包消费者的实际状态见基线中的 R2、R3 记录。

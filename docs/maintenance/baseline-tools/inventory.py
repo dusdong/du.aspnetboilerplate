@@ -29,7 +29,7 @@ def source_label(value):
     return urlunsplit((url.scheme, url.hostname, "/[已脱敏]", "", ""))
 
 
-def restore_inventory(root):
+def restore_inventory(root, packages_root=None):
     root = root.resolve()
     starting_paths = [f"src/{name}/{name}.csproj" for name in PACKAGE_NAMES]
     starting_paths += [f"test/{name}/{name}.csproj" for name in TEST_NAMES]
@@ -45,6 +45,8 @@ def restore_inventory(root):
         if Path(restore["projectPath"]).resolve() != root / relative:
             raise ValueError(f"资产文件的项目路径不一致：{relative}")
         package_root = Path(restore["packagesPath"])
+        if packages_root is not None and package_root.resolve() != packages_root.resolve():
+            raise ValueError(f"{relative} 的实际包目录为 {package_root}，预期为 {packages_root}")
         sources = sorted(source_label(source) for source in restore["sources"])
         targets = []
         for target, libraries in sorted(data["targets"].items()):
@@ -112,11 +114,41 @@ def compare_api(before, after):
     return changes
 
 
+def compare_restore(before, after, before_label, after_label):
+    sections = [
+        ("入口", {key: value for key, value in before.items() if key != "projects"},
+         {key: value for key, value in after.items() if key != "projects"}),
+    ]
+    for project in sorted(before["projects"].keys() | after["projects"].keys()):
+        earlier = before["projects"].get(project)
+        later = after["projects"].get(project)
+        if earlier is None or later is None:
+            sections.append((project, earlier, later))
+            continue
+        sections.append((project, earlier["effectiveSources"], later["effectiveSources"]))
+        earlier_targets = {(t["targetFramework"], t["runtimeIdentifier"] or ""): t for t in earlier["targets"]}
+        later_targets = {(t["targetFramework"], t["runtimeIdentifier"] or ""): t for t in later["targets"]}
+        for framework, rid in sorted(earlier_targets.keys() | later_targets.keys()):
+            target = f"{framework}/{rid}" if rid else framework
+            key = framework, rid
+            sections.append((f"{project} [{target}]", earlier_targets.get(key), later_targets.get(key)))
+    return "".join(
+        "".join(difflib.unified_diff(
+            json_text(earlier).splitlines(keepends=True),
+            json_text(later).splitlines(keepends=True),
+            fromfile=f"{before_label}: {section}", tofile=f"{after_label}: {section}",
+        ))
+        for section, earlier, later in sections if earlier != later
+    )
+
+
 def main():
     parser = argparse.ArgumentParser()
     commands = parser.add_subparsers(dest="command", required=True)
     restore = commands.add_parser("restore")
     restore.add_argument("root", type=Path)
+    restore.add_argument("--output", type=Path)
+    restore.add_argument("--packages-root", type=Path)
     for command in ("compare-restore", "compare-api"):
         diff = commands.add_parser(command)
         diff.add_argument("before", type=Path)
@@ -124,7 +156,11 @@ def main():
     args = parser.parse_args()
 
     if args.command == "restore":
-        print(json_text(restore_inventory(args.root)), end="")
+        result = json_text(restore_inventory(args.root, args.packages_root))
+        if args.output:
+            args.output.write_text(result, encoding="utf-8")
+        else:
+            print(result, end="")
         return 0
 
     before, after = read_json(args.before), read_json(args.after)
@@ -133,11 +169,8 @@ def main():
         print(json_text({"assembly": before["assembly"]["name"], "changes": changes}), end="")
         return int(bool(changes))
     if before != after:
-        print("".join(difflib.unified_diff(
-            json_text(before).splitlines(keepends=True),
-            json_text(after).splitlines(keepends=True),
-            fromfile=str(args.before), tofile=str(args.after),
-        )), end="")
+        differences = compare_restore(before, after, args.before, args.after)
+        print(differences or "还原清单的结构或顺序不同\n", end="")
         return 1
 
     print(json_text({
