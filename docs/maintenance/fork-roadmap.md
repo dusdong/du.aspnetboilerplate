@@ -4,7 +4,8 @@
 
 - R0 已验收并归档。上游 `v10.5.1` 的首批五包源码基线记录了公共 API、还原图和三套回归，实测环境为 macOS ARM64、.NET 9，EF Core 关系型用例使用 SQLite。[R0 基线](release-baseline.json) · [R0 归档](../../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)
 - R0 统一复验已完成本地与 GitHub Actions 的独立配对验收并归档。两次执行均用 `python3 eng/verify.py --profile r0` 复验固定的原版 R0 源码。[复验手册](baseline-evidence/README.md#统一入口) · [配对验收记录](baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](../../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
-- R1 首项已验收并归档，在同一 .NET 9 环境接入上游 EF Core 查询过滤修复 #7219。首批 .NET 10 / EF Core 10 源码已通过 macOS ARM64、UTM Windows ARM64 和 GitHub Windows x64 验收，已合入框架 `dev` 并由主仓 gitlink 固定。首批候选包与完整模板的消费验收分别属于后续 R2、R3。[R1 首项验收记录](r1-efcore-query-filter.md) · [R1 运行时迁移验收](r1-dotnet10-runtime-migration.md) · [迁移归档](../../openspec/changes/archive/2026-11-25-migrate-r1-core-to-dotnet10/)
+- R1 首项已验收并归档，在同一 .NET 9 环境接入上游 EF Core 查询过滤修复 #7219。首批 .NET 10 / EF Core 10 源码已通过 macOS ARM64、UTM Windows ARM64 和 GitHub Windows x64 验收，已合入框架 `dev` 并由主仓 gitlink 固定。[R1 首项验收记录](r1-efcore-query-filter.md) · [R1 运行时迁移验收](r1-dotnet10-runtime-migration.md) · [迁移归档](../../openspec/changes/archive/2026-11-25-migrate-r1-core-to-dotnet10/)
+- R2 本地候选 `10.5.1-r2.1` 的五个核心包已通过 macOS ARM64 的 `net9.0` 与 `net10.0` 独立后端验收，覆盖两条传递依赖链、实际程序集加载和 SQLite 工作单元提交。OpenSpec 已归档。框架 `dev` 已推送同树实现，主仓 gitlink 记录该提交。完整模板属于 R3，公开包发布属于 R4。[R2 候选包消费验收](r2-core-package-consumption.md) · [R2 归档](../../openspec/changes/archive/2026-11-25-validate-r2-core-package-consumption/)
 
 **原路线与研究说明**
 
@@ -185,6 +186,8 @@ R0 已于 2026-11-24 验收。基线范围为官方 `v10.5.1` 源码上的首批
 R4 的发行对象是通过上述验收的具体候选。后续补丁进入 R5；R6 的架构替换由实际消费需求单独排期。
 
 ### R2：完成包依赖整体迁移
+
+首批五个包的双目标实测组合及复跑命令见 [R2 候选包消费验收](r2-core-package-consumption.md)。
 
 只修改顶层 PackageId 不够。正式包的内部依赖应指向本项目对应的 `Du.Abp*` 包，原有框架程序集仍叫 `Abp*`。
 

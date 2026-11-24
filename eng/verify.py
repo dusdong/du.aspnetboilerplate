@@ -480,10 +480,25 @@ def make_run_directory(parent, prefix):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--profile", required=True, choices=("r0",))
+    parser.add_argument("--profile", required=True, choices=("r0", "r2"))
     parser.add_argument("--evidence-root", type=Path)
     parser.add_argument("--work-root", type=Path)
+    parser.add_argument("--candidate-feed", type=Path)
+    parser.add_argument("--candidate-manifest", type=Path)
+    parser.add_argument("--candidate-symbols", type=Path)
+    parser.add_argument("--r1-evidence", type=Path)
+    parser.add_argument("--dotnet", type=Path)
     args = parser.parse_args()
+    if args.profile == "r2":
+        if not all((args.candidate_feed, args.candidate_manifest, args.r1_evidence, args.evidence_root)):
+            parser.error("r2 需要 --candidate-feed、--candidate-manifest、--r1-evidence 和 --evidence-root")
+        if args.work_root:
+            parser.error("r2 在 --evidence-root 下建立隔离工作目录")
+        sys.dont_write_bytecode = True
+        from r2_verify import execute
+        return execute(args)
+    if any((args.candidate_feed, args.candidate_manifest, args.candidate_symbols, args.r1_evidence, args.dotnet)):
+        parser.error("候选、R1 对照和私有 dotnet 参数适用于 r2")
     run = R0Run(ROOT, make_run_directory(args.evidence_root, "r0-"))
     print(f"R0 report: {run.report_path}", flush=True)
     return run.execute(args.work_root)
