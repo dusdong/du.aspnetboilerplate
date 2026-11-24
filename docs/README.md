@@ -7,7 +7,7 @@
 | 任务 | 入口 |
 | --- | --- |
 | 查看各阶段目标、当前进度与发行条件 | [维护型 fork 路线](maintenance/fork-roadmap.md) |
-| 复验 R0 的还原、Release 构建、公共 API 与回归 | [R0 基线复验手册](maintenance/baseline-evidence/README.md) |
+| 用 `python3 eng/verify.py --profile r0` 复验 R0 的还原、Release 构建、公共 API 与回归 | [统一复验入口](maintenance/baseline-evidence/README.md#统一入口) · [本地与 GitHub Actions 配对验收](maintenance/baseline-evidence/README.md#统一入口验收记录) |
 | 核对 EF Core 查询过滤补丁的提交、兼容行为与回归结果 | [R1 首项补丁验收记录](maintenance/r1-efcore-query-filter.md) |
 | 比较第三方 fork 的迁移、补丁与独立发包实践 | [ASP.NET Boilerplate fork 调研](maintenance/fork-references.md) |
 | 维护映射行为、Collection 依赖或消费项目回归 | [AutoMapper 兼容维护](compatibility/automapper.md) |
@@ -53,7 +53,7 @@ git submodule status
 
 主仓使用 `openspec-cn` 的 `spec-driven` 工作流。项目约束和制品规则见 [OpenSpec 配置](../openspec/config.yaml)。
 
-截至 2026-11-24，R0 和 R1 首项 .NET 9 查询过滤补丁均已验收并归档，运行时迁移及后续候选包消费继续按维护路线推进。[R0 归档](../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/) · [R1 首项归档](../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/) · [维护路线](maintenance/fork-roadmap.md)
+截至 2026-11-24，R0 基线、R0 统一复验与 R1 首项 .NET 9 查询过滤补丁均已验收并归档，运行时迁移及后续候选包消费继续按维护路线推进。[R0 基线归档](../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/) · [R0 统一复验归档](../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/) · [R1 首项归档](../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/) · [维护路线](maintenance/fork-roadmap.md)
 
 - 新能力、重大行为变化或跨子模块架构调整，先核对 `openspec/specs/` 和 `openspec/changes/`。可用 `openspec-cn list --specs` 和 `openspec-cn list` 查看。
 - 用 `openspec-cn new change <name>` 创建变更，在 `openspec/changes/<name>/` 中完成提案、增量规范、设计和任务清单。

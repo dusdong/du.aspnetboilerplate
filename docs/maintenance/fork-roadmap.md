@@ -3,6 +3,7 @@
 ## 当前阶段（2026-11-24）
 
 - R0 已验收并归档。上游 `v10.5.1` 的首批五包源码基线记录了公共 API、还原图和三套回归，实测环境为 macOS ARM64、.NET 9，EF Core 关系型用例使用 SQLite。[R0 基线](release-baseline.json) · [R0 归档](../../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)
+- R0 统一复验已完成本地与 GitHub Actions 的独立配对验收并归档。两次执行均用 `python3 eng/verify.py --profile r0` 复验固定的原版 R0 源码。[复验手册](baseline-evidence/README.md#统一入口) · [配对验收记录](baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](../../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
 - R1 首项已验收并归档，在同一 .NET 9 环境接入上游 EF Core 查询过滤修复 #7219。运行时迁移至 .NET 10 / EF Core 10 仍待实施，首批候选包与完整模板的消费验收分别属于后续 R2、R3。[R1 首项验收记录](r1-efcore-query-filter.md) · [R1 首项归档](../../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/)
 
 **原路线与研究说明**

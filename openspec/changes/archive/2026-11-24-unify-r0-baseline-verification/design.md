@@ -9,7 +9,7 @@
 | 历史 R0 主仓输入 | `cf1420d6dc967fe2b34b52c0409e8407140e917e` | 基线的 `superprojectInputCommit` |
 | 实际复验的框架输入 | `6c4580c5e7ea41154696c071a53fd200059a768b`，上游 `v10.5.1` | 基线的 `frameworkInputCommit` 与子模块 Git 对象 |
 
-已接受的实测环境是 macOS 27.2.1 ARM64、SDK `9.0.306`、.NET 与 ASP.NET Core `9.0.10`、`net9.0` 及 SQLite。历史还原清单的项目目标均未指定 RID，宿主 RID 为 `osx-arm64`。现有 `primary` 还原后直接继续身份求值、Release 构建和三套测试，`repeat` 使用另一份干净源码和缓存并在还原后结束。基线另记录过换目录完整复跑及其 API、DLL 摘要与测试计数。[结构化基线](../../../docs/maintenance/release-baseline.json) · [复验手册](../../../docs/maintenance/baseline-evidence/README.md) · [R1 记录](../../../docs/maintenance/r1-efcore-query-filter.md)
+已接受的实测环境是 macOS 27.2.1 ARM64、SDK `9.0.306`、.NET 与 ASP.NET Core `9.0.10`、`net9.0` 及 SQLite。历史还原清单的项目目标均未指定 RID，宿主 RID 为 `osx-arm64`。现有 `primary` 还原后直接继续身份求值、Release 构建和三套测试，`repeat` 使用另一份干净源码和缓存并在还原后结束。基线另记录过换目录完整复跑及其 API、DLL 摘要与测试计数。[结构化基线](../../../../docs/maintenance/release-baseline.json) · [复验手册](../../../../docs/maintenance/baseline-evidence/README.md) · [R1 记录](../../../../docs/maintenance/r1-efcore-query-filter.md)
 
 ## Goals / Non-Goals
 
@@ -23,14 +23,14 @@
 
 在主仓根目录用 Python 3.10 或以上运行 `python3 eng/verify.py --profile r0`。入口读取 `docs/maintenance/release-baseline.json`、其中引用的还原清单和五份 API 清单。从结构化记录取框架提交、项目范围、预期身份、SDK 和测试预期。现有工具内置的 R0 SHA、五个框架项目和三个测试入口应与这些输入核对。报告同时记录实际 `HEAD`、gitlink、框架当前检出、有无影响复验的未提交输入，以及实际使用的工具和基线文件摘要，便于还原主仓输入身份。历史主仓输入 SHA 只用于溯源，在浅克隆中登记其记录值即可。
 
-首期严格复验环境采用 `macOS ARM64` 和 SDK `9.0.306`，以 `net9.0` 及 SQLite 执行。以实际命令工作目录中的 `dotnet --version` 判定 SDK，记录 .NET / ASP.NET Core 运行时、VSTest、宿主 OS 版本、架构及宿主 RID。框架固定源码的 `global.json` 使用 .NET 9 RC 版本和 `latestFeature`，实际选中的 SDK 必须满足本 profile。OS 版本记录为实测环境。缺少 Git、zsh、tar、Python、SDK、运行时或固定框架对象时给出定位信息，其他平台按独立验收结果确定范围。CI 需要取得可归档的完整 R0 Git 对象及其目录树，检出历史深度由实施时验证。入口仅在独立目录物化固定源码，保持主仓和子模块检出状态。[现有复验脚本](../../../docs/maintenance/baseline-tools/reproduce.zsh)
+首期严格复验环境采用 `macOS ARM64` 和 SDK `9.0.306`，以 `net9.0` 及 SQLite 执行。以实际命令工作目录中的 `dotnet --version` 判定 SDK，记录 .NET / ASP.NET Core 运行时、VSTest、宿主 OS 版本、架构及宿主 RID。框架固定源码的 `global.json` 使用 .NET 9 RC 版本和 `latestFeature`，实际选中的 SDK 必须满足本 profile。OS 版本记录为实测环境。缺少 Git、zsh、tar、Python、SDK、运行时或固定框架对象时给出定位信息，其他平台按独立验收结果确定范围。CI 需要取得可归档的完整 R0 Git 对象及其目录树，检出历史深度由实施时验证。入口仅在独立目录物化固定源码，保持主仓和子模块检出状态。[现有复验脚本](../../../../docs/maintenance/baseline-tools/reproduce.zsh)
 
 ### 单次调用与独立完整复跑
 
 每次调用创建唯一工作和证据目录，按顺序组织以下步骤。目录名可在运行控制台定位，CI 可将证据根设置在工作流临时目录。
 
 1. 将 `reproduce.zsh` 的执行步骤分成可单独调用的物化及还原阶段，以及沿用已还原 `primary` 的续跑阶段。统一入口先为 `primary` 和 `repeat` 各调用一次物化及还原，从同一 R0 对象物化源码，各用首次为空的 `NUGET_PACKAGES`、仅启用 `nuget.org` 的配置和 `--no-http-cache`。用 `inventory.py` 的实际资产解析，三方对照主轮还原、第二次还原和基线清单，按项目与目标核实包 ID、直接或传递关系、版本、来源与内容哈希。项目图须与清单匹配，覆盖 11 个项目、11 个 `net9.0` 目标。通过比较后，续跑使用原 `primary` 工作目录、包目录和还原产物。出现依赖漂移时保存差异、返回非零，构建、API 和 .NET 回归均不启动并标为未执行。
-2. 在主轮对五个框架项目核对 Release MSBuild 求值结果，包括原 `PackageId`、包版本、`AssemblyName`、`RootNamespace`、目标框架和内部 `ProjectReference`。例如 `Abp.EntityFramework.Common` 的根命名空间为 `Abp.EntityFramework`。复用主轮还原执行 Release 构建 `--no-restore`，由该轮的 `TargetPath` 定位五个 DLL。主轮续跑的构建与回归步骤可分别调用，供统一入口在两者之间核对 API。使用已核对的 .NET SDK 在独立工具目录构建 `ApiInventory.csproj`，复用 `Program.cs` 对同一个 DLL 提取两次并核对清单一致。记录每个实际 DLL 的 SHA-256、提取器版本和提取命令，用 `inventory.py compare-api` 比较程序集身份、完整类型名、公开和受保护签名、资源名。内容摘要用于标识证据，跨独立构建的同一性以 API 语义为准。R0 的身份预期来自原版字段，`plannedPackageId` 留给 R2 的实际包验收。[清单比较器](../../../docs/maintenance/baseline-tools/inventory.py) · [API 提取器](../../../docs/maintenance/baseline-tools/Program.cs) · [提取器项目](../../../docs/maintenance/baseline-tools/ApiInventory.csproj)
+2. 在主轮对五个框架项目核对 Release MSBuild 求值结果，包括原 `PackageId`、包版本、`AssemblyName`、`RootNamespace`、目标框架和内部 `ProjectReference`。例如 `Abp.EntityFramework.Common` 的根命名空间为 `Abp.EntityFramework`。复用主轮还原执行 Release 构建 `--no-restore`，由该轮的 `TargetPath` 定位五个 DLL。主轮续跑的构建与回归步骤可分别调用，供统一入口在两者之间核对 API。使用已核对的 .NET SDK 在独立工具目录构建 `ApiInventory.csproj`，复用 `Program.cs` 对同一个 DLL 提取两次并核对清单一致。记录每个实际 DLL 的 SHA-256、提取器版本和提取命令，用 `inventory.py compare-api` 比较程序集身份、完整类型名、公开和受保护签名、资源名。内容摘要用于标识证据，跨独立构建的同一性以 API 语义为准。R0 的身份预期来自原版字段，`plannedPackageId` 留给 R2 的实际包验收。[清单比较器](../../../../docs/maintenance/baseline-tools/inventory.py) · [API 提取器](../../../../docs/maintenance/baseline-tools/Program.cs) · [提取器项目](../../../../docs/maintenance/baseline-tools/ApiInventory.csproj)
 3. 用同一主轮构建运行三套回归，沿用 `--no-build --no-restore`，收集当次日志和三份 TRX。兼容 XML 命名空间，从 `UnitTestResult` 明细统计结果，以 `outcome=NotExecuted` 计跳过，并将两项跳过的完整 `testName` 与基线精确匹配。按套件要求 `1105/0/2`、`150/0/0`、`58/0/0`，以汇总 `total`、`executed`、`passed`、`failed` 与明细交叉核对。
 
    两份实际 R0 核心 TRX 的汇总均为 `total=1107`、`executed=1105`、`passed=1105`、`failed=0`、`notExecuted=0`，明细各有 1105 个 `Passed` 和两个具名 `NotExecuted`。汇总 `notExecuted` 通常应与明细一致。当这组关键计数和两项完整测试名全部与基线相符时，记录汇总 `notExecuted=0` 与实际跳过 2 项的差异并接受结果。缺失明细、意外跳过或其他计数矛盾仍须失败。定向正例用可在仓库内生成的夹具重现这组汇总、明细及完整测试名，CI 可直接运行该夹具。
@@ -51,7 +51,7 @@
 
 本地与 CI 通过 `python3 eng/tests/run_verify_r0_tests.py` 执行同一组定向用例。用 Python 3.10 即可使用的 `unittest` 发现 `eng/tests/test_verify_r0.py` 中的用例并执行 `TextTestRunner`，显式检查返回的 `TestResult`。仅在 `wasSuccessful()` 且 `testsRun` 大于跳过数时返回零，日志记录实际计数及失败诊断。定向用例通过夹具验证正反例，不调用 .NET 回归。发现或执行失败、有效执行数为零时，工作流失败并跳过完整命令，留存自检诊断。完整命令开始后，工作流保留其退出状态，并在失败时仍尝试上传该命令已经生成的证据。
 
-本地验收和 CI 定义检查可在入口与证据约定就绪后并行开展。真实远端验收须记录 GitHub Actions run URL 或 ID、该次工作流实际检出的 `HEAD`、固定框架 SHA、runner / SDK、自检执行计数与结果及完整命令结果，并回读本次报告及三份 TRX。用报告中的主仓输入与实际检出的 SHA 核对证据归属，比较时以实际执行所用的候选输入为准。[组件现有工作流](../../../aspnetboilerplate/.github/workflows/build-and-test.yml) · [主仓维护计划](../../../docs/maintenance/du-abp-maintenance-plan.md#9-ci-与发行证据)
+本地验收和 CI 定义检查可在入口与证据约定就绪后并行开展。真实远端验收须记录 GitHub Actions run URL 或 ID、该次工作流实际检出的 `HEAD`、固定框架 SHA、runner / SDK、自检执行计数与结果及完整命令结果，并回读本次报告及三份 TRX。用报告中的主仓输入与实际检出的 SHA 核对证据归属，比较时以实际执行所用的候选输入为准。[组件现有工作流](../../../../aspnetboilerplate/.github/workflows/build-and-test.yml) · [主仓维护计划](../../../../docs/maintenance/du-abp-maintenance-plan.md#9-ci-与发行证据)
 
 ## Risks / Trade-offs
 
@@ -61,4 +61,4 @@
 
 ## Migration Plan
 
-实现并完成本地回归后，从 R0 手册增加统一入口、环境要求和报告位置的说明。主仓 CI 接入单独验收，可通过回退新增工作流恢复原先的 CI 状态，历史手册命令可继续用于复验。维护路线随后在已验收的 R1 补丁上推进 .NET 10 / EF Core 10 迁移，再以五个实际 `Du.Abp*` 候选包做 R2 独立消费者验收。[维护路线](../../../docs/maintenance/fork-roadmap.md)
+实现并完成本地回归后，从 R0 手册增加统一入口、环境要求和报告位置的说明。主仓 CI 接入单独验收，可通过回退新增工作流恢复原先的 CI 状态，历史手册命令可继续用于复验。维护路线随后在已验收的 R1 补丁上推进 .NET 10 / EF Core 10 迁移，再以五个实际 `Du.Abp*` 候选包做 R2 独立消费者验收。[维护路线](../../../../docs/maintenance/fork-roadmap.md)
