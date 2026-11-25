@@ -29,7 +29,9 @@ R3 首包和第二包均已归档。首包记录固定模板原版 Web.Host 的�
 
 Module Zero 的三个候选包 `10.5.1-r3.3` 已通过 macOS ARM64 上的独立 `net9.0` 实包验收，覆盖 SQLite 角色提交和双向租户隔离。框架 `dev` 已交付通过验收的源码树，主仓 gitlink 固定对应提交，OpenSpec 已同步并归档。[Module Zero 候选验收](docs/maintenance/r3-module-zero-candidates.md) · [稳定消费规范](openspec/specs/module-zero-package-consumption/spec.md)
 
-R3.4 AutoMapper 的引擎、Collection 和 ABP 适配器候选已通过本机独立 `net9.0` 实包验收，覆盖单一引擎加载、已有用户更新、按键集合和 SQLite 投影。三个子仓的源码均已交付，主仓固定相应 gitlink，OpenSpec 已同步并归档。固定模板 Web.Host 的六个缺口均已取得独立候选。完整 Web.Host 换包、真实登录、SQL Server、Angular、运行时升级和回退留待后续验收。[AutoMapper 本机验收](docs/maintenance/r3-automapper-downstream.md#消费验收记录) · [Git 交付](docs/maintenance/r3-automapper-downstream.md#git-交付) · [稳定消费规范](openspec/specs/automapper-package-consumption/spec.md)
+R3.4 AutoMapper 的引擎、Collection 和 ABP 适配器候选已通过本机独立 `net9.0` 实包验收，覆盖单一引擎加载、已有用户更新、按键集合和 SQLite 投影。三个子仓的源码均已交付，主仓固定相应 gitlink，OpenSpec 已同步并归档。固定模板 Web.Host 的六个缺口均已取得独立候选。[AutoMapper 本机验收](docs/maintenance/r3-automapper-downstream.md#消费验收记录) · [Git 交付](docs/maintenance/r3-automapper-downstream.md#git-交付) · [稳定消费规范](openspec/specs/automapper-package-consumption/spec.md)
+
+R3 原版模板的 SQL Server 恢复、Angular 租户登录和授权查询已通过两轮本机验收，OpenSpec 已同步并归档。下一步是在同一 `net9.0` 目标下替换维护包，沿用最终返修轮的 Angular 输入、业务预期和登录前备份。[运行对照与恢复点](docs/maintenance/r3-template-runtime-baseline.md#交接数据恢复点) · [稳定规范](openspec/specs/template-runtime-baseline/spec.md)
 
 在主仓根目录运行 `python3 eng/verify.py --profile r0` 可复验固定 R0 源码。统一复验已完成本地与 GitHub Actions 的配对验收并归档。[复验手册](docs/maintenance/baseline-evidence/README.md#统一入口) · [配对验收记录](docs/maintenance/baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
 

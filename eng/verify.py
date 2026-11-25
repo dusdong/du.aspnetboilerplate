@@ -481,7 +481,8 @@ def make_run_directory(parent, prefix):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--profile", required=True,
-                        choices=("r0", "r2", "r3-web-host", "r3-signalr-log4net", "r3-module-zero", "r3-automapper"))
+                        choices=("r0", "r2", "r3-web-host", "r3-signalr-log4net", "r3-module-zero",
+                                 "r3-automapper", "r3-template-runtime"))
     parser.add_argument("--evidence-root", type=Path)
     parser.add_argument("--work-root", type=Path)
     parser.add_argument("--candidate-feed", type=Path)
@@ -493,7 +494,20 @@ def main():
     parser.add_argument("--engine-manifest", type=Path, help="R3 AutoMapper 冻结引擎清单")
     parser.add_argument("--module-zero-feed", type=Path, help="R3 AutoMapper 业务消费的冻结 Module Zero 源")
     parser.add_argument("--strict-runtime-baseline", action="store_true", help="要求实际共享运行时匹配 R3 候选基线")
+    parser.add_argument("--runtime-config", type=Path, help="R3 原版模板运行的无凭据环境配置")
     args = parser.parse_args()
+    if args.profile == "r3-template-runtime":
+        if not args.evidence_root or not args.runtime_config:
+            parser.error("r3-template-runtime 需要 --evidence-root 和 --runtime-config")
+        if any((args.work_root, args.candidate_feed, args.candidate_manifest, args.candidate_symbols,
+                args.r1_evidence, args.dotnet, args.r2_feed, args.engine_manifest, args.module_zero_feed,
+                args.strict_runtime_baseline)):
+            parser.error("r3-template-runtime 从固定模板和原版包建立独立工作目录")
+        sys.dont_write_bytecode = True
+        from r3_template_runtime import execute
+        return execute(args)
+    if args.runtime_config:
+        parser.error("--runtime-config 仅适用于 r3-template-runtime")
     if args.profile == "r3-automapper":
         if not all((args.engine_manifest, args.candidate_manifest, args.r2_feed, args.module_zero_feed,
                     args.evidence_root, args.dotnet)):
