@@ -10,7 +10,7 @@ import sys
 from r3_leaf_packages import checked_file
 from r3_template_net9_packages import CandidateRun
 from r3_template_runtime import RuntimeSupport, inventory
-from r3_web_host import PREFIX, TFM, artifact, project_path, write_json
+from r3_web_host import PREFIX, artifact, project_path, write_json
 from verify import ROOT, VerificationError, make_run_directory, read_json, require, sha256
 
 
@@ -50,35 +50,32 @@ def check_end_counts(counts, candidate, control):
             f"登录写入目标或增量不符，预期 {candidate}=2 / {control}=1，实际 {counts}")
 
 
-def unique_loaded(rows, name, pid, *, optional=False):
+def unique_loaded(rows, name, pid, *, optional=False, process_name="Host"):
     matches = [row for row in rows if (row.get("name") or "").casefold() == name.casefold()]
     if optional and not matches:
         return None
-    require(len(matches) == 1, f"Host PID {pid} 的 {name} 加载记录应唯一，实际 {matches}")
+    require(len(matches) == 1, f"{process_name} PID {pid} 的 {name} 加载记录应唯一，实际 {matches}")
     row, = matches
     require(row["isDefaultContext"] is True and row["context"] == "Default"
             and row["contextId"] > 0 and row["moduleVersionId"]
             and row["name"] == name and row["fullName"].startswith(name + ", Version=")
             and row["diskFullName"] == row["fullName"] and Path(row["path"]).is_absolute(),
-            f"Host PID {pid} 的 {name} 实际程序集身份、上下文或文件不符：{row}")
+            f"{process_name} PID {pid} 的 {name} 实际程序集身份、上下文或文件不符：{row}")
     return row
 
 
-def verify_host_assemblies(observed, launch, output, expected, report):
-    pid = launch.get("pid")
-    require(pid and observed.get("pid") == pid,
-            f"运行程序集证据 PID 不符，Host {pid}，观测 {observed.get('pid')}")
-    rows = observed["assemblies"]
+def verify_shared_runtime(rows, launch, report, expected_version, *, anchors=SHARED, process_name="Host"):
+    pid = launch["pid"]
     trace = launch["sharedRuntime"]
     shared = report["sharedRuntime"] = {}
-    for name, anchor in SHARED.items():
-        row = unique_loaded(rows, anchor, pid)
+    for name, anchor in anchors.items():
+        row = unique_loaded(rows, anchor, pid, process_name=process_name)
         loaded = Path(row["path"])
-        shared[name] = {"expectedVersion": EXPECTED_RUNTIME, "actualVersion": loaded.parent.name,
+        shared[name] = {"expectedVersion": expected_version, "actualVersion": loaded.parent.name,
                         "selectedAtStartup": trace[name], "loaded": row}
-    require(all(record["actualVersion"] == EXPECTED_RUNTIME
-                and record["selectedAtStartup"]["version"] == EXPECTED_RUNTIME for record in shared.values()),
-            f"Host PID {pid} 的共享运行时补丁偏离 {EXPECTED_RUNTIME}："
+    require(all(record["actualVersion"] == expected_version
+                and record["selectedAtStartup"]["version"] == expected_version for record in shared.values()),
+            f"进程 PID {pid} 的共享运行时补丁偏离 {expected_version}："
             + ", ".join(f"{name}={record['actualVersion']} (启动选择 {record['selectedAtStartup']['version']})"
                         for name, record in shared.items()))
     for name, record in shared.items():
@@ -87,7 +84,15 @@ def verify_host_assemblies(observed, launch, output, expected, report):
         require(path.parent.parent.name == name and path.parent.parent.parent.name == "shared"
                 and path.parent == Path(record["selectedAtStartup"]["path"]).resolve()
                 and sha256(path) == row["sha256"],
-                f"Host PID {pid} 的 {name} 实际共享运行时文件不符：{row}")
+                f"进程 PID {pid} 的 {name} 实际共享运行时文件不符：{row}")
+
+
+def verify_host_assemblies(observed, launch, output, expected, report, *, runtime_version=EXPECTED_RUNTIME):
+    pid = launch.get("pid")
+    require(pid and observed.get("pid") == pid,
+            f"运行程序集证据 PID 不符，Host {pid}，观测 {observed.get('pid')}")
+    rows = observed["assemblies"]
+    verify_shared_runtime(rows, launch, report, runtime_version)
 
     framework_names = {Path(path).stem for path, item in expected["maintenanceDlls"].items()
                        if item["package"].startswith("Du.Abp")}
@@ -116,22 +121,24 @@ def verify_host_assemblies(observed, launch, output, expected, report):
         if name == "Microsoft.Data.SqlClient":
             require(relative.startswith("runtimes/unix/"), f"Host PID {pid} 的 SqlClient 未加载 Unix 资产：{relative}")
     contexts = {item["contextId"] for item in tracked.values() if item["loaded"]}
-    contexts.update(item["loaded"]["contextId"] for item in shared.values())
+    contexts.update(item["loaded"]["contextId"] for item in report["sharedRuntime"].values())
     require(len(contexts) == 1, f"Host PID {pid} 运行程序集分属多个默认上下文：{contexts}")
 
 
 class CandidateRuntime(RuntimeSupport, CandidateRun):
+    runtime_stages = RUNTIME_STAGES
+
     def __init__(self, repo, evidence, frozen_root, runtime_config, dotnet=None):
         super().__init__(repo, evidence, frozen_root, dotnet)
         self.setup_runtime(runtime_config)
         self.browser_output = evidence / "angular-browser"
-        self.migrator_output = self.root / project_path("Migrator").parent / f"bin/Release/{TFM}"
+        self.migrator_output = self.root / project_path("Migrator").parent / f"bin/Release/{self.tfm}"
         self.report.update(profile=PROFILE, runId=self.run_id,
                            coverageNotRun=[".NET 10 / EF Core 10 升级", "升级后回退",
                                            "其他消费组合、平台、CI 和部署"])
         self.report["stages"].update(
             {stage: {"status": "not_run", "exitCode": None, "commands": [], "evidence": []}
-             for stage in (*RUNTIME_STAGES, "cleanup", "frozen_inputs_after")})
+             for stage in (*self.runtime_stages, "cleanup", "frozen_inputs_after")})
         self.save()
 
     def inputs(self):
@@ -346,7 +353,7 @@ class CandidateRuntime(RuntimeSupport, CandidateRun):
                                finishedAt=datetime.now(timezone.utc).isoformat())
             if failures:
                 self.report["reason"] = "\n".join(failures)
-                print(f"{PROFILE}：{self.report['reason']}", file=sys.stderr)
+                print(f"{self.report['profile']}：{self.report['reason']}", file=sys.stderr)
             self.save()
         return self.report["exitCode"]
 

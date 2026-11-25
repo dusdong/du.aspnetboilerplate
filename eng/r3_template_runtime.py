@@ -81,7 +81,20 @@ class SpaHandler(SimpleHTTPRequestHandler):
         return super().send_head()
 
 
+def shared_runtime_trace(log, label):
+    log_text = log.read_text(encoding="utf-8")
+    shared = {}
+    for name in ("Microsoft.NETCore.App", "Microsoft.AspNetCore.App"):
+        found = sorted(set(re.findall(r"(?:Chose FX version|Resolved framework:)\s*\[([^\]]+/shared/"
+                                      + re.escape(name) + r"/[^\]]+)\]", log_text)))
+        require(len(found) == 1, f"{label} 启动记录缺少唯一 {name} 路径，详见 {log.name}")
+        shared[name] = {"path": found[0], "version": Path(found[0]).name}
+    return shared
+
+
 class RuntimeSupport:
+    database_type = RuntimeDatabase
+
     def setup_runtime(self, config_file):
         self.config_file = config_file
         self.run_id = secrets.token_hex(8)
@@ -145,7 +158,7 @@ class RuntimeSupport:
             sql_config | {"localBackupDirectory": str(sql_config["localBackupDirectory"])})
         user, sql_password, self.admin_password = self.credentials
         try:
-            self.db = RuntimeDatabase(sql_config, user, sql_password, self.run_id, frozen_backup=frozen_backup)
+            self.db = self.database_type(sql_config, user, sql_password, self.run_id, frozen_backup=frozen_backup)
             self.report["environment"]["pymssql"] = version("pymssql")
         except (ImportError, PackageNotFoundError) as error:
             raise VerificationError("SQL Server 客户端 pymssql 不可用，请在入口的 Python 环境安装") from error
@@ -238,13 +251,8 @@ class RuntimeSupport:
                 time.sleep(0.2)
             else:
                 raise VerificationError(f"Release Host 未报告本轮地址和实际 Development 环境，详见 {log.name}")
-            shared = {}
-            for name in ("Microsoft.NETCore.App", "Microsoft.AspNetCore.App"):
-                found = sorted(set(re.findall(r"(?:Chose FX version|Resolved framework:)\s*\[([^\]]+/shared/"
-                                              + re.escape(name) + r"/[^\]]+)\]", log_text)))
-                require(len(found) == 1, f"Host 启动记录缺少唯一 {name} 路径，详见 {log.name}")
-                shared[name] = {"path": found[0], "version": Path(found[0]).name}
-            record.update(environment=environment[1], address=self.runtime["host"], sharedRuntime=shared)
+            record.update(environment=environment[1], address=self.runtime["host"],
+                          sharedRuntime=shared_runtime_trace(log, "Host"))
             with HTTP.open(self.runtime["host"] + USER_CONFIG, timeout=10) as response:
                 require(response.status == 200, f"Host 应用配置 HTTP {response.status}")
             yield record

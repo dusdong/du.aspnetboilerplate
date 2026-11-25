@@ -136,7 +136,8 @@ def download_records(framework, cache, lookup, graph_ids):
 
 
 def read_project(root, name, path, cache, config, lookup, *, topology=PROJECTS,
-                 sources=(NUGET_SOURCE,), managed=is_abp, managed_versions=None, forbidden=is_maintained):
+                 sources=(NUGET_SOURCE,), managed=is_abp, managed_versions=None, forbidden=is_maintained,
+                 tfm=TFM, deps_target=DEPS_TARGET):
     relative = project_path(name)
     data = read_json(path)
     project = data["project"]
@@ -147,16 +148,16 @@ def read_project(root, name, path, cache, config, lookup, *, topology=PROJECTS,
     require(set(restore["sources"]) == set(sources) and not restore.get("fallbackFolders")
             and [Path(p).resolve() for p in restore["configFilePaths"]] == [config],
             "资产登记的有效配置或包源不符")
-    require(set(data["targets"]) == {TFM} and restore["originalTargetFrameworks"] == [TFM],
-            f"预期唯一目标 {TFM}，实际 {list(data['targets'])}")
+    require(set(data["targets"]) == {tfm} and restore["originalTargetFrameworks"] == [tfm],
+            f"预期唯一目标 {tfm}，实际 {list(data['targets'])}")
     require(not any(log.get("level") == "Error" or log.get("code") == "NU1605"
                     for log in data.get("logs", [])), f"还原资产含错误或包降级：{data.get('logs')}")
-    graph = data["targets"][TFM]
+    graph = data["targets"][tfm]
     require(bool(graph), "目标无匹配的包或项目")
     require(graph.keys() == data["libraries"].keys(), "目标与库的集合不符")
     keys_by_id = {key.split("/")[0].casefold(): key for key in graph}
     require(len(keys_by_id) == len(graph), "同一 ID 匹配了多个包版本或项目")
-    framework = project["frameworks"][TFM]
+    framework = project["frameworks"][tfm]
     raw_direct = framework.get("dependencies", {})
     direct = {name: info for name, info in raw_direct.items() if info["target"] == "Package"}
     if managed_versions is None:
@@ -176,7 +177,7 @@ def read_project(root, name, path, cache, config, lookup, *, topology=PROJECTS,
         require(declarations[package]["version"] == version,
                 f"{package} 源码声明并非固定版本 {version}")
 
-    refs = restore["frameworks"][TFM]["projectReferences"]
+    refs = restore["frameworks"][tfm]["projectReferences"]
     ref_paths = {Path(ref["projectPath"]).resolve().relative_to(root).as_posix() for ref in refs.values()}
     require(ref_paths == {project_path(ref).as_posix() for ref in topology[name]},
             f"直接项目引用不符：{sorted(ref_paths)}")
@@ -201,7 +202,7 @@ def read_project(root, name, path, cache, config, lookup, *, topology=PROJECTS,
         dependencies = selected.get("dependencies", {})
         if library["type"] == "project":
             source = inside(root, relative.parent / library["msbuildProject"])
-            require(selected["framework"] == DEPS_TARGET, f"{key} 项目目标不符：{selected['framework']}")
+            require(selected["framework"] == deps_target, f"{key} 项目目标不符：{selected['framework']}")
             projects[key] = {"project": source.relative_to(root).as_posix(), "dependencies": dependencies}
             continue
         require(library["type"] == "package", f"{key} 的库类型不可识别：{library['type']}")
@@ -214,7 +215,7 @@ def read_project(root, name, path, cache, config, lookup, *, topology=PROJECTS,
     require({item["project"] for item in projects.values()} == expected_projects(name, topology),
             f"传递项目闭包不符：{projects}")
     require(restore["projectName"] == relative.stem, f"还原的入口项目名不符：{restore['projectName']}")
-    return {"targetFramework": TFM, "runtimeIdentifier": None, "projectReferences": sorted(ref_paths),
+    return {"targetFramework": tfm, "runtimeIdentifier": None, "projectReferences": sorted(ref_paths),
             "entryProject": f"{restore['projectName']}/{project['version']}",
             "projects": projects,
             "directPackages": {key: {**direct[key], "declaration": value,
@@ -269,22 +270,30 @@ def selected_pack(item, kind, target, cache, pack_root):
     return result
 
 
-def read_sdk_packs(data, target, cache, pack_root, is_host):
+def read_sdk_packs(data, target, cache, pack_root, is_host, *, tfm=TFM):
     props, items = data["Properties"], data["Items"]
     require(Path(props["NetCoreTargetingPackRoot"]).resolve() == pack_root, "SDK pack 根目录不符")
     targeting = items["ResolvedTargetingPack"]
     references = {item["Identity"] for item in items["FrameworkReference"]}
     require(references and references == {item["Identity"] for item in targeting},
             f"FrameworkReference 与已解析 targeting pack 集合不符：{references}")
-    require(all(item["TargetFramework"] == TFM for item in targeting), "SDK targeting pack 目标不符")
+    require(all(item["TargetFramework"] == tfm for item in targeting), "SDK targeting pack 目标不符")
     result = {item["Identity"]: selected_pack(item, "targeting", target, cache, pack_root)
               for item in targeting}
     apphosts = items.get("ResolvedAppHostPack", [])
     require(len(apphosts) == int(is_host), f"apphost pack 数量不符：{apphosts}")
     if apphosts:
         item = apphosts[0]
-        require(item["RuntimeIdentifier"] == RID and Path(item["Path"]).resolve()
-                == Path(props["AppHostSourcePath"]).resolve(), "实际 AppHostSourcePath 或 RID 不符")
+        path = Path(item["Path"]).resolve()
+        require(item["RuntimeIdentifier"] == RID and path == Path(props["AppHostSourcePath"]).resolve(),
+                "实际 AppHostSourcePath 或 RID 不符")
+        if tfm == "net10.0" and not (item.get("NuGetPackageId") or item.get("NuGetPackageVersion")):
+            package_dir = Path(item["PackageDirectory"]).resolve()
+            package_id = f"Microsoft.NETCore.App.Host.{RID}"
+            require(package_dir.parent == pack_root / package_id
+                    and path == package_dir / item["PathInPackage"],
+                    f"已安装的 apphost 路径与 SDK pack 目录不符：{path}")
+            item = {**item, "NuGetPackageId": package_id, "NuGetPackageVersion": package_dir.name}
         result["apphost"] = selected_pack(item, "apphost", target, cache, pack_root)
     return result
 

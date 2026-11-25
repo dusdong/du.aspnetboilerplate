@@ -136,7 +136,7 @@ class RuntimeFailureTests(unittest.TestCase):
                 run.inputs()
 
             def sql_without_client():
-                with patch("r3_template_runtime.RuntimeDatabase", side_effect=ModuleNotFoundError("pymssql")):
+                with patch.dict(sys.modules, {"pymssql": None}):
                     run.sql_preflight()
 
             return sql_without_client

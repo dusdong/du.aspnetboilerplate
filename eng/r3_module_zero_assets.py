@@ -113,7 +113,7 @@ def check_assets(data, project, cache, feeds, packages):
             "restoreFrameworkReferences": framework["frameworkReferences"], "sdkDownloads": downloads}
 
 
-def runtime_packages(libraries, assets, selection, references, *, cache=None):
+def runtime_packages(libraries, assets, selection, references, *, cache=None, platform_runtime=None):
     resolved = assets["packages"]
     runtime = {key for key, entry in libraries.items() if entry["type"] == "package"}
     require(runtime <= resolved.keys(), f"Release .deps.json 出现未还原的包：{sorted(runtime - resolved.keys())}")
@@ -134,6 +134,9 @@ def runtime_packages(libraries, assets, selection, references, *, cache=None):
         omitted[key] = {}
         for filename in sorted({Path(asset).name for section in ("compile", "runtime", "runtimeTargets")
                                 for asset in selected.get(section, {}) if asset.lower().endswith(".dll")}):
+            if platform := (platform_runtime or {}).get(key, {}).get(filename):
+                omitted[key][filename] = platform
+                continue
             matches = [item for item in references["ReferencePath"] if Path(item["FullPath"]).name == filename]
             require(len(matches) == 1 and matches[0].get("FrameworkReferenceName") in SHARED,
                     f"Release .deps.json 省略 {key} {filename}，缺少相应共享框架编译来源")

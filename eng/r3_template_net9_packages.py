@@ -37,7 +37,7 @@ PREIMAGES = {
 STAGES = ("preflight", "packages", "materialize", "sdk", "restore", "assets", "build", "output", "inputs_after")
 
 
-def selected_archive(row, root):
+def selected_archive(row, root, *, upgrade_core=False):
     path = checked_file(root, row["archive"], row["archiveSha256"])
     with ZipFile(path) as archive:
         metadata = nuspec_metadata(archive)
@@ -48,9 +48,13 @@ def selected_archive(row, root):
         asset = row["asset"]
         require(archive.namelist().count(asset) == 1 and bytes_sha256(archive.read(asset)) == row["assetSha256"],
                 f"{path} 选中资产 {asset} 缺失、重名或摘要不符")
+        if upgrade_core and row["batch"] == "r2":
+            asset = f"lib/net10.0/{Path(asset).name}"
+            require(archive.namelist().count(asset) == 1, f"{path} 缺少唯一的升级资产 {asset}")
+            row = {**row, "asset": asset, "assetSha256": bytes_sha256(archive.read(asset))}
         require(not metadata.findall("dependencies/dependency"), f"{path} nuspec 有未分组依赖")
         group = metadata_groups(metadata, "dependencies", "id")[Path(asset).parts[1]]
-        return path, {id_: item["version"] for id_, item in group.items()}
+        return path, row, {id_: item["version"] for id_, item in group.items()}
 
 
 def normalized_range(value):
@@ -64,13 +68,24 @@ def original_package(name):
     return stack_package(name) and not name.casefold().startswith("du.")
 
 
+def git_blob(data):
+    return hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+
+
+def project_diff(relative, before, after):
+    label = f"aspnet-core/{relative.as_posix()}"
+    lines = unified_diff(before.decode().splitlines(keepends=True), after.decode().splitlines(keepends=True),
+                         f"a/{label}", f"b/{label}")
+    return "".join(line if line.endswith("\n") else line + "\n\\ No newline at end of file\n" for line in lines)
+
+
 def project_changes(root, frozen):
     differences = []
     for name, packages in REPLACEMENTS.items():
         relative = project_path(name)
         path = root / relative
         before = path.read_bytes()
-        blob = hashlib.sha1(f"blob {len(before)}\0".encode() + before).hexdigest()
+        blob = git_blob(before)
         require(blob == PREIMAGES[name], f"{relative} 固定 Git blob 不符：{blob}")
         after = before
         for package in sorted(packages):
@@ -79,10 +94,7 @@ def project_changes(root, frozen):
             require(after.count(old) == 1, f"{relative} 预期唯一引用 {package} {ABP_VERSION}")
             after = after.replace(old, new)
         path.write_bytes(after)
-        label = f"aspnet-core/{relative.as_posix()}"
-        for line in unified_diff(before.decode().splitlines(keepends=True), after.decode().splitlines(keepends=True),
-                                 f"a/{label}", f"b/{label}"):
-            differences.append(line if line.endswith("\n") else line + "\n\\ No newline at end of file\n")
+        differences.append(project_diff(relative, before, after))
     return "".join(differences)
 
 
@@ -103,7 +115,7 @@ def source_config(path, feed, packages):
     ET.indent(document, space="  ")
     ET.ElementTree(document).write(path, encoding="utf-8", xml_declaration=True)
 
-def verify_project_packages(name, target, frozen):
+def verify_project_packages(name, target, frozen, *, pruned_edges=None):
     projects = expected_projects(name, TOPOLOGY) | {project_path(name).as_posix()}
     expected = set()
     pending = [f"Du.{package}" for project, packages in REPLACEMENTS.items()
@@ -123,6 +135,8 @@ def verify_project_packages(name, target, frozen):
                 selected["archive"]["sha256"] == registered["archiveSha256"],
                 f"{key} 缓存版本或归档 SHA-256 与冻结实物不符")
         declared = {dep: normalized_range(version) for dep, version in registered["dependencies"].items()}
+        for dependency in (pruned_edges or {}).get(package, ()):
+            del declared[dependency]
         resolved = {dep: normalized_range(version) for dep, version in selected["dependencies"].items()}
         require(declared == resolved, f"{key} 还原边与 nuspec 不符，预期 {declared}，实际 {resolved}")
         asset = registered["asset"]
@@ -180,7 +194,7 @@ def archive_asset(cache, package, asset):
     return restored, digest
 
 
-def compile_records(items, target, frozen, cache, root):
+def compile_records(items, target, frozen, cache, root, *, tfm=TFM):
     references = {}
     for item in items["ReferencePathWithRefAssemblies"]:
         path = Path(item["FullPath"]).resolve()
@@ -188,7 +202,7 @@ def compile_records(items, target, frozen, cache, root):
         record = {"path": str(path), "sha256": sha256(path)}
         if framework := item.get("FrameworkReferenceName"):
             pack = target["sdkUsedPacks"].get(framework)
-            require(pack and path.is_relative_to(Path(pack["location"]) / "ref" / TFM),
+            require(pack and path.is_relative_to(Path(pack["location"]) / "ref" / tfm),
                     f"未登记的 SDK 编译参考：{framework} {path}")
             record["frameworkReference"] = framework
         elif item.get("ReferenceSourceTarget") == "ProjectReference":
@@ -218,19 +232,21 @@ def compile_records(items, target, frozen, cache, root):
     return references
 
 
-def check_entry_output(name, output, target, items, frozen, cache):
+def check_entry_output(name, output, target, items, frozen, cache, *, tfm=TFM, deps_target=DEPS_TARGET,
+                       platform_runtime=None):
     dll = output / (project_path(name).stem + ".dll")
     deps_file = dll.with_suffix(".deps.json")
     runtime_config_file = dll.with_suffix(".runtimeconfig.json")
     deps = read_json(deps_file)
-    require(deps["runtimeTarget"]["name"] == DEPS_TARGET and set(deps["targets"]) == {DEPS_TARGET},
+    require(deps["runtimeTarget"]["name"] == deps_target and set(deps["targets"]) == {deps_target},
             f"{deps_file} 运行目标不符")
-    graph, libraries = deps["targets"][DEPS_TARGET], deps["libraries"]
+    graph, libraries = deps["targets"][deps_target], deps["libraries"]
     require(graph.keys() == libraries.keys(), f"{deps_file} 目标与库表集合不符")
     config = read_json(runtime_config_file)["runtimeOptions"]
-    require(config["tfm"] == TFM, f"{runtime_config_file} 运行目标不符")
+    require(config["tfm"] == tfm, f"{runtime_config_file} 运行目标不符")
     selection = runtime_selection(items, target, cache)
-    retained, omitted = runtime_packages(libraries, target, selection, items, cache=cache)
+    retained, omitted = runtime_packages(libraries, target, selection, items, cache=cache,
+                                         platform_runtime=platform_runtime)
     excluded = {key.split("/")[0] for key in omitted}
     deps_target = {**target, "packages": retained, "sdkRuntimeSelection": selection,
                    "directPackages": {key: node for key, node in target["directPackages"].items() if key not in excluded},
@@ -261,7 +277,9 @@ def check_entry_output(name, output, target, items, frozen, cache):
             for asset, selection_record in assets.items():
                 path, digest = archive_asset(cache, row, asset)
                 destination = inside(output, selection_record["outputPath"])
-                require(sha256(destination) == digest, f"{key} 的运行输出与归档 SHA-256 不符：{destination}")
+                actual = sha256(destination)
+                require(actual == digest, f"{key} 的运行输出与归档 SHA-256 不符：{destination}，"
+                        f"预期 {digest}，实际 {actual}")
                 copies[selection_record["outputPath"]] = {**selection_record, "cachePath": str(path),
                                                            "package": key, "packageAsset": asset,
                                                            "sha256": digest, "section": section}
@@ -287,6 +305,13 @@ def check_entry_output(name, output, target, items, frozen, cache):
 
 
 class CandidateRun(R3Run):
+    profile = PROFILE
+    tfm = TFM
+    deps_target = DEPS_TARGET
+    upgrade_core = False
+    planning_commit = PLANNING_COMMIT
+    planning_tree = PLANNING_TREE
+
     def __init__(self, repo, evidence, frozen_root, dotnet=None):
         super().__init__(repo, evidence)
         self.frozen_root = frozen_root
@@ -295,17 +320,19 @@ class CandidateRun(R3Run):
         self.frozen = {}
         if dotnet:
             self.dotnet = dotnet
-        self.report.update(profile=PROFILE, coverageNotRun=["共享运行时与实际加载", "数据库与浏览器业务验证"],
+        self.report.update(profile=self.profile, coverageNotRun=["共享运行时与实际加载", "数据库与浏览器业务验证"],
                            stages={stage: {"status": "not_run", "exitCode": None, "commands": [], "evidence": []}
                                    for stage in STAGES})
-        self.report["inputs"].update(planningCommit=PLANNING_COMMIT, planningTree=PLANNING_TREE)
+        self.output = self.root / self.entry.parent / f"bin/Release/{self.tfm}"
+        self.report["inputs"].update(planningCommit=self.planning_commit, planningTree=self.planning_tree,
+                                     targetFramework=self.tfm)
         self.save()
 
     def preflight(self):
         super().preflight()
-        self.git_tree(self.repo, "candidate-planning", PLANNING_COMMIT, PLANNING_TREE)
+        self.git_tree(self.repo, "candidate-planning", self.planning_commit, self.planning_tree)
         expected = ["160000", "commit", INPUTS[TEMPLATE][0], TEMPLATE]
-        for revision in (PLANNING_COMMIT, self.report["inputs"]["executionCommit"]):
+        for revision in dict.fromkeys((self.planning_commit, self.report["inputs"]["executionCommit"])):
             actual = self.git(self.repo, f"template-gitlink-{revision[:12]}.log", "ls-tree", revision, "--", TEMPLATE)
             require(actual.split() == expected, f"{revision} 模板 gitlink 不符：{actual}")
 
@@ -327,7 +354,7 @@ class CandidateRun(R3Run):
                 require(name not in self.frozen, f"{batch} 冻结包重复：{name}")
                 label = {"Du.AutoMapper": "engine", "Du.AutoMapper.Collection": "collection"}.get(name, "framework")
                 row = {**row, "batch": batch, "repository": registration["sources"][label], "manifests": manifests}
-                path, dependencies = selected_archive(row, self.frozen_root)
+                path, row, dependencies = selected_archive(row, self.frozen_root, upgrade_core=self.upgrade_core)
                 self.original_hashes[path] = row["archiveSha256"]
                 target = self.feed / path.name
                 shutil.copyfile(path, target)
@@ -373,13 +400,14 @@ class CandidateRun(R3Run):
                     self.record_diagnostics(log)
                     self.stage.setdefault("entries", {})[name] = self.stage.pop("diagnostics")
 
-    def read_target(self, name, saved, lookup):
+    def read_target(self, name, saved, lookup, *, pruned_edges=None):
         managed = {f"Du.{package}" for package in REPLACEMENTS.get(name, ())}
         target = read_project(self.root, name, saved, self.cache, self.config, lookup, topology=TOPOLOGY,
                               sources=(str(self.feed), NUGET_SOURCE), managed=stack_package,
                               managed_versions={package: f"[{self.frozen[package]['version']}]"
-                                                for package in managed}, forbidden=original_package)
-        verify_project_packages(name, target, self.frozen)
+                                                for package in managed}, forbidden=original_package,
+                              tfm=self.tfm, deps_target=self.deps_target)
+        verify_project_packages(name, target, self.frozen, pruned_edges=pruned_edges)
         return target
 
     def inventory(self):
@@ -419,7 +447,7 @@ class CandidateRun(R3Run):
                     },
                 }
             except (OSError, ValueError, KeyError, TypeError, VerificationError) as error:
-                raise VerificationError(f"{project} {TFM}：{error}") from error
+                raise VerificationError(f"{project} {self.tfm}：{error}") from error
         write_json(self.evidence_file("assets-inventory.json"), self.assets)
         write_json(self.evidence_file("third-party-differences.json"), differences)
 
@@ -435,6 +463,10 @@ class CandidateRun(R3Run):
                 require(sha256(path) == self.report["rawAssets"][project]["sha256"],
                         f"构建改写了 {project} 还原图：{path}")
 
+    def read_output(self, name, output, target, items, *, platform_runtime=None):
+        return check_entry_output(name, output, target, items, self.frozen, self.cache,
+                                  tfm=self.tfm, deps_target=self.deps_target, platform_runtime=platform_runtime)
+
     def inspect_output(self):
         launch = {}
         for name in TOPOLOGY:
@@ -447,7 +479,8 @@ class CandidateRun(R3Run):
                      "-getItem:FrameworkReference,ResolvedTargetingPack,ResolvedAppHostPack,ResolvedAnalyzers",
                      "-getProperty:AppHostSourcePath,NetCoreTargetingPackRoot"], f"{name}-sdk-packs.log")
                 sdk = read_json(sdk_log)
-                target["sdkUsedPacks"] = read_sdk_packs(sdk, target, self.cache, self.pack_root, name in ENTRIES)
+                target["sdkUsedPacks"] = read_sdk_packs(sdk, target, self.cache, self.pack_root, name in ENTRIES,
+                                                        tfm=self.tfm)
                 target["selectedPackageAnalyzers"] = [
                     artifact(Path(item["FullPath"]).resolve(), self.cache) for item in sdk["Items"]["ResolvedAnalyzers"]
                 ]
@@ -456,7 +489,8 @@ class CandidateRun(R3Run):
                      "-target:ResolveReferences;FindReferenceAssembliesForReferences",
                      "-getItem:ReferencePath,ReferencePathWithRefAssemblies"], f"{name}-compile-selection.log")
                 items = read_json(references)["Items"]
-                target["compileReferences"] = compile_records(items, target, self.frozen, self.cache, self.root)
+                target["compileReferences"] = compile_records(
+                    items, target, self.frozen, self.cache, self.root, tfm=self.tfm)
                 if name in ENTRIES:
                     copies = self.run_dotnet(
                         ["msbuild", project, "-nologo", "-p:Configuration=Release",
@@ -464,8 +498,8 @@ class CandidateRun(R3Run):
                          "-getItem:ReferenceCopyLocalPaths,_ConflictPackageFiles,PackageConflictPlatformManifests"],
                         f"{name}-runtime-selection.log")
                     items.update(read_json(copies)["Items"])
-                    output = self.root / project.parent / f"bin/Release/{TFM}"
-                    result = check_entry_output(name, output, target, items, self.frozen, self.cache)
+                    output = self.root / project.parent / f"bin/Release/{self.tfm}"
+                    result = self.read_output(name, output, target, items)
                     result_file = self.evidence_file(f"{name}-output.json")
                     write_json(result_file, result)
                     command = [str(self.dotnet), str(output / result["entry"]["path"])]
@@ -477,7 +511,7 @@ class CandidateRun(R3Run):
                         launch[name]["environment"] = {"ASPNETCORE_ENVIRONMENT": "Development",
                                                        "DOTNET_ENVIRONMENT": "Development"}
             except (KeyError, ValueError, VerificationError, OSError) as error:
-                raise VerificationError(f"{project} {TFM} 输出核对失败：{error}") from error
+                raise VerificationError(f"{project} {self.tfm} 输出核对失败：{error}") from error
         write_json(self.evidence_file("assets-inventory.json"), self.assets)
         write_json(self.evidence_file("launch-manifest.json"), launch)
 
@@ -496,7 +530,7 @@ class CandidateRun(R3Run):
             for step in self.report["stages"].values():
                 if step["status"] == "not_run":
                     step["reason"] = f"{stage} 未通过"
-            print(f"{PROFILE} 构建核验失败：{error}", file=sys.stderr)
+            print(f"{self.profile} 构建核验失败：{error}", file=sys.stderr)
         else:
             self.report.update(status="build_verified", exitCode=0)
         self.report["finishedAt"] = datetime.now(timezone.utc).isoformat()

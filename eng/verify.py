@@ -483,7 +483,8 @@ def main():
     parser.add_argument("--profile", required=True,
                         choices=("r0", "r2", "r3-web-host", "r3-signalr-log4net", "r3-module-zero",
                                  "r3-automapper", "r3-template-runtime", "r3-template-net9-packages",
-                                 "r3-template-net9-packages-runtime"))
+                                 "r3-template-net9-packages-runtime", "r3-template-net10-upgrade",
+                                 "r3-template-net10-upgrade-runtime"))
     parser.add_argument("--evidence-root", type=Path)
     parser.add_argument("--work-root", type=Path)
     parser.add_argument("--candidate-feed", type=Path)
@@ -498,7 +499,8 @@ def main():
     parser.add_argument("--runtime-config", type=Path, help="R3 模板运行的无凭据环境配置")
     parser.add_argument("--frozen-root", type=Path, help="R3 模板冻结包和原版比较证据的登记根目录")
     args = parser.parse_args()
-    if args.profile in ("r3-template-net9-packages", "r3-template-net9-packages-runtime"):
+    if args.profile in ("r3-template-net9-packages", "r3-template-net9-packages-runtime",
+                        "r3-template-net10-upgrade", "r3-template-net10-upgrade-runtime"):
         if not args.evidence_root or not args.frozen_root:
             parser.error(f"{args.profile} 需要 --evidence-root 和 --frozen-root")
         if any((args.work_root, args.candidate_feed, args.candidate_manifest, args.candidate_symbols,
@@ -511,8 +513,16 @@ def main():
                 parser.error(f"{args.profile} 需要 --runtime-config")
             from r3_template_net9_runtime import execute
             return execute(args)
+        if args.profile == "r3-template-net10-upgrade-runtime":
+            if not args.runtime_config:
+                parser.error(f"{args.profile} 需要 --runtime-config")
+            from r3_template_net10_runtime import execute
+            return execute(args)
         if args.runtime_config:
-            parser.error("候选模板的 --runtime-config 用于 r3-template-net9-packages-runtime")
+            parser.error("候选模板的 --runtime-config 用于模板完整运行入口")
+        if args.profile == "r3-template-net10-upgrade":
+            from r3_template_net10_upgrade import execute
+            return execute(args)
         from r3_template_net9_packages import execute
         return execute(args)
     if args.frozen_root:

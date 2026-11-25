@@ -129,4 +129,4 @@ openspec-cn validate --all --strict --no-interactive
 
 完整报告及对应原版回归、首错和负例的证据副本在验证机 `.git/r3-template-net9-packages/package-2/records/`，由 `evidence-index.json` 登记来源和摘要。诊断复用通过轮的实际 DLL，并读取报告内的原绝对路径。历史通过轮可从 `.git/r3-template-net9-packages/package-2/execution/candidate/r3-template-net9-packages-runtime-a8smhbra/` 定位。原路径失效时，按验证机 `.git/r3-template-net9-packages/closeout/交接.md` 恢复完整运行树至原路径，或以本页的[运行复验](#运行复验)重新取得通过轮。
 
-结果只覆盖登记的 macOS ARM64、.NET 9、SQL Server 与 Angular 组合。.NET 10、迁移后回退及公开发包各有后续验收。
+结果覆盖登记的 macOS ARM64、.NET 9、SQL Server 与 Angular 组合。同一固定模板及冻结输入的 .NET 10 结果见独立验收记录。迁移后回退与公开发包待验。[.NET 10 正式运行](r3-template-net10-upgrade.md#2026-11-25-正式运行验收)

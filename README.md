@@ -33,7 +33,9 @@ R3.4 AutoMapper 的引擎、Collection 和 ABP 适配器候选已通过本机独
 
 R3 原版模板的 SQL Server 恢复、Angular 租户登录和授权查询已通过两轮本机验收，OpenSpec 已同步并归档。[运行对照与恢复点](docs/maintenance/r3-template-runtime-baseline.md#交接数据恢复点) · [稳定规范](openspec/specs/template-runtime-baseline/spec.md)
 
-R3 固定模板 `net9.0` 同目标换包已验收并归档。13 个冻结维护包在 macOS ARM64、.NET 9.0.10、SQL Server 和原版 Angular production 客户端组合下复现租户登录与授权查询。候选库新增一条成功登录记录，独立对照库计数未变。完整模板的 .NET 10 / EF Core 10 升级及升级后回退待验。[验收与复跑](docs/maintenance/r3-template-net9-packages.md) · [稳定规范](openspec/specs/template-maintenance-package-consumption/spec.md) · [归档](openspec/changes/archive/2026-11-25-validate-r3-net9-template-package-migration/)
+R3 固定模板 `net9.0` 同目标换包已验收并归档。13 个冻结维护包在 macOS ARM64、.NET 9.0.10、SQL Server 和原版 Angular production 客户端组合下复现租户登录与授权查询。候选库新增一条成功登录记录，独立对照库计数未变。[验收与复跑](docs/maintenance/r3-template-net9-packages.md) · [稳定规范](openspec/specs/template-maintenance-package-consumption/spec.md) · [归档](openspec/changes/archive/2026-11-25-validate-r3-net9-template-package-migration/)
+
+R3 固定维护版模板的 .NET 10 / EF Core 10 升级已通过本机实测，OpenSpec 已同步并归档。在同一候选库完成两代迁移、租户登录与权限查询，两库成功登录计数从 `1/1` 经 `2/1` 到 `3/1`。升级前后备份分别恢复至独立新库，原版应用回退待验。[正式运行与恢复点](docs/maintenance/r3-template-net10-upgrade.md#2026-11-25-正式运行验收) · [稳定规范](openspec/specs/template-runtime-upgrade/spec.md) · [归档](openspec/changes/archive/2026-11-25-validate-r3-net10-template-runtime-upgrade/)
 
 在主仓根目录运行 `python3 eng/verify.py --profile r0` 可复验固定 R0 源码。统一复验已完成本地与 GitHub Actions 的配对验收并归档。[复验手册](docs/maintenance/baseline-evidence/README.md#统一入口) · [配对验收记录](docs/maintenance/baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
 

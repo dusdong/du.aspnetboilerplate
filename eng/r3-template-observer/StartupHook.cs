@@ -20,6 +20,10 @@ internal static class StartupHook
                 break;
             case "migrator":
                 DiagnosticListener.AllListeners.Subscribe(new MigrationObserver(evidence));
+                if (Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_ASSEMBLIES") is { } assemblies)
+                {
+                    new AssemblyObserver(assemblies).Start();
+                }
                 break;
             default:
                 throw new InvalidOperationException("模板进程证据模式不符");
