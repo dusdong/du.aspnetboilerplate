@@ -480,7 +480,8 @@ def make_run_directory(parent, prefix):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--profile", required=True, choices=("r0", "r2", "r3-web-host", "r3-signalr-log4net", "r3-module-zero"))
+    parser.add_argument("--profile", required=True,
+                        choices=("r0", "r2", "r3-web-host", "r3-signalr-log4net", "r3-module-zero", "r3-automapper"))
     parser.add_argument("--evidence-root", type=Path)
     parser.add_argument("--work-root", type=Path)
     parser.add_argument("--candidate-feed", type=Path)
@@ -489,8 +490,23 @@ def main():
     parser.add_argument("--r1-evidence", type=Path)
     parser.add_argument("--dotnet", type=Path)
     parser.add_argument("--r2-feed", type=Path)
+    parser.add_argument("--engine-manifest", type=Path, help="R3 AutoMapper 冻结引擎清单")
+    parser.add_argument("--module-zero-feed", type=Path, help="R3 AutoMapper 业务消费的冻结 Module Zero 源")
     parser.add_argument("--strict-runtime-baseline", action="store_true", help="要求实际共享运行时匹配 R3 候选基线")
     args = parser.parse_args()
+    if args.profile == "r3-automapper":
+        if not all((args.engine_manifest, args.candidate_manifest, args.r2_feed, args.module_zero_feed,
+                    args.evidence_root, args.dotnet)):
+            parser.error("r3-automapper 需要 --engine-manifest、--candidate-manifest、--r2-feed、"
+                         "--module-zero-feed、--evidence-root 和 --dotnet")
+        if any((args.work_root, args.r1_evidence, args.candidate_feed, args.candidate_symbols,
+                args.strict_runtime_baseline)):
+            parser.error("r3-automapper 从冻结清单定位原包并使用独立目录及固定运行时")
+        sys.dont_write_bytecode = True
+        from r3_automapper_verify import execute
+        return execute(args)
+    if args.engine_manifest or args.module_zero_feed:
+        parser.error("--engine-manifest 和 --module-zero-feed 仅适用于 r3-automapper")
     if args.profile in ("r3-signalr-log4net", "r3-module-zero"):
         if not all((args.candidate_feed, args.candidate_manifest, args.candidate_symbols, args.r2_feed,
                     args.evidence_root, args.dotnet)):

@@ -8,7 +8,8 @@
 - R2 本地候选 `10.5.1-r2.1` 的五个核心包已通过 macOS ARM64 的 `net9.0` 与 `net10.0` 独立后端验收，覆盖两条传递依赖链、实际程序集加载和 SQLite 工作单元提交。OpenSpec 已归档。框架 `dev` 已推送同树实现，主仓 gitlink 记录该提交。完整模板属于 R3，公开包发布属于 R4。[R2 候选包消费验收](r2-core-package-consumption.md) · [R2 归档](../../openspec/changes/archive/2026-11-25-validate-r2-core-package-consumption/)
 - R3 首包已验收并归档。在 macOS ARM64 上构建了固定模板的原版 `net9.0` Web.Host，核对了实际还原图、运行资产与六个维护包缺口。首包记录保持原始验收口径。[R3 首包验收](r3-web-host-baseline.md) · [模板 Web.Host 基线规范](../../openspec/specs/template-host-baseline/spec.md) · [R3 首包归档](../../openspec/changes/archive/2026-11-25-baseline-r3-web-host-dependencies/)
 - R3 第二包已验收并归档。SignalR 与 Log4Net 的同批候选 `10.5.1-r3.1` 已通过 macOS ARM64 独立 `net9.0` 宿主验收，框架 `dev` 已交付同树实现。该批将候选缺口从六个减为四个。[R3 第二包验收](r3-signalr-log4net-candidates.md) · [集成候选包消费规范](../../openspec/specs/web-host-integration-package-consumption/spec.md) · [R3 第二包归档](../../openspec/changes/archive/2026-11-25-add-r3-signalr-log4net-candidates/)
-- R3 Module Zero 的三个候选包 `10.5.1-r3.3` 已通过 macOS ARM64 上的独立 `net9.0` 实包验收，覆盖 SQLite 角色提交与双向租户隔离。框架 `dev` 已交付同树提交 `819c64c`，主仓 gitlink 指向该提交，OpenSpec 已同步并归档。固定模板的候选缺口尚余 `Abp.AutoMapper`，完整 Web.Host 迁移与宿主、真实登录、SQL Server、Angular 及回退验收仍待后续。 [Module Zero 候选验收](r3-module-zero-candidates.md) · [Module Zero 归档](../../openspec/changes/archive/2026-11-25-add-r3-module-zero-candidates/)
+- R3 Module Zero 的三个候选包 `10.5.1-r3.3` 已在 macOS ARM64 的独立 `net9.0` 消费者中验证 SQLite 角色提交与双向租户隔离。主仓 `d54f782` 固定了与冻结候选同树的框架提交 `819c64cf`，OpenSpec 已归档，该主仓提交的 R0 基线 CI 已通过。[Module Zero 交付与 CI 记录](r3-module-zero-candidates.md#git-交付) · [Module Zero 归档](../../openspec/changes/archive/2026-11-25-add-r3-module-zero-candidates/)
+- R3 AutoMapper 的三份冻结候选完成本机验收，补齐固定 Web.Host 的最后一项候选包 `Abp.AutoMapper`。六项均已取得独立候选，剩余缺口为 **0**。三仓已交付，主仓固定相应 gitlink，稳定规范已同步并归档。完整模板换包、运行时升级和数据回退待后续验证。[AutoMapper 引擎验收](r3-automapper-engine.md) · [下游实包验收](r3-automapper-downstream.md#消费验收记录) · [Git 交付](r3-automapper-downstream.md#git-交付) · [完整模板验收](#r3验证升级路径和实际消费者)
 
 **原路线与研究说明**
 
@@ -151,7 +152,7 @@ Silo 还明确限定协同维护组件，并继续复用满足要求的上游 SD
 | R0 固定基线与规则 | 固定上游 tag/SHA；记录硬约束；盘点包和真实消费者 | 上游记录、包映射、支持矩阵、公共 API 基线 | 能复现基线；迁移范围明确 |
 | R1 维护与升级 | 审查重要上游修复；迁移 .NET 10；处理依赖和 API 变化 | 小而可追溯的提交、回归用例、变更说明 | 核心行为测试通过，重要修复逐项有结论 |
 | R2 独立包交付 | 改 PackageId；转换内部依赖；统一版本；修复打包脚本 | `Du.Abp*` 候选包、符号包、依赖清单 | 命名空间和程序集检查通过，消费者无新旧框架混装 |
-| R3 消费者迁移 | 从包源安装；升级代表性应用；验证数据和回退 | 可运行模板、迁移指南、平台测试结果 | 文档步骤可从干净环境执行 |
+| R3 消费者迁移 | 从候选包源安装、升级代表性应用并回退 | 可运行模板、迁移指南、实测包清单及平台结果 | 从干净检出复跑安装，用同一组测试数据在原版、升级与回退后完成登录及受权限控制的业务请求 |
 | R4 首次正式发行 | 对最终提交执行门禁；记录源码与产物关系；发布 | tag、NuGet 包、发布说明和支持矩阵 | 发行证据完整，实际发布包完成消费者验证 |
 | R5 持续维护 | 跟踪上游和依赖公告；处理回归；更新支持状态 | 定期补丁、维护记录、下一次候选版本 | 每次补丁重复必要门禁 |
 | R6 有边界地演进 | 评估 Mapperly、Serilog、编译期拦截等 | 可选模块、独立设计与迁移说明 | 不破坏命名空间硬约束，且收益覆盖维护成本 |
@@ -206,13 +207,22 @@ R4 的发行对象是通过上述验收的具体候选。后续补丁进入 R5�
 
 ### R3：验证升级路径和实际消费者
 
-固定模板原版 Web.Host 的还原与构建作为安装、升级和回退的对照。SignalR、Log4Net 和 Module Zero 候选已通过各自的本地独立消费验收。后续补齐 `Abp.AutoMapper` 候选，再核对完整 Web.Host 使用的依赖闭包。 [R3 Web.Host 基线](r3-web-host-baseline.md) · [第二包实际消费](r3-signalr-log4net-candidates.md) · [Module Zero 候选验收](r3-module-zero-candidates.md)
+固定模板 `2e953687` 的原版 `net9.0` Web.Host 基线覆盖还原、Release 构建和 11 个 ABP 包的运行资产。R2 的五个核心包已完成双目标独立后端验收。基线记录的其余六个 ABP 包已有下表的独立消费候选，补包缺口从 **6 降至 0**。[原版 Web.Host 基线](r3-web-host-baseline.md) · [R2 双目标验收](r2-core-package-consumption.md)
 
-至少保留一个代表性应用作为迁移样本，分开验证三件事：
+| 独立候选批次 | 覆盖的 Web.Host 包缺口 | 本机验收 |
+| --- | --- | --- |
+| `10.5.1-r3.1` | `Du.Abp.AspNetCore.SignalR`、`Du.Abp.Castle.Log4Net` | [SignalR 与 Log4Net 消费](r3-signalr-log4net-candidates.md#消费验证器复验记录) |
+| `10.5.1-r3.3` | `Du.Abp.Zero.Common`、`Du.Abp.ZeroCore`、`Du.Abp.ZeroCore.EntityFrameworkCore` | [Module Zero 消费](r3-module-zero-candidates.md#验收记录) |
+| `10.5.1-r3.4` | `Du.Abp.AutoMapper`，使用 `Du.AutoMapper 14.0.0-r3.4` 与 `Du.AutoMapper.Collection 11.0.0-r3.4` | [AutoMapper 消费](r3-automapper-downstream.md#消费验收记录) |
 
-1. **安装路径：**从空白项目或干净检出开始，仅通过候选 NuGet 包完成 restore、build、启动和关键请求。
-2. **应用升级：**原应用切换包依赖并升级目标框架，验证公共 API、配置、数据和业务关键路径。
-3. **回退边界：**验证能否切回旧应用；若有 schema 或格式变化，使用明确的备份恢复或迁移策略。
+完整 Web.Host 的候选组合还原、SQL Server 运行、Angular 登录、.NET 10 升级和数据回退按以下顺序另行验收。
+
+| 顺序 | 操作 | 通过条件 |
+| --- | --- | --- |
+| 1. 原版运行对照 | 用原版 `net9.0` Host 连接 SQL Server，按模板的 `angular/yarn.lock` 安装客户端。准备有已知用户和权限的测试库，保存可恢复的副本。 | 从 Angular 登录，以具备 `Pages.Users` 权限的账号打开用户列表，读到预期的租户测试用户。记录数据库起点、实际请求与结果，供后三步对照。 |
+| 2. 同目标换包 | 从干净检出和空 NuGet 缓存开始，保持 `net9.0` 和前端输入，切换为维护候选，构建并启动 Web.Host。 | 核对还原图、Host 输出与实际加载的程序集来源，确认 11 个原版 ABP 包均由对应维护包提供。从同一测试库副本起步，复跑登录与用户查询。 |
+| 3. 运行时升级 | 将模板迁到 .NET 10 / EF Core 10，明确各模块的兼容资产和 SQL Server Provider 版本，按迁移步骤升级上一步的应用与测试库。 | 完整 Host 在目标运行时启动，Angular 用同一账号和请求读回预期数据。保存选用的包版本、摘要、运行时及 Provider 组合和可复跑的操作步骤。 |
+| 4. 回退 | 切回原版应用。若数据库结构或数据格式已变化，执行约定的逆向迁移或恢复测试库备份，注明恢复点及其后的写入如何处理。 | 旧应用能重新登录并读取该恢复点预期的租户数据和权限。迁移指南记录实际使用的回退步骤与数据边界。 |
 
 建议使用来自真实业务的最小数据集，至少包含不同租户、软删除记录、权限、持久化任务、认证数据，以及业务实际使用的 Blob 或缓存结构。测试必须避免泄露真实生产个人数据。
 
@@ -224,12 +234,12 @@ R4 的发行对象是通过上述验收的具体候选。后续补丁进入 R5�
 
 建议流程：
 
-1. 选定固定候选 SHA，冻结本次包清单和版本。
+1. 以 R3 通过的整套包清单为起点，确定正式包版本及其内部依赖范围。例如，Module Zero 的候选 nuspec 已精确引用 `[10.5.1-r3.3]` 和 `[10.5.1-r2.1]`。若采用统一正式版本，先更新这些依赖，再冻结最终源码 SHA 和包清单。[候选包依赖表](r3-module-zero-candidates.md#消费闭包与运行)
 2. 对该 SHA 执行 Release 构建、必要回归、命名检查和依赖审查。
-3. 生成最终候选包；如签名或重新打包会改变字节，应在变更后记录校验值。
-4. 用这些候选包完成消费者安装、启动和升级验证。
+3. 用最终源码按正式版本重新打包，核对各包 nuspec 的依赖范围和符号包，记录供发布的最终产物摘要。若签名改变字节，以签名后的包作为验收输入。
+4. 复用 R3 的模板、测试库和迁移步骤，从空缓存只用这套最终框架包还原，核对实际依赖图，复验启动、升级、登录和受权限控制的业务请求。
 5. 按已确定的发布授权和流程，发布 tag、包和对应说明。
-6. 对实际发布包做简短的安装核验，保留源码与包之间的溯源信息。
+6. 再从公开包源使用空缓存安装实际发布包，核对包身份、版本与依赖解析结果，并记录安装结果及对应的发行提交。
 
 绿色 badge、不同 SHA 的历史测试、自动 dependency submission，均不能替代候选版本的验证。NuGet 包应按不可变发行物管理，出现错误时发布新版本，不用覆盖同一版本来隐藏变化。
 

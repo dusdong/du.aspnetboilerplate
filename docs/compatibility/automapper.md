@@ -1,15 +1,19 @@
 # AutoMapper：兼容维护 Fork 评估与实施路线
 
-## 当前状态（2026-11-24）
+## 当前状态（2026-11-25）
 
-AutoMapper 与 AutoMapper.Collection 的两个 fork 均已接入主仓子模块。以下 gitlink 以主仓 `8dcdca6f5aaa892225bcef74846eefce24f4f0d0` 为准。已选参考对应框架 `Abp.AutoMapper` 的 `14.0.0` 和 `11.0.0` 依赖声明。[子模块地址](../../.gitmodules) · [gitlink 核对方法](../README.md#子模块分工) · [参考提交与验证状态](../maintenance/release-baseline.json)
+R3.4 规划基点 `d54f782` 固定了下表的两个 fork。当时经典框架声明 AutoMapper `14.0.0` 和 Collection `11.0.0`，固定模板原版 Web.Host 的还原图也实际选中了这两个版本。[子模块地址](../../.gitmodules) · [参考提交登记](../maintenance/release-baseline.json) · [原版 Host 依赖对照](../maintenance/r3-web-host-baseline.md)
 
-| 组件 | 当前 gitlink | 已选兼容参考 |
+| 组件 | `d54f782` 的 gitlink | 已选兼容参考 |
 | --- | --- | --- |
 | AutoMapper | `79d10deec5881a617c38e7373f354694044bf83d` | `v14.0.0`，`bf76a5819e1bad7af7db5382bf0f3a0178048a15` |
 | AutoMapper.Collection | `5301edbc689a9696bdd7c396452669434e75989a` | `v11.0.0`，`eafbf005becf73f989e1b1c0d52e8699439f837c` |
 
-已核对框架和参考组件的源码声明。补丁验收、实际候选包的消费还原，以及存量应用的映射配置、对象更新、集合映射与查询投影回归仍待验证。[R0 验证范围](../maintenance/release-baseline.json)
+### R3 独立候选验收
+
+`Du.Abp.AutoMapper 10.5.1-r3.4`、`Du.AutoMapper 14.0.0-r3.4` 和 `Du.AutoMapper.Collection 11.0.0-r3.4` 已在本机冻结并通过独立验收，补齐固定 Web.Host 的最后一个候选包缺口，剩余缺口为 **0**。冻结引擎对三则公告的处置和 ApiCompat 均有证据。CLR 低栈分支按获准的实包 IL、.NET 9 异常契约及受控异常传播和同一 Mapper 恢复实测验收。实际 CLR 低栈触发未观测。[引擎验收](../maintenance/r3-automapper-engine.md) · [维护路线](../maintenance/fork-roadmap.md#r3验证升级路径和实际消费者)
+
+在两个独立空目录还原和运行 `net9.0` 消费者，四条精确依赖均命中，Castle、静态入口和按键集合映射完成后各加载一个引擎实例。固定模板的重复 `CreateMap`、已有用户更新、角色对象和创建时间保留、集合增删改及 SQLite `ProjectTo` 与原版结果一致。三个组件已在各自维护分支交付，主仓固定相应 gitlink。完整模板的 SQL Server 和 Angular 验收、升级与回退及公开发行仍按后续阶段推进。[消费验收与复跑](../maintenance/r3-automapper-downstream.md#主仓实包消费与复验) · [Git 交付](../maintenance/r3-automapper-downstream.md#git-交付)
 
 **下文保留原调研方案和当时的实施状态。**
 

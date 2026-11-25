@@ -22,7 +22,7 @@ python3 -B eng/verify.py --profile r3-module-zero \
 
 ## 源码生产新批
 
-生产使用框架检出的 `nupkg/pack-r3-module-zero-candidates.sh`。R3 生产者共用框架 Git 公共目录的 `du-r3-leaf-candidate-versions/`，在输入预检后原子占用序号。`10.5.1-r3.1` 已分配给 SignalR 与 Log4Net，`10.5.1-r3.2` 的生产在首个 restore 之后失败并保留占号，`10.5.1-r3.3` 已冻结。截至本机验收，下一可用序号为 `10.5.1-r3.4`。执行时用下列命令核对分配目录，再使用新的输出目录。 [框架生产说明](../../aspnetboilerplate/nupkg/README.r3-module-zero.md)
+生产使用框架检出的 `nupkg/pack-r3-module-zero-candidates.sh`。R3 生产者共用框架 Git 公共目录的 `du-r3-leaf-candidate-versions/`，在输入预检后原子占用序号。`10.5.1-r3.1` 已分配给 SignalR 与 Log4Net，`10.5.1-r3.2` 的生产在首个 restore 之后失败并保留占号，`10.5.1-r3.3` 已冻结。`10.5.1-r3.4` 后续已分配给 AutoMapper 候选。执行时用下列命令核对分配目录和下一可用序号，再使用新的输出目录。[R3.4 冻结产物](r3-automapper-downstream.md#冻结产物) [框架生产说明](../../aspnetboilerplate/nupkg/README.r3-module-zero.md)
 
 ```sh
 ROOT="$PWD"
@@ -84,10 +84,12 @@ python3 -B eng/tests/verify_r3_module_zero.py "$RUN" "$PWD/.git/r3-module-zero/l
 
 普通源码沿用三个原项目的 `net9.0` Release 构建、包 ID、项目引用、依赖边、自动打包和既有工具。第一包五个具名角色 SQLite 回归各有一个通过、零失败、零跳过，原始命令和 TRX 在 `.git/r3-module-zero/package-1/ordinary-test/`。固定普通、变更后普通与候选的程序集名称、版本、公开及受保护 API 和资源名称均一致。`Abp.Zero.Common` 的 15 个和 `Abp.ZeroCore` 的 16 个嵌入本地化 XML 逐项同摘要，证据在同级 `comparison/`。
 
-固定模板 `2e9536872673a7ff1986a19e798c51684d16afe5` 的原版 Web.Host 图中，三个 Module Zero 包均解析到 `10.2.0`。Web.Core 直接声明 `Abp.ZeroCore`，Core 直接声明 `Abp.ZeroCore.EntityFrameworkCore`。计入本轮三个候选和上一批 SignalR、Log4Net 后，原版基线登记的六个候选缺口中尚余 `Abp.AutoMapper`。本轮覆盖独立 macOS ARM64、`net9.0`、SQLite 消费及第一包普通源码对照。完整模板集成、真实登录、SQL Server、Angular、其他平台或目标、公开发包和部署留待相应阶段。 [模板基线](r3-web-host-baseline.md) · [前批实包验收](r3-signalr-log4net-candidates.md) · [AutoMapper 兼容维护](../compatibility/automapper.md)
+固定模板 `2e9536872673a7ff1986a19e798c51684d16afe5` 的原版 Web.Host 图中，三个 Module Zero 包均解析到 `10.2.0`。Web.Core 直接声明 `Abp.ZeroCore`，Core 直接声明 `Abp.ZeroCore.EntityFrameworkCore`。在 Module Zero 归档时，计入本轮三个候选和上一批 SignalR、Log4Net，原版基线登记的六个候选缺口只余 `Abp.AutoMapper`。当前候选覆盖以维护路线为准。本轮覆盖独立 macOS ARM64、`net9.0`、SQLite 消费及第一包普通源码对照。完整模板集成、真实登录、SQL Server、Angular、其他平台或目标、公开发包和部署留待相应阶段。 [模板基线](r3-web-host-baseline.md) · [前批实包验收](r3-signalr-log4net-candidates.md) · [当前候选覆盖](fork-roadmap.md#r3验证升级路径和实际消费者)
 
 ## Git 交付
 
 2026-11-25，框架 `dev` 提交 `819c64cf527b6918a5eafbf42550c93400f1fb75` 已推送至 `.gitmodules` 登记的框架 fork。其父提交为 `b329282a6ab4429b0cc724a2649e7a446e2c1a6a`，提交树 `68a09980ff8fb1f8225483dfe200124eb051ef49` 与本机验收所用的生产树一致，完整提交补丁与冻结批次的 `source.patch` 逐字节相同。冻结候选保留生产时的源码证明及归档摘要。 [框架交付提交](https://github.com/dusdong/aspnetboilerplate/commit/819c64cf527b6918a5eafbf42550c93400f1fb75)
 
-主仓本次交付将框架 gitlink 固定到 `819c64cf527b6918a5eafbf42550c93400f1fb75`，并同步稳定规范、归档变更。检出本版后可用 `git ls-tree HEAD -- aspnetboilerplate module-zero-core-template` 核对这两个输入。框架应为该提交，模板仍为 `2e9536872673a7ff1986a19e798c51684d16afe5`。以上验收记录对应本机独立消费者，主仓 GitHub Actions 的 R0 基线复验另按其工作流记录。 [稳定消费规范](../../openspec/specs/module-zero-package-consumption/spec.md) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-25-add-r3-module-zero-candidates/)
+主仓交付提交 `d54f782fe91cbf0230680c94256913ce46b0581d` 已同步稳定规范并归档变更。`git ls-tree d54f782 -- aspnetboilerplate module-zero-core-template` 可核对该提交固定的框架 `819c64cf527b6918a5eafbf42550c93400f1fb75` 和模板 `2e9536872673a7ff1986a19e798c51684d16afe5`。[主仓交付提交](https://github.com/dusdong/du.aspnetboilerplate/commit/d54f782fe91cbf0230680c94256913ce46b0581d) · [稳定消费规范](../../openspec/specs/module-zero-package-consumption/spec.md) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-25-add-r3-module-zero-candidates/)
+
+该提交的 push 触发 GitHub Actions「R0 基线复验」，运行 `45554959410` 首次执行成功。Module Zero 的实包还原、SQLite 角色提交与双向租户隔离结果来自本机独立消费者的初验和同批严格复现。[R0 CI 运行](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45554959410) · [本机验收记录](#验收记录)

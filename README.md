@@ -27,7 +27,9 @@ R2 已归档。首批五个核心候选包 `10.5.1-r2.1` 已通过本机 macOS A
 
 R3 首包和第二包均已归档。首包记录固定模板原版 Web.Host 的包图及六个维护包缺口。第二包用 `10.5.1-r3.1` 在 macOS ARM64 的独立 `net9.0` 宿主验证 SignalR 通知和 Log4Net 日志。框架 `dev` 已交付同树实现，主仓 gitlink 记录相应提交。[原版 Web.Host 基线](docs/maintenance/r3-web-host-baseline.md) · [第二包验收](docs/maintenance/r3-signalr-log4net-candidates.md) · [集成候选包消费规范](openspec/specs/web-host-integration-package-consumption/spec.md) · [第二包归档](openspec/changes/archive/2026-11-25-add-r3-signalr-log4net-candidates/)
 
-Module Zero 的三个候选包 `10.5.1-r3.3` 已通过 macOS ARM64 上的独立 `net9.0` 实包验收，覆盖 SQLite 角色提交和双向租户隔离。框架 `dev` 已交付通过验收的源码树，主仓 gitlink 固定对应提交，OpenSpec 已同步并归档。固定模板的候选缺口尚余 `Abp.AutoMapper`，完整 Web.Host 迁移、真实登录、SQL Server 和 Angular 验收仍待后续。 [Module Zero 候选验收](docs/maintenance/r3-module-zero-candidates.md) · [稳定消费规范](openspec/specs/module-zero-package-consumption/spec.md)
+Module Zero 的三个候选包 `10.5.1-r3.3` 已通过 macOS ARM64 上的独立 `net9.0` 实包验收，覆盖 SQLite 角色提交和双向租户隔离。框架 `dev` 已交付通过验收的源码树，主仓 gitlink 固定对应提交，OpenSpec 已同步并归档。[Module Zero 候选验收](docs/maintenance/r3-module-zero-candidates.md) · [稳定消费规范](openspec/specs/module-zero-package-consumption/spec.md)
+
+R3.4 AutoMapper 的引擎、Collection 和 ABP 适配器候选已通过本机独立 `net9.0` 实包验收，覆盖单一引擎加载、已有用户更新、按键集合和 SQLite 投影。三个子仓的源码均已交付，主仓固定相应 gitlink，OpenSpec 已同步并归档。固定模板 Web.Host 的六个缺口均已取得独立候选。完整 Web.Host 换包、真实登录、SQL Server、Angular、运行时升级和回退留待后续验收。[AutoMapper 本机验收](docs/maintenance/r3-automapper-downstream.md#消费验收记录) · [Git 交付](docs/maintenance/r3-automapper-downstream.md#git-交付) · [稳定消费规范](openspec/specs/automapper-package-consumption/spec.md)
 
 在主仓根目录运行 `python3 eng/verify.py --profile r0` 可复验固定 R0 源码。统一复验已完成本地与 GitHub Actions 的配对验收并归档。[复验手册](docs/maintenance/baseline-evidence/README.md#统一入口) · [配对验收记录](docs/maintenance/baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
 

@@ -15,7 +15,7 @@
 | 生成或复验 SignalR 与 Log4Net 本地候选，核对独立宿主的通知和日志 | [R3 SignalR 与 Log4Net 候选验收](maintenance/r3-signalr-log4net-candidates.md) · [Git 交付](maintenance/r3-signalr-log4net-candidates.md#git-交付) |
 | 生成或复验 Module Zero 本地候选，核对 SQLite 角色提交及双向租户隔离 | [R3 Module Zero 候选验收](maintenance/r3-module-zero-candidates.md) |
 | 比较第三方 fork 的迁移、补丁与独立发包实践 | [ASP.NET Boilerplate fork 调研](maintenance/fork-references.md) |
-| 维护映射行为、Collection 依赖或消费项目回归 | [AutoMapper 兼容维护](compatibility/automapper.md) |
+| 复验 R3 映射候选、Collection 依赖与模板业务投影 | [AutoMapper 兼容维护](compatibility/automapper.md) · [原版基线](maintenance/r3-automapper-baseline.md) · [引擎验收](maintenance/r3-automapper-engine.md) · [独立消费者验收与复跑](maintenance/r3-automapper-downstream.md#主仓实包消费与复验) · [Git 交付](maintenance/r3-automapper-downstream.md#git-交付) |
 | 核对 Angular 适配器、Web Resources 与模板的版本组合 | [Angular 生态维护](compatibility/angular-ecosystem.md) |
 | 选择多 DbContext、拦截器等专项消费验收场景 | [Samples 取舍与兼容验收](validation/samples.md) |
 
@@ -25,11 +25,11 @@
 | --- | --- |
 | 子模块仓库地址和路径 | [`.gitmodules`](../.gitmodules) |
 | 指定主仓提交固定的子模块版本 | 该提交树中的 gitlink，见下文命令 |
-| 长期可验收的要求 | [维护基线规范](../openspec/specs/maintenance-baseline/spec.md) · [EF Core 查询过滤规范](../openspec/specs/efcore-query-filters/spec.md) · [运行时迁移规范](../openspec/specs/runtime-migration/spec.md) · [核心候选包消费规范](../openspec/specs/core-package-consumption/spec.md) · [模板 Web.Host 基线规范](../openspec/specs/template-host-baseline/spec.md) · [集成候选包消费规范](../openspec/specs/web-host-integration-package-consumption/spec.md) · [Module Zero 候选包消费规范](../openspec/specs/module-zero-package-consumption/spec.md) |
+| 长期可验收的要求 | [维护基线规范](../openspec/specs/maintenance-baseline/spec.md) · [EF Core 查询过滤规范](../openspec/specs/efcore-query-filters/spec.md) · [运行时迁移规范](../openspec/specs/runtime-migration/spec.md) · [核心候选包消费规范](../openspec/specs/core-package-consumption/spec.md) · [模板 Web.Host 基线规范](../openspec/specs/template-host-baseline/spec.md) · [集成候选包消费规范](../openspec/specs/web-host-integration-package-consumption/spec.md) · [Module Zero 候选包消费规范](../openspec/specs/module-zero-package-consumption/spec.md) · [AutoMapper 候选包消费规范](../openspec/specs/automapper-package-consumption/spec.md) |
 | 正在推进的提案、设计、任务与验收条件 | 主仓根目录执行 `openspec-cn list`，按列表查阅[变更目录](../openspec/changes/) |
 | 已完成变更的历史方案及当时的验收范围 | [OpenSpec 归档](../openspec/changes/archive/) |
 | R0 的固定来源、五包映射、依赖闭包、环境和实测结果 | [R0 维护基线](maintenance/release-baseline.json) |
-| 某次验收实际执行的项目、环境和结果 | [R1 首项补丁验收记录](maintenance/r1-efcore-query-filter.md) · [R1 运行时迁移验收](maintenance/r1-dotnet10-runtime-migration.md) · [R2 候选包消费验收](maintenance/r2-core-package-consumption.md) · [R3 首包验收](maintenance/r3-web-host-baseline.md) · [R3 第二包验收](maintenance/r3-signalr-log4net-candidates.md) · [R3 Module Zero 验收](maintenance/r3-module-zero-candidates.md) |
+| 某次验收实际执行的项目、环境和结果 | [R1 首项补丁验收记录](maintenance/r1-efcore-query-filter.md) · [R1 运行时迁移验收](maintenance/r1-dotnet10-runtime-migration.md) · [R2 候选包消费验收](maintenance/r2-core-package-consumption.md) · [R3 首包验收](maintenance/r3-web-host-baseline.md) · [R3 第二包验收](maintenance/r3-signalr-log4net-candidates.md) · [R3 Module Zero 验收](maintenance/r3-module-zero-candidates.md) · [R3 AutoMapper 验收](maintenance/r3-automapper-downstream.md#消费验收记录) |
 | 当时的组织和实施建议 | [文档组织与治理建议稿](maintenance/du-abp-documentation-governance.md) · [主仓改进建议与实施路线](maintenance/du-abp-maintenance-plan.md)，两稿均基于 R0 快照 `92a31c2` |
 | 某一版本实际交付的源码、包与支持范围 | 对应版本的发行清单和验收证据，由该次发行记录 |
 
@@ -58,7 +58,7 @@ git submodule status
 
 主仓使用 `openspec-cn` 的 `spec-driven` 工作流。项目约束和制品规则见 [OpenSpec 配置](../openspec/config.yaml)。
 
-截至 2026-11-25，R0 基线、R0 统一复验、R1 首项 .NET 9 查询过滤补丁、R1 首批核心源码运行时迁移、R2 首批核心候选包的本机双目标消费验收，以及 R3 原版 Web.Host 基线、SignalR 与 Log4Net 候选验收、Module Zero 候选验收均已归档。[R0 基线归档](../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/) · [R0 统一复验归档](../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/) · [R1 首项归档](../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/) · [R1 运行时迁移归档](../openspec/changes/archive/2026-11-25-migrate-r1-core-to-dotnet10/) · [R2 归档](../openspec/changes/archive/2026-11-25-validate-r2-core-package-consumption/) · [R3 首包归档](../openspec/changes/archive/2026-11-25-baseline-r3-web-host-dependencies/) · [R3 第二包归档](../openspec/changes/archive/2026-11-25-add-r3-signalr-log4net-candidates/) · [R3 Module Zero 归档](../openspec/changes/archive/2026-11-25-add-r3-module-zero-candidates/) · [维护路线](maintenance/fork-roadmap.md)
+截至 2026-11-25，R0 基线、R0 统一复验、R1 首项 .NET 9 查询过滤补丁、R1 首批核心源码运行时迁移、R2 首批核心候选包的本机双目标消费验收，以及 R3 原版 Web.Host 基线、SignalR 与 Log4Net 候选验收、Module Zero 候选验收和 AutoMapper 候选验收均已归档。[R0 基线归档](../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/) · [R0 统一复验归档](../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/) · [R1 首项归档](../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/) · [R1 运行时迁移归档](../openspec/changes/archive/2026-11-25-migrate-r1-core-to-dotnet10/) · [R2 归档](../openspec/changes/archive/2026-11-25-validate-r2-core-package-consumption/) · [R3 首包归档](../openspec/changes/archive/2026-11-25-baseline-r3-web-host-dependencies/) · [R3 第二包归档](../openspec/changes/archive/2026-11-25-add-r3-signalr-log4net-candidates/) · [R3 Module Zero 归档](../openspec/changes/archive/2026-11-25-add-r3-module-zero-candidates/) · [R3 AutoMapper 归档](../openspec/changes/archive/2026-11-25-add-r3-automapper-candidates/) · [维护路线](maintenance/fork-roadmap.md)
 
 - 新能力、重大行为变化或跨子模块架构调整，先核对 `openspec/specs/` 和 `openspec/changes/`。可用 `openspec-cn list --specs` 和 `openspec-cn list` 查看。
 - 用 `openspec-cn new change <name>` 创建变更，在 `openspec/changes/<name>/` 中完成提案、增量规范、设计和任务清单。
