@@ -1,0 +1,4806 @@
+{
+  "frameworkRuntimeDlls": [
+    {
+      "packageAsset": "lib/net9.0/Abp.AspNetCore.dll",
+      "packageId": "Abp.AspNetCore",
+      "path": "Abp.AspNetCore.dll",
+      "sha256": "c43fa9ef5937eb54b4d5332c30569fa48a2a0a5e8b8e02dbfe531c59e5f47ac9",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.AspNetCore.SignalR.dll",
+      "packageId": "Abp.AspNetCore.SignalR",
+      "path": "Abp.AspNetCore.SignalR.dll",
+      "sha256": "d427a04d3f59b21d291dc79af1e6b0b551976856229991e875fbe4b6f2053118",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.AutoMapper.dll",
+      "packageId": "Abp.AutoMapper",
+      "path": "Abp.AutoMapper.dll",
+      "sha256": "75fc38c32b17660b2dcfc148b89103b4a56a0c9b939d13518d19ac1efbae9b3d",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.Castle.Log4Net.dll",
+      "packageId": "Abp.Castle.Log4Net",
+      "path": "Abp.Castle.Log4Net.dll",
+      "sha256": "8693b8bc8a91775783c5139660a5fee3a9ddf103689f87bda554fd1d936ab669",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.dll",
+      "packageId": "Abp",
+      "path": "Abp.dll",
+      "sha256": "94823a17ecc58dfc9385e4ab07ce6017c9d925264b16e5878eb5829712b7cb1e",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.EntityFramework.Common.dll",
+      "packageId": "Abp.EntityFramework.Common",
+      "path": "Abp.EntityFramework.Common.dll",
+      "sha256": "06a97d8b667f696fb12faf3f0d16c618f9fea7553a635457a0cc3d322209b4a0",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.EntityFrameworkCore.dll",
+      "packageId": "Abp.EntityFrameworkCore",
+      "path": "Abp.EntityFrameworkCore.dll",
+      "sha256": "944bc4769009c4d99fbc1b61104a9f267cfefc074a0290470e8f76907c33a907",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.Web.Common.dll",
+      "packageId": "Abp.Web.Common",
+      "path": "Abp.Web.Common.dll",
+      "sha256": "8f5bfec9e189df8eb496cccbe1aa0501c0115308fc243adba34980ff6ff0dc1d",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.Zero.Common.dll",
+      "packageId": "Abp.Zero.Common",
+      "path": "Abp.Zero.Common.dll",
+      "sha256": "6a228a610e6d6c1ac976ade34fd686f9fecc8eaa7681f41fe3ced6fedeec964e",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.ZeroCore.dll",
+      "packageId": "Abp.ZeroCore",
+      "path": "Abp.ZeroCore.dll",
+      "sha256": "16782c1ea142c9552388d47bfd0de3f985659febc091671d407b63d149465b8b",
+      "version": "10.2.0"
+    },
+    {
+      "packageAsset": "lib/net9.0/Abp.ZeroCore.EntityFrameworkCore.dll",
+      "packageId": "Abp.ZeroCore.EntityFrameworkCore",
+      "path": "Abp.ZeroCore.EntityFrameworkCore.dll",
+      "sha256": "938c5ea120daaea9f66b4cbf66e97e41185d23d772aa08edd5a698e1db9015b7",
+      "version": "10.2.0"
+    }
+  ],
+  "inputsSDK": "10.0.404",
+  "projects": {
+    "aspnet-core/src/AbpCompanyName.AbpProjectName.Application/AbpCompanyName.AbpProjectName.Application.csproj": {
+      "net9.0": {
+        "directPackages": {},
+        "packages": [
+          {
+            "dependencies": {
+              "Abp": "10.2.0",
+              "AutoMapper": "14.0.0",
+              "AutoMapper.Collection": "11.0.0"
+            },
+            "id": "Abp.AutoMapper",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.EntityFramework.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFramework.Common": "10.2.0",
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5"
+            },
+            "id": "Abp.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.Zero.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFrameworkCore": "10.2.0",
+              "Abp.ZeroCore": "10.2.0"
+            },
+            "id": "Abp.ZeroCore.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.Zero.Common": "10.2.0"
+            },
+            "id": "Abp.ZeroCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.2.1",
+              "Castle.Core.AsyncInterceptor": "2.1.0",
+              "Castle.LoggingFacility": "6.0.0",
+              "JetBrains.Annotations": "2024.3.0",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Newtonsoft.Json": "13.0.3",
+              "Nito.AsyncEx.Context": "5.1.2",
+              "Nito.AsyncEx.Coordination": "5.1.2",
+              "System.Collections.Immutable": "9.0.5",
+              "System.ComponentModel.Annotations": "5.0.0",
+              "System.Configuration.ConfigurationManager": "9.0.5",
+              "System.Data.Common": "4.3.0",
+              "System.Linq.Dynamic.Core": "1.6.4",
+              "System.Linq.Queryable": "4.3.0",
+              "System.Runtime.Serialization.Formatters": "9.0.5",
+              "System.Security.Claims": "4.3.0",
+              "System.Text.Json": "9.0.5",
+              "System.Text.RegularExpressions": "4.3.1",
+              "System.Threading": "4.3.0",
+              "System.Xml.XPath.XmlDocument": "4.7.0",
+              "TimeZoneConverter": "7.0.0"
+            },
+            "id": "Abp",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "AutoMapper": "[14.0.0, 15.0.0)"
+            },
+            "id": "AutoMapper.Collection",
+            "version": "11.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Options": "8.0.0"
+            },
+            "id": "AutoMapper",
+            "version": "14.0.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "4.4.0"
+            },
+            "id": "Castle.Core.AsyncInterceptor",
+            "version": "2.1.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "6.0.0"
+            },
+            "id": "Castle.Core",
+            "version": "5.2.1"
+          },
+          {
+            "dependencies": {
+              "Castle.Windsor": "[6.0.0]"
+            },
+            "id": "Castle.LoggingFacility",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.1.1",
+              "Castle.Windsor": "6.0.0",
+              "Microsoft.Extensions.DependencyInjection": "7.0.0",
+              "Microsoft.Extensions.Options": "7.0.0"
+            },
+            "id": "Castle.Windsor.MsDependencyInjection",
+            "version": "4.1.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "[5.1.0, 6.0.0)",
+              "Microsoft.Extensions.DependencyModel": "6.0.0"
+            },
+            "id": "Castle.Windsor",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "JetBrains.Annotations",
+            "version": "2024.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Analyzers",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.Relational",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore.Abstractions": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Analyzers": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Caching.Abstractions": "9.0.5",
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Memory",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Configuration.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.DependencyInjection",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Buffers": "4.5.1",
+              "System.Memory": "4.5.4",
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0",
+              "System.Text.Encodings.Web": "6.0.0",
+              "System.Text.Json": "6.0.0"
+            },
+            "id": "Microsoft.Extensions.DependencyModel",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Options",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.Primitives",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Platforms",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Targets",
+            "version": "1.1.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Newtonsoft.Json",
+            "version": "13.0.3"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2"
+            },
+            "id": "Nito.AsyncEx.Context",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2",
+              "Nito.Collections.Deque": "1.1.1"
+            },
+            "id": "Nito.AsyncEx.Coordination",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.Disposables": "2.2.1"
+            },
+            "id": "Nito.AsyncEx.Tasks",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {},
+            "id": "Nito.Collections.Deque",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections.Immutable": "1.7.1"
+            },
+            "id": "Nito.Disposables",
+            "version": "2.2.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Buffers",
+            "version": "4.5.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Collections.Immutable",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Collections",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.ComponentModel.Annotations",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "9.0.5",
+              "System.Security.Cryptography.ProtectedData": "9.0.5"
+            },
+            "id": "System.Configuration.ConfigurationManager",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Text.RegularExpressions": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Data.Common",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Diagnostics.Debug",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Diagnostics.EventLog",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Globalization",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0",
+              "System.Text.Encoding": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.IO",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Linq.Dynamic.Core",
+            "version": "1.6.4"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.ObjectModel": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Emit.Lightweight": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Reflection.TypeExtensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.Linq.Expressions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.Linq.Expressions": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Linq.Queryable",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0"
+            },
+            "id": "System.Linq",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Memory",
+            "version": "4.5.4"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.ObjectModel",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.ILGeneration",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.Lightweight",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.IO": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Primitives",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.TypeExtensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.IO": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Globalization": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Resources.ResourceManager",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.CompilerServices.Unsafe",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Runtime.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.Serialization.Formatters",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.1",
+              "Microsoft.NETCore.Targets": "1.1.3"
+            },
+            "id": "System.Runtime",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Security.Principal": "4.3.0"
+            },
+            "id": "System.Security.Claims",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Security.Cryptography.ProtectedData",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Security.Principal",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Text.Encoding",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Text.Encodings.Web",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Text.Json",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.1"
+            },
+            "id": "System.Text.RegularExpressions",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Threading.Tasks",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Threading",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Xml.XPath.XmlDocument",
+            "version": "4.7.0"
+          },
+          {
+            "dependencies": {},
+            "id": "TimeZoneConverter",
+            "version": "7.0.0"
+          }
+        ],
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Core/AbpCompanyName.AbpProjectName.Core.csproj"
+        ],
+        "sdkDownloads": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.NETCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ],
+        "sdkUsedPacks": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "d3a85030cacd48a5afd22459d07105b721be4a6fe9e039df3aadb3e55fecee19"
+            },
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "3305db0e0cb407d87ca2c9e0bb8dd7e27e98457b931f9b06fdb331ae084e0351"
+            },
+            "id": "Microsoft.NETCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ]
+      }
+    },
+    "aspnet-core/src/AbpCompanyName.AbpProjectName.Core/AbpCompanyName.AbpProjectName.Core.csproj": {
+      "net9.0": {
+        "directPackages": {
+          "Abp.AutoMapper": {
+            "declaredRange": "[10.2.0, )",
+            "declaredVersion": "10.2.0",
+            "resolvedVersion": "10.2.0"
+          },
+          "Abp.ZeroCore.EntityFrameworkCore": {
+            "declaredRange": "[10.2.0, )",
+            "declaredVersion": "10.2.0",
+            "resolvedVersion": "10.2.0"
+          },
+          "Castle.Windsor.MsDependencyInjection": {
+            "declaredRange": "[4.1.0, )",
+            "declaredVersion": "4.1.0",
+            "resolvedVersion": "4.1.0"
+          }
+        },
+        "packages": [
+          {
+            "dependencies": {
+              "Abp": "10.2.0",
+              "AutoMapper": "14.0.0",
+              "AutoMapper.Collection": "11.0.0"
+            },
+            "id": "Abp.AutoMapper",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.EntityFramework.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFramework.Common": "10.2.0",
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5"
+            },
+            "id": "Abp.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.Zero.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFrameworkCore": "10.2.0",
+              "Abp.ZeroCore": "10.2.0"
+            },
+            "id": "Abp.ZeroCore.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.Zero.Common": "10.2.0"
+            },
+            "id": "Abp.ZeroCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.2.1",
+              "Castle.Core.AsyncInterceptor": "2.1.0",
+              "Castle.LoggingFacility": "6.0.0",
+              "JetBrains.Annotations": "2024.3.0",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Newtonsoft.Json": "13.0.3",
+              "Nito.AsyncEx.Context": "5.1.2",
+              "Nito.AsyncEx.Coordination": "5.1.2",
+              "System.Collections.Immutable": "9.0.5",
+              "System.ComponentModel.Annotations": "5.0.0",
+              "System.Configuration.ConfigurationManager": "9.0.5",
+              "System.Data.Common": "4.3.0",
+              "System.Linq.Dynamic.Core": "1.6.4",
+              "System.Linq.Queryable": "4.3.0",
+              "System.Runtime.Serialization.Formatters": "9.0.5",
+              "System.Security.Claims": "4.3.0",
+              "System.Text.Json": "9.0.5",
+              "System.Text.RegularExpressions": "4.3.1",
+              "System.Threading": "4.3.0",
+              "System.Xml.XPath.XmlDocument": "4.7.0",
+              "TimeZoneConverter": "7.0.0"
+            },
+            "id": "Abp",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "AutoMapper": "[14.0.0, 15.0.0)"
+            },
+            "id": "AutoMapper.Collection",
+            "version": "11.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Options": "8.0.0"
+            },
+            "id": "AutoMapper",
+            "version": "14.0.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "4.4.0"
+            },
+            "id": "Castle.Core.AsyncInterceptor",
+            "version": "2.1.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "6.0.0"
+            },
+            "id": "Castle.Core",
+            "version": "5.2.1"
+          },
+          {
+            "dependencies": {
+              "Castle.Windsor": "[6.0.0]"
+            },
+            "id": "Castle.LoggingFacility",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.1.1",
+              "Castle.Windsor": "6.0.0",
+              "Microsoft.Extensions.DependencyInjection": "7.0.0",
+              "Microsoft.Extensions.Options": "7.0.0"
+            },
+            "id": "Castle.Windsor.MsDependencyInjection",
+            "version": "4.1.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "[5.1.0, 6.0.0)",
+              "Microsoft.Extensions.DependencyModel": "6.0.0"
+            },
+            "id": "Castle.Windsor",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "JetBrains.Annotations",
+            "version": "2024.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Analyzers",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.Relational",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore.Abstractions": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Analyzers": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Caching.Abstractions": "9.0.5",
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Memory",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Configuration.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.DependencyInjection",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Buffers": "4.5.1",
+              "System.Memory": "4.5.4",
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0",
+              "System.Text.Encodings.Web": "6.0.0",
+              "System.Text.Json": "6.0.0"
+            },
+            "id": "Microsoft.Extensions.DependencyModel",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Options",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.Primitives",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Platforms",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Targets",
+            "version": "1.1.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Newtonsoft.Json",
+            "version": "13.0.3"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2"
+            },
+            "id": "Nito.AsyncEx.Context",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2",
+              "Nito.Collections.Deque": "1.1.1"
+            },
+            "id": "Nito.AsyncEx.Coordination",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.Disposables": "2.2.1"
+            },
+            "id": "Nito.AsyncEx.Tasks",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {},
+            "id": "Nito.Collections.Deque",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections.Immutable": "1.7.1"
+            },
+            "id": "Nito.Disposables",
+            "version": "2.2.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Buffers",
+            "version": "4.5.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Collections.Immutable",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Collections",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.ComponentModel.Annotations",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "9.0.5",
+              "System.Security.Cryptography.ProtectedData": "9.0.5"
+            },
+            "id": "System.Configuration.ConfigurationManager",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Text.RegularExpressions": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Data.Common",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Diagnostics.Debug",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Diagnostics.EventLog",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Globalization",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0",
+              "System.Text.Encoding": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.IO",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Linq.Dynamic.Core",
+            "version": "1.6.4"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.ObjectModel": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Emit.Lightweight": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Reflection.TypeExtensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.Linq.Expressions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.Linq.Expressions": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Linq.Queryable",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0"
+            },
+            "id": "System.Linq",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Memory",
+            "version": "4.5.4"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.ObjectModel",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.ILGeneration",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.Lightweight",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.IO": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Primitives",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.TypeExtensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.IO": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Globalization": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Resources.ResourceManager",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.CompilerServices.Unsafe",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Runtime.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.Serialization.Formatters",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.1",
+              "Microsoft.NETCore.Targets": "1.1.3"
+            },
+            "id": "System.Runtime",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Security.Principal": "4.3.0"
+            },
+            "id": "System.Security.Claims",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Security.Cryptography.ProtectedData",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Security.Principal",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Text.Encoding",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Text.Encodings.Web",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Text.Json",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.1"
+            },
+            "id": "System.Text.RegularExpressions",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Threading.Tasks",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Threading",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Xml.XPath.XmlDocument",
+            "version": "4.7.0"
+          },
+          {
+            "dependencies": {},
+            "id": "TimeZoneConverter",
+            "version": "7.0.0"
+          }
+        ],
+        "projectReferences": [],
+        "sdkDownloads": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.NETCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ],
+        "sdkUsedPacks": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "d3a85030cacd48a5afd22459d07105b721be4a6fe9e039df3aadb3e55fecee19"
+            },
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "3305db0e0cb407d87ca2c9e0bb8dd7e27e98457b931f9b06fdb331ae084e0351"
+            },
+            "id": "Microsoft.NETCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ]
+      }
+    },
+    "aspnet-core/src/AbpCompanyName.AbpProjectName.EntityFrameworkCore/AbpCompanyName.AbpProjectName.EntityFrameworkCore.csproj": {
+      "net9.0": {
+        "directPackages": {
+          "Microsoft.EntityFrameworkCore.Design": {
+            "declaredRange": "[9.0.5, )",
+            "declaredVersion": "9.0.5",
+            "resolvedVersion": "9.0.5"
+          },
+          "Microsoft.EntityFrameworkCore.SqlServer": {
+            "declaredRange": "[9.0.5, )",
+            "declaredVersion": "9.0.5",
+            "resolvedVersion": "9.0.5"
+          },
+          "Microsoft.EntityFrameworkCore.Tools": {
+            "declaredRange": "[9.0.5, )",
+            "declaredVersion": "9.0.5",
+            "resolvedVersion": "9.0.5"
+          }
+        },
+        "packages": [
+          {
+            "dependencies": {
+              "Abp": "10.2.0",
+              "AutoMapper": "14.0.0",
+              "AutoMapper.Collection": "11.0.0"
+            },
+            "id": "Abp.AutoMapper",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.EntityFramework.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFramework.Common": "10.2.0",
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5"
+            },
+            "id": "Abp.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.Zero.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFrameworkCore": "10.2.0",
+              "Abp.ZeroCore": "10.2.0"
+            },
+            "id": "Abp.ZeroCore.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.Zero.Common": "10.2.0"
+            },
+            "id": "Abp.ZeroCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.2.1",
+              "Castle.Core.AsyncInterceptor": "2.1.0",
+              "Castle.LoggingFacility": "6.0.0",
+              "JetBrains.Annotations": "2024.3.0",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Newtonsoft.Json": "13.0.3",
+              "Nito.AsyncEx.Context": "5.1.2",
+              "Nito.AsyncEx.Coordination": "5.1.2",
+              "System.Collections.Immutable": "9.0.5",
+              "System.ComponentModel.Annotations": "5.0.0",
+              "System.Configuration.ConfigurationManager": "9.0.5",
+              "System.Data.Common": "4.3.0",
+              "System.Linq.Dynamic.Core": "1.6.4",
+              "System.Linq.Queryable": "4.3.0",
+              "System.Runtime.Serialization.Formatters": "9.0.5",
+              "System.Security.Claims": "4.3.0",
+              "System.Text.Json": "9.0.5",
+              "System.Text.RegularExpressions": "4.3.1",
+              "System.Threading": "4.3.0",
+              "System.Xml.XPath.XmlDocument": "4.7.0",
+              "TimeZoneConverter": "7.0.0"
+            },
+            "id": "Abp",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "AutoMapper": "[14.0.0, 15.0.0)"
+            },
+            "id": "AutoMapper.Collection",
+            "version": "11.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Options": "8.0.0"
+            },
+            "id": "AutoMapper",
+            "version": "14.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Bcl.AsyncInterfaces": "1.1.1",
+              "System.ClientModel": "1.0.0",
+              "System.Diagnostics.DiagnosticSource": "6.0.1",
+              "System.Memory.Data": "1.0.2",
+              "System.Numerics.Vectors": "4.5.0",
+              "System.Text.Encodings.Web": "4.7.2",
+              "System.Text.Json": "4.7.2",
+              "System.Threading.Tasks.Extensions": "4.5.4"
+            },
+            "id": "Azure.Core",
+            "version": "1.38.0"
+          },
+          {
+            "dependencies": {
+              "Azure.Core": "1.38.0",
+              "Microsoft.Identity.Client": "4.61.3",
+              "Microsoft.Identity.Client.Extensions.Msal": "4.61.3",
+              "System.Memory": "4.5.4",
+              "System.Security.Cryptography.ProtectedData": "4.7.0",
+              "System.Text.Json": "4.7.2",
+              "System.Threading.Tasks.Extensions": "4.5.4"
+            },
+            "id": "Azure.Identity",
+            "version": "1.11.4"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "4.4.0"
+            },
+            "id": "Castle.Core.AsyncInterceptor",
+            "version": "2.1.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "6.0.0"
+            },
+            "id": "Castle.Core",
+            "version": "5.2.1"
+          },
+          {
+            "dependencies": {
+              "Castle.Windsor": "[6.0.0]"
+            },
+            "id": "Castle.LoggingFacility",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.1.1",
+              "Castle.Windsor": "6.0.0",
+              "Microsoft.Extensions.DependencyInjection": "7.0.0",
+              "Microsoft.Extensions.Options": "7.0.0"
+            },
+            "id": "Castle.Windsor.MsDependencyInjection",
+            "version": "4.1.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "[5.1.0, 6.0.0)",
+              "Microsoft.Extensions.DependencyModel": "6.0.0"
+            },
+            "id": "Castle.Windsor",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Humanizer.Core",
+            "version": "2.14.1"
+          },
+          {
+            "dependencies": {},
+            "id": "JetBrains.Annotations",
+            "version": "2024.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Bcl.AsyncInterfaces",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Build.Framework",
+            "version": "17.8.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Build.Locator",
+            "version": "1.7.8"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.CodeAnalysis.Analyzers",
+            "version": "3.3.4"
+          },
+          {
+            "dependencies": {
+              "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+              "System.Collections.Immutable": "7.0.0",
+              "System.Reflection.Metadata": "7.0.0",
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "Microsoft.CodeAnalysis.Common",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {
+              "Humanizer.Core": "2.14.1",
+              "Microsoft.CodeAnalysis.CSharp": "[4.8.0]",
+              "Microsoft.CodeAnalysis.Common": "[4.8.0]",
+              "Microsoft.CodeAnalysis.Workspaces.Common": "[4.8.0]"
+            },
+            "id": "Microsoft.CodeAnalysis.CSharp.Workspaces",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.CodeAnalysis.Common": "[4.8.0]"
+            },
+            "id": "Microsoft.CodeAnalysis.CSharp",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {
+              "Humanizer.Core": "2.14.1",
+              "Microsoft.Bcl.AsyncInterfaces": "7.0.0",
+              "Microsoft.CodeAnalysis.Common": "[4.8.0]",
+              "System.Composition": "7.0.0",
+              "System.IO.Pipelines": "7.0.0",
+              "System.Threading.Channels": "7.0.0"
+            },
+            "id": "Microsoft.CodeAnalysis.Workspaces.Common",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Build.Framework": "16.10.0",
+              "Microsoft.CodeAnalysis.Common": "[4.8.0]",
+              "Microsoft.CodeAnalysis.Workspaces.Common": "[4.8.0]",
+              "System.Text.Json": "7.0.3"
+            },
+            "id": "Microsoft.CodeAnalysis.Workspaces.MSBuild",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.CSharp",
+            "version": "4.5.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Data.SqlClient.SNI.runtime",
+            "version": "5.1.1"
+          },
+          {
+            "dependencies": {
+              "Azure.Identity": "1.11.4",
+              "Microsoft.Data.SqlClient.SNI.runtime": "5.1.1",
+              "Microsoft.Identity.Client": "4.61.3",
+              "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
+              "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0",
+              "Microsoft.SqlServer.Server": "1.0.0",
+              "System.Configuration.ConfigurationManager": "6.0.1",
+              "System.Diagnostics.DiagnosticSource": "6.0.1",
+              "System.Runtime.Caching": "6.0.0",
+              "System.Security.Cryptography.Cng": "5.0.0",
+              "System.Security.Principal.Windows": "5.0.0",
+              "System.Text.Encoding.CodePages": "6.0.0",
+              "System.Text.Encodings.Web": "6.0.0"
+            },
+            "id": "Microsoft.Data.SqlClient",
+            "version": "5.1.6"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Analyzers",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Humanizer.Core": "2.14.1",
+              "Microsoft.Build.Framework": "17.8.3",
+              "Microsoft.Build.Locator": "1.7.8",
+              "Microsoft.CodeAnalysis.CSharp": "4.8.0",
+              "Microsoft.CodeAnalysis.CSharp.Workspaces": "4.8.0",
+              "Microsoft.CodeAnalysis.Workspaces.MSBuild": "4.8.0",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.DependencyModel": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5",
+              "Mono.TextTemplating": "3.0.0",
+              "System.Text.Json": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.Design",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.Relational",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Data.SqlClient": "5.1.6",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5",
+              "System.Formats.Asn1": "9.0.5",
+              "System.Text.Json": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.SqlServer",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore.Design": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.Tools",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore.Abstractions": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Analyzers": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Caching.Abstractions": "9.0.5",
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Memory",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Configuration.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.DependencyInjection",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.DependencyModel",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Options",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.Primitives",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Identity.Client": "4.61.3",
+              "System.Security.Cryptography.ProtectedData": "4.5.0"
+            },
+            "id": "Microsoft.Identity.Client.Extensions.Msal",
+            "version": "4.61.3"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Abstractions": "6.35.0",
+              "System.Diagnostics.DiagnosticSource": "6.0.1"
+            },
+            "id": "Microsoft.Identity.Client",
+            "version": "4.61.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.IdentityModel.Abstractions",
+            "version": "6.35.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Tokens": "6.35.0",
+              "System.Text.Encoding": "4.3.0",
+              "System.Text.Encodings.Web": "4.7.2",
+              "System.Text.Json": "4.7.2"
+            },
+            "id": "Microsoft.IdentityModel.JsonWebTokens",
+            "version": "6.35.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Abstractions": "6.35.0"
+            },
+            "id": "Microsoft.IdentityModel.Logging",
+            "version": "6.35.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Protocols": "6.35.0",
+              "System.IdentityModel.Tokens.Jwt": "6.35.0"
+            },
+            "id": "Microsoft.IdentityModel.Protocols.OpenIdConnect",
+            "version": "6.35.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Logging": "6.35.0",
+              "Microsoft.IdentityModel.Tokens": "6.35.0"
+            },
+            "id": "Microsoft.IdentityModel.Protocols",
+            "version": "6.35.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.CSharp": "4.5.0",
+              "Microsoft.IdentityModel.Logging": "6.35.0",
+              "System.Security.Cryptography.Cng": "4.5.0"
+            },
+            "id": "Microsoft.IdentityModel.Tokens",
+            "version": "6.35.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Platforms",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Targets",
+            "version": "1.1.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.SqlServer.Server",
+            "version": "1.0.0"
+          },
+          {
+            "dependencies": {
+              "System.CodeDom": "6.0.0"
+            },
+            "id": "Mono.TextTemplating",
+            "version": "3.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Newtonsoft.Json",
+            "version": "13.0.3"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2"
+            },
+            "id": "Nito.AsyncEx.Context",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2",
+              "Nito.Collections.Deque": "1.1.1"
+            },
+            "id": "Nito.AsyncEx.Coordination",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.Disposables": "2.2.1"
+            },
+            "id": "Nito.AsyncEx.Tasks",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {},
+            "id": "Nito.Collections.Deque",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections.Immutable": "1.7.1"
+            },
+            "id": "Nito.Disposables",
+            "version": "2.2.1"
+          },
+          {
+            "dependencies": {
+              "System.Memory.Data": "1.0.2",
+              "System.Text.Json": "4.7.2"
+            },
+            "id": "System.ClientModel",
+            "version": "1.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.CodeDom",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Collections.Immutable",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Collections",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.ComponentModel.Annotations",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Composition.AttributedModel",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Composition.AttributedModel": "7.0.0"
+            },
+            "id": "System.Composition.Convention",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Composition.Runtime": "7.0.0"
+            },
+            "id": "System.Composition.Hosting",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Composition.Runtime",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Composition.AttributedModel": "7.0.0",
+              "System.Composition.Hosting": "7.0.0",
+              "System.Composition.Runtime": "7.0.0"
+            },
+            "id": "System.Composition.TypedParts",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Composition.AttributedModel": "7.0.0",
+              "System.Composition.Convention": "7.0.0",
+              "System.Composition.Hosting": "7.0.0",
+              "System.Composition.Runtime": "7.0.0",
+              "System.Composition.TypedParts": "7.0.0"
+            },
+            "id": "System.Composition",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "9.0.5",
+              "System.Security.Cryptography.ProtectedData": "9.0.5"
+            },
+            "id": "System.Configuration.ConfigurationManager",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Text.RegularExpressions": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Data.Common",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Diagnostics.Debug",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Diagnostics.DiagnosticSource",
+            "version": "6.0.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Diagnostics.EventLog",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Formats.Asn1",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Globalization",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
+              "Microsoft.IdentityModel.Tokens": "6.35.0"
+            },
+            "id": "System.IdentityModel.Tokens.Jwt",
+            "version": "6.35.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.IO.Pipelines",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0",
+              "System.Text.Encoding": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.IO",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Linq.Dynamic.Core",
+            "version": "1.6.4"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.ObjectModel": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Emit.Lightweight": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Reflection.TypeExtensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.Linq.Expressions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.Linq.Expressions": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Linq.Queryable",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0"
+            },
+            "id": "System.Linq",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Text.Encodings.Web": "4.7.2",
+              "System.Text.Json": "4.6.0"
+            },
+            "id": "System.Memory.Data",
+            "version": "1.0.2"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Memory",
+            "version": "4.5.4"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Numerics.Vectors",
+            "version": "4.5.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.ObjectModel",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.ILGeneration",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.Lightweight",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.IO": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections.Immutable": "7.0.0"
+            },
+            "id": "System.Reflection.Metadata",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Primitives",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.TypeExtensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.IO": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Globalization": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Resources.ResourceManager",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Configuration.ConfigurationManager": "6.0.0"
+            },
+            "id": "System.Runtime.Caching",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.CompilerServices.Unsafe",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Runtime.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.Serialization.Formatters",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.1",
+              "Microsoft.NETCore.Targets": "1.1.3"
+            },
+            "id": "System.Runtime",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Security.Principal": "4.3.0"
+            },
+            "id": "System.Security.Claims",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Formats.Asn1": "5.0.0"
+            },
+            "id": "System.Security.Cryptography.Cng",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Security.Cryptography.ProtectedData",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Security.Principal.Windows",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Security.Principal",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Text.Encoding.CodePages",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Text.Encoding",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Text.Encodings.Web",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Text.Json",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.1"
+            },
+            "id": "System.Text.RegularExpressions",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Threading.Channels",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Threading.Tasks.Extensions",
+            "version": "4.5.4"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Threading.Tasks",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Threading",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Xml.XPath.XmlDocument",
+            "version": "4.7.0"
+          },
+          {
+            "dependencies": {},
+            "id": "TimeZoneConverter",
+            "version": "7.0.0"
+          }
+        ],
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Core/AbpCompanyName.AbpProjectName.Core.csproj"
+        ],
+        "sdkDownloads": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.NETCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ],
+        "sdkUsedPacks": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "d3a85030cacd48a5afd22459d07105b721be4a6fe9e039df3aadb3e55fecee19"
+            },
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "3305db0e0cb407d87ca2c9e0bb8dd7e27e98457b931f9b06fdb331ae084e0351"
+            },
+            "id": "Microsoft.NETCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ]
+      }
+    },
+    "aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Core/AbpCompanyName.AbpProjectName.Web.Core.csproj": {
+      "net9.0": {
+        "directPackages": {
+          "Abp.AspNetCore": {
+            "declaredRange": "[10.2.0, )",
+            "declaredVersion": "10.2.0",
+            "resolvedVersion": "10.2.0"
+          },
+          "Abp.AspNetCore.SignalR": {
+            "declaredRange": "[10.2.0, )",
+            "declaredVersion": "10.2.0",
+            "resolvedVersion": "10.2.0"
+          },
+          "Abp.ZeroCore": {
+            "declaredRange": "[10.2.0, )",
+            "declaredVersion": "10.2.0",
+            "resolvedVersion": "10.2.0"
+          },
+          "Microsoft.AspNetCore.Authentication.JwtBearer": {
+            "declaredRange": "[9.0.5, )",
+            "declaredVersion": "9.0.5",
+            "resolvedVersion": "9.0.5"
+          },
+          "Swashbuckle.AspNetCore": {
+            "declaredRange": "[8.1.2, )",
+            "declaredVersion": "8.1.2",
+            "resolvedVersion": "8.1.2"
+          }
+        },
+        "packages": [
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.AspNetCore.SignalR",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.Web.Common": "10.2.0",
+              "Castle.LoggingFacility.MsLogging": "3.1.0",
+              "Castle.Windsor.MsDependencyInjection": "4.1.0",
+              "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "9.0.5",
+              "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "9.0.5"
+            },
+            "id": "Abp.AspNetCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0",
+              "AutoMapper": "14.0.0",
+              "AutoMapper.Collection": "11.0.0"
+            },
+            "id": "Abp.AutoMapper",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.EntityFramework.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFramework.Common": "10.2.0",
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5"
+            },
+            "id": "Abp.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0",
+              "NUglify": "1.21.15"
+            },
+            "id": "Abp.Web.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.Zero.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFrameworkCore": "10.2.0",
+              "Abp.ZeroCore": "10.2.0"
+            },
+            "id": "Abp.ZeroCore.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.Zero.Common": "10.2.0"
+            },
+            "id": "Abp.ZeroCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.2.1",
+              "Castle.Core.AsyncInterceptor": "2.1.0",
+              "Castle.LoggingFacility": "6.0.0",
+              "JetBrains.Annotations": "2024.3.0",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Newtonsoft.Json": "13.0.3",
+              "Nito.AsyncEx.Context": "5.1.2",
+              "Nito.AsyncEx.Coordination": "5.1.2",
+              "System.Collections.Immutable": "9.0.5",
+              "System.ComponentModel.Annotations": "5.0.0",
+              "System.Configuration.ConfigurationManager": "9.0.5",
+              "System.Data.Common": "4.3.0",
+              "System.Linq.Dynamic.Core": "1.6.4",
+              "System.Linq.Queryable": "4.3.0",
+              "System.Runtime.Serialization.Formatters": "9.0.5",
+              "System.Security.Claims": "4.3.0",
+              "System.Text.Json": "9.0.5",
+              "System.Text.RegularExpressions": "4.3.1",
+              "System.Threading": "4.3.0",
+              "System.Xml.XPath.XmlDocument": "4.7.0",
+              "TimeZoneConverter": "7.0.0"
+            },
+            "id": "Abp",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "AutoMapper": "[14.0.0, 15.0.0)"
+            },
+            "id": "AutoMapper.Collection",
+            "version": "11.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Options": "8.0.0"
+            },
+            "id": "AutoMapper",
+            "version": "14.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Bcl.AsyncInterfaces": "1.1.1",
+              "System.ClientModel": "1.0.0",
+              "System.Diagnostics.DiagnosticSource": "6.0.1",
+              "System.Memory.Data": "1.0.2",
+              "System.Numerics.Vectors": "4.5.0",
+              "System.Text.Encodings.Web": "4.7.2",
+              "System.Text.Json": "4.7.2",
+              "System.Threading.Tasks.Extensions": "4.5.4"
+            },
+            "id": "Azure.Core",
+            "version": "1.38.0"
+          },
+          {
+            "dependencies": {
+              "Azure.Core": "1.38.0",
+              "Microsoft.Identity.Client": "4.61.3",
+              "Microsoft.Identity.Client.Extensions.Msal": "4.61.3",
+              "System.Memory": "4.5.4",
+              "System.Security.Cryptography.ProtectedData": "4.7.0",
+              "System.Text.Json": "4.7.2",
+              "System.Threading.Tasks.Extensions": "4.5.4"
+            },
+            "id": "Azure.Identity",
+            "version": "1.11.4"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "4.4.0"
+            },
+            "id": "Castle.Core.AsyncInterceptor",
+            "version": "2.1.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "6.0.0"
+            },
+            "id": "Castle.Core",
+            "version": "5.2.1"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "4.2.1",
+              "Castle.LoggingFacility": "4.1.0",
+              "Microsoft.Extensions.Logging": "2.0.0"
+            },
+            "id": "Castle.LoggingFacility.MsLogging",
+            "version": "3.1.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Windsor": "[6.0.0]"
+            },
+            "id": "Castle.LoggingFacility",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.1.1",
+              "Castle.Windsor": "6.0.0",
+              "Microsoft.Extensions.DependencyInjection": "7.0.0",
+              "Microsoft.Extensions.Options": "7.0.0"
+            },
+            "id": "Castle.Windsor.MsDependencyInjection",
+            "version": "4.1.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "[5.1.0, 6.0.0)",
+              "Microsoft.Extensions.DependencyModel": "6.0.0"
+            },
+            "id": "Castle.Windsor",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "JetBrains.Annotations",
+            "version": "2024.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.0.1"
+            },
+            "id": "Microsoft.AspNetCore.Authentication.JwtBearer",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.CSharp": "4.7.0",
+              "Newtonsoft.Json": "13.0.3"
+            },
+            "id": "Microsoft.AspNetCore.JsonPatch",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.AspNetCore.JsonPatch": "9.0.5",
+              "Newtonsoft.Json": "13.0.3",
+              "Newtonsoft.Json.Bson": "1.0.2"
+            },
+            "id": "Microsoft.AspNetCore.Mvc.NewtonsoftJson",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.AspNetCore.Razor.Language": "6.0.0",
+              "Microsoft.CodeAnalysis.Razor": "6.0.0"
+            },
+            "id": "Microsoft.AspNetCore.Mvc.Razor.Extensions",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.AspNetCore.Mvc.Razor.Extensions": "6.0.0",
+              "Microsoft.CodeAnalysis.Razor": "6.0.0",
+              "Microsoft.Extensions.DependencyModel": "9.0.5"
+            },
+            "id": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.AspNetCore.Razor.Language",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Bcl.AsyncInterfaces",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.CodeAnalysis.Analyzers",
+            "version": "3.3.2"
+          },
+          {
+            "dependencies": {
+              "Microsoft.CodeAnalysis.Analyzers": "3.3.2",
+              "System.Collections.Immutable": "5.0.0",
+              "System.Memory": "4.5.4",
+              "System.Reflection.Metadata": "5.0.0",
+              "System.Runtime.CompilerServices.Unsafe": "5.0.0",
+              "System.Text.Encoding.CodePages": "4.5.1",
+              "System.Threading.Tasks.Extensions": "4.5.4"
+            },
+            "id": "Microsoft.CodeAnalysis.Common",
+            "version": "4.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.CodeAnalysis.Common": "[4.0.0]"
+            },
+            "id": "Microsoft.CodeAnalysis.CSharp",
+            "version": "4.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.AspNetCore.Razor.Language": "6.0.0",
+              "Microsoft.CodeAnalysis.CSharp": "4.0.0",
+              "Microsoft.CodeAnalysis.Common": "4.0.0"
+            },
+            "id": "Microsoft.CodeAnalysis.Razor",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.CSharp",
+            "version": "4.7.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Data.SqlClient.SNI.runtime",
+            "version": "5.1.1"
+          },
+          {
+            "dependencies": {
+              "Azure.Identity": "1.11.4",
+              "Microsoft.Data.SqlClient.SNI.runtime": "5.1.1",
+              "Microsoft.Identity.Client": "4.61.3",
+              "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
+              "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0",
+              "Microsoft.SqlServer.Server": "1.0.0",
+              "System.Configuration.ConfigurationManager": "6.0.1",
+              "System.Diagnostics.DiagnosticSource": "6.0.1",
+              "System.Runtime.Caching": "6.0.0",
+              "System.Security.Cryptography.Cng": "5.0.0",
+              "System.Security.Principal.Windows": "5.0.0",
+              "System.Text.Encoding.CodePages": "6.0.0",
+              "System.Text.Encodings.Web": "6.0.0"
+            },
+            "id": "Microsoft.Data.SqlClient",
+            "version": "5.1.6"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Analyzers",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.Relational",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Data.SqlClient": "5.1.6",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5",
+              "System.Formats.Asn1": "9.0.5",
+              "System.Text.Json": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.SqlServer",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore.Abstractions": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Analyzers": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.ApiDescription.Server",
+            "version": "6.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Caching.Abstractions": "9.0.5",
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Memory",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Configuration.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.DependencyInjection",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.DependencyModel",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Options",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.Primitives",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Identity.Client": "4.61.3",
+              "System.Security.Cryptography.ProtectedData": "4.5.0"
+            },
+            "id": "Microsoft.Identity.Client.Extensions.Msal",
+            "version": "4.61.3"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Abstractions": "6.35.0",
+              "System.Diagnostics.DiagnosticSource": "6.0.1"
+            },
+            "id": "Microsoft.Identity.Client",
+            "version": "4.61.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.IdentityModel.Abstractions",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Tokens": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.JsonWebTokens",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Abstractions": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.Logging",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Protocols": "8.0.1",
+              "System.IdentityModel.Tokens.Jwt": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.Protocols.OpenIdConnect",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Tokens": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.Protocols",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Logging": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.Tokens",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Platforms",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Targets",
+            "version": "1.1.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.OpenApi",
+            "version": "1.6.23"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.SqlServer.Server",
+            "version": "1.0.0"
+          },
+          {
+            "dependencies": {
+              "Newtonsoft.Json": "12.0.1"
+            },
+            "id": "Newtonsoft.Json.Bson",
+            "version": "1.0.2"
+          },
+          {
+            "dependencies": {},
+            "id": "Newtonsoft.Json",
+            "version": "13.0.3"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2"
+            },
+            "id": "Nito.AsyncEx.Context",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2",
+              "Nito.Collections.Deque": "1.1.1"
+            },
+            "id": "Nito.AsyncEx.Coordination",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.Disposables": "2.2.1"
+            },
+            "id": "Nito.AsyncEx.Tasks",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {},
+            "id": "Nito.Collections.Deque",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections.Immutable": "1.7.1"
+            },
+            "id": "Nito.Disposables",
+            "version": "2.2.1"
+          },
+          {
+            "dependencies": {},
+            "id": "NUglify",
+            "version": "1.21.15"
+          },
+          {
+            "dependencies": {
+              "Microsoft.OpenApi": "1.6.23"
+            },
+            "id": "Swashbuckle.AspNetCore.Swagger",
+            "version": "8.1.2"
+          },
+          {
+            "dependencies": {
+              "Swashbuckle.AspNetCore.Swagger": "8.1.2"
+            },
+            "id": "Swashbuckle.AspNetCore.SwaggerGen",
+            "version": "8.1.2"
+          },
+          {
+            "dependencies": {},
+            "id": "Swashbuckle.AspNetCore.SwaggerUI",
+            "version": "8.1.2"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.ApiDescription.Server": "6.0.5",
+              "Swashbuckle.AspNetCore.Swagger": "8.1.2",
+              "Swashbuckle.AspNetCore.SwaggerGen": "8.1.2",
+              "Swashbuckle.AspNetCore.SwaggerUI": "8.1.2"
+            },
+            "id": "Swashbuckle.AspNetCore",
+            "version": "8.1.2"
+          },
+          {
+            "dependencies": {
+              "System.Memory.Data": "1.0.2",
+              "System.Text.Json": "4.7.2"
+            },
+            "id": "System.ClientModel",
+            "version": "1.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Collections.Immutable",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Collections",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.ComponentModel.Annotations",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "9.0.5",
+              "System.Security.Cryptography.ProtectedData": "9.0.5"
+            },
+            "id": "System.Configuration.ConfigurationManager",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Text.RegularExpressions": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Data.Common",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Diagnostics.Debug",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Diagnostics.DiagnosticSource",
+            "version": "6.0.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Diagnostics.EventLog",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Formats.Asn1",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Globalization",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.JsonWebTokens": "8.0.1",
+              "Microsoft.IdentityModel.Tokens": "8.0.1"
+            },
+            "id": "System.IdentityModel.Tokens.Jwt",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0",
+              "System.Text.Encoding": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.IO",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Linq.Dynamic.Core",
+            "version": "1.6.4"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.ObjectModel": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Emit.Lightweight": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Reflection.TypeExtensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.Linq.Expressions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.Linq.Expressions": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Linq.Queryable",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0"
+            },
+            "id": "System.Linq",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Text.Encodings.Web": "4.7.2",
+              "System.Text.Json": "4.6.0"
+            },
+            "id": "System.Memory.Data",
+            "version": "1.0.2"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Memory",
+            "version": "4.5.4"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Numerics.Vectors",
+            "version": "4.5.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.ObjectModel",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.ILGeneration",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.Lightweight",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.IO": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Reflection.Metadata",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Primitives",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.TypeExtensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.IO": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Globalization": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Resources.ResourceManager",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Configuration.ConfigurationManager": "6.0.0"
+            },
+            "id": "System.Runtime.Caching",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.CompilerServices.Unsafe",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Runtime.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.Serialization.Formatters",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.1",
+              "Microsoft.NETCore.Targets": "1.1.3"
+            },
+            "id": "System.Runtime",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Security.Principal": "4.3.0"
+            },
+            "id": "System.Security.Claims",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Formats.Asn1": "5.0.0"
+            },
+            "id": "System.Security.Cryptography.Cng",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Security.Cryptography.ProtectedData",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Security.Principal.Windows",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Security.Principal",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Text.Encoding.CodePages",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Text.Encoding",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Text.Encodings.Web",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Text.Json",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.1"
+            },
+            "id": "System.Text.RegularExpressions",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Threading.Tasks.Extensions",
+            "version": "4.5.4"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Threading.Tasks",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Threading",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Xml.XPath.XmlDocument",
+            "version": "4.7.0"
+          },
+          {
+            "dependencies": {},
+            "id": "TimeZoneConverter",
+            "version": "7.0.0"
+          }
+        ],
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Application/AbpCompanyName.AbpProjectName.Application.csproj",
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.EntityFrameworkCore/AbpCompanyName.AbpProjectName.EntityFrameworkCore.csproj"
+        ],
+        "sdkDownloads": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.NETCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ],
+        "sdkUsedPacks": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "d3a85030cacd48a5afd22459d07105b721be4a6fe9e039df3aadb3e55fecee19"
+            },
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "3305db0e0cb407d87ca2c9e0bb8dd7e27e98457b931f9b06fdb331ae084e0351"
+            },
+            "id": "Microsoft.NETCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ]
+      }
+    },
+    "aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Host/AbpCompanyName.AbpProjectName.Web.Host.csproj": {
+      "net9.0": {
+        "directPackages": {
+          "Abp.Castle.Log4Net": {
+            "declaredRange": "[10.2.0, )",
+            "declaredVersion": "10.2.0",
+            "resolvedVersion": "10.2.0"
+          },
+          "Microsoft.EntityFrameworkCore.Design": {
+            "declaredRange": "[9.0.5, )",
+            "declaredVersion": "9.0.5",
+            "resolvedVersion": "9.0.5"
+          }
+        },
+        "packages": [
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.AspNetCore.SignalR",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.Web.Common": "10.2.0",
+              "Castle.LoggingFacility.MsLogging": "3.1.0",
+              "Castle.Windsor.MsDependencyInjection": "4.1.0",
+              "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "9.0.5",
+              "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "9.0.5"
+            },
+            "id": "Abp.AspNetCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0",
+              "AutoMapper": "14.0.0",
+              "AutoMapper.Collection": "11.0.0"
+            },
+            "id": "Abp.AutoMapper",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0",
+              "log4net": "3.1.0"
+            },
+            "id": "Abp.Castle.Log4Net",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.EntityFramework.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFramework.Common": "10.2.0",
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5"
+            },
+            "id": "Abp.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0",
+              "NUglify": "1.21.15"
+            },
+            "id": "Abp.Web.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp": "10.2.0"
+            },
+            "id": "Abp.Zero.Common",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.EntityFrameworkCore": "10.2.0",
+              "Abp.ZeroCore": "10.2.0"
+            },
+            "id": "Abp.ZeroCore.EntityFrameworkCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Abp.Zero.Common": "10.2.0"
+            },
+            "id": "Abp.ZeroCore",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.2.1",
+              "Castle.Core.AsyncInterceptor": "2.1.0",
+              "Castle.LoggingFacility": "6.0.0",
+              "JetBrains.Annotations": "2024.3.0",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Newtonsoft.Json": "13.0.3",
+              "Nito.AsyncEx.Context": "5.1.2",
+              "Nito.AsyncEx.Coordination": "5.1.2",
+              "System.Collections.Immutable": "9.0.5",
+              "System.ComponentModel.Annotations": "5.0.0",
+              "System.Configuration.ConfigurationManager": "9.0.5",
+              "System.Data.Common": "4.3.0",
+              "System.Linq.Dynamic.Core": "1.6.4",
+              "System.Linq.Queryable": "4.3.0",
+              "System.Runtime.Serialization.Formatters": "9.0.5",
+              "System.Security.Claims": "4.3.0",
+              "System.Text.Json": "9.0.5",
+              "System.Text.RegularExpressions": "4.3.1",
+              "System.Threading": "4.3.0",
+              "System.Xml.XPath.XmlDocument": "4.7.0",
+              "TimeZoneConverter": "7.0.0"
+            },
+            "id": "Abp",
+            "version": "10.2.0"
+          },
+          {
+            "dependencies": {
+              "AutoMapper": "[14.0.0, 15.0.0)"
+            },
+            "id": "AutoMapper.Collection",
+            "version": "11.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Options": "8.0.0"
+            },
+            "id": "AutoMapper",
+            "version": "14.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Bcl.AsyncInterfaces": "1.1.1",
+              "System.ClientModel": "1.0.0",
+              "System.Diagnostics.DiagnosticSource": "6.0.1",
+              "System.Memory.Data": "1.0.2",
+              "System.Numerics.Vectors": "4.5.0",
+              "System.Text.Encodings.Web": "4.7.2",
+              "System.Text.Json": "4.7.2",
+              "System.Threading.Tasks.Extensions": "4.5.4"
+            },
+            "id": "Azure.Core",
+            "version": "1.38.0"
+          },
+          {
+            "dependencies": {
+              "Azure.Core": "1.38.0",
+              "Microsoft.Identity.Client": "4.61.3",
+              "Microsoft.Identity.Client.Extensions.Msal": "4.61.3",
+              "System.Memory": "4.5.4",
+              "System.Security.Cryptography.ProtectedData": "4.7.0",
+              "System.Text.Json": "4.7.2",
+              "System.Threading.Tasks.Extensions": "4.5.4"
+            },
+            "id": "Azure.Identity",
+            "version": "1.11.4"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "4.4.0"
+            },
+            "id": "Castle.Core.AsyncInterceptor",
+            "version": "2.1.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "6.0.0"
+            },
+            "id": "Castle.Core",
+            "version": "5.2.1"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "4.2.1",
+              "Castle.LoggingFacility": "4.1.0",
+              "Microsoft.Extensions.Logging": "2.0.0"
+            },
+            "id": "Castle.LoggingFacility.MsLogging",
+            "version": "3.1.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Windsor": "[6.0.0]"
+            },
+            "id": "Castle.LoggingFacility",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "5.1.1",
+              "Castle.Windsor": "6.0.0",
+              "Microsoft.Extensions.DependencyInjection": "7.0.0",
+              "Microsoft.Extensions.Options": "7.0.0"
+            },
+            "id": "Castle.Windsor.MsDependencyInjection",
+            "version": "4.1.0"
+          },
+          {
+            "dependencies": {
+              "Castle.Core": "[5.1.0, 6.0.0)",
+              "Microsoft.Extensions.DependencyModel": "6.0.0"
+            },
+            "id": "Castle.Windsor",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Humanizer.Core",
+            "version": "2.14.1"
+          },
+          {
+            "dependencies": {},
+            "id": "JetBrains.Annotations",
+            "version": "2024.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Configuration.ConfigurationManager": "4.5.0"
+            },
+            "id": "log4net",
+            "version": "3.1.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.0.1"
+            },
+            "id": "Microsoft.AspNetCore.Authentication.JwtBearer",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.CSharp": "4.7.0",
+              "Newtonsoft.Json": "13.0.3"
+            },
+            "id": "Microsoft.AspNetCore.JsonPatch",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.AspNetCore.JsonPatch": "9.0.5",
+              "Newtonsoft.Json": "13.0.3",
+              "Newtonsoft.Json.Bson": "1.0.2"
+            },
+            "id": "Microsoft.AspNetCore.Mvc.NewtonsoftJson",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.AspNetCore.Razor.Language": "6.0.0",
+              "Microsoft.CodeAnalysis.Razor": "6.0.0"
+            },
+            "id": "Microsoft.AspNetCore.Mvc.Razor.Extensions",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.AspNetCore.Mvc.Razor.Extensions": "6.0.0",
+              "Microsoft.CodeAnalysis.Razor": "6.0.0",
+              "Microsoft.Extensions.DependencyModel": "9.0.5"
+            },
+            "id": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.AspNetCore.Razor.Language",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Bcl.AsyncInterfaces",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Build.Framework",
+            "version": "17.8.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Build.Locator",
+            "version": "1.7.8"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.CodeAnalysis.Analyzers",
+            "version": "3.3.4"
+          },
+          {
+            "dependencies": {
+              "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+              "System.Collections.Immutable": "7.0.0",
+              "System.Reflection.Metadata": "7.0.0",
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "Microsoft.CodeAnalysis.Common",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {
+              "Humanizer.Core": "2.14.1",
+              "Microsoft.CodeAnalysis.CSharp": "[4.8.0]",
+              "Microsoft.CodeAnalysis.Common": "[4.8.0]",
+              "Microsoft.CodeAnalysis.Workspaces.Common": "[4.8.0]"
+            },
+            "id": "Microsoft.CodeAnalysis.CSharp.Workspaces",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.CodeAnalysis.Common": "[4.8.0]"
+            },
+            "id": "Microsoft.CodeAnalysis.CSharp",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.AspNetCore.Razor.Language": "6.0.0",
+              "Microsoft.CodeAnalysis.CSharp": "4.0.0",
+              "Microsoft.CodeAnalysis.Common": "4.0.0"
+            },
+            "id": "Microsoft.CodeAnalysis.Razor",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Humanizer.Core": "2.14.1",
+              "Microsoft.Bcl.AsyncInterfaces": "7.0.0",
+              "Microsoft.CodeAnalysis.Common": "[4.8.0]",
+              "System.Composition": "7.0.0",
+              "System.IO.Pipelines": "7.0.0",
+              "System.Threading.Channels": "7.0.0"
+            },
+            "id": "Microsoft.CodeAnalysis.Workspaces.Common",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Build.Framework": "16.10.0",
+              "Microsoft.CodeAnalysis.Common": "[4.8.0]",
+              "Microsoft.CodeAnalysis.Workspaces.Common": "[4.8.0]",
+              "System.Text.Json": "7.0.3"
+            },
+            "id": "Microsoft.CodeAnalysis.Workspaces.MSBuild",
+            "version": "4.8.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.CSharp",
+            "version": "4.7.0"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Data.SqlClient.SNI.runtime",
+            "version": "5.1.1"
+          },
+          {
+            "dependencies": {
+              "Azure.Identity": "1.11.4",
+              "Microsoft.Data.SqlClient.SNI.runtime": "5.1.1",
+              "Microsoft.Identity.Client": "4.61.3",
+              "Microsoft.IdentityModel.JsonWebTokens": "6.35.0",
+              "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0",
+              "Microsoft.SqlServer.Server": "1.0.0",
+              "System.Configuration.ConfigurationManager": "6.0.1",
+              "System.Diagnostics.DiagnosticSource": "6.0.1",
+              "System.Runtime.Caching": "6.0.0",
+              "System.Security.Cryptography.Cng": "5.0.0",
+              "System.Security.Principal.Windows": "5.0.0",
+              "System.Text.Encoding.CodePages": "6.0.0",
+              "System.Text.Encodings.Web": "6.0.0"
+            },
+            "id": "Microsoft.Data.SqlClient",
+            "version": "5.1.6"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.EntityFrameworkCore.Analyzers",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Humanizer.Core": "2.14.1",
+              "Microsoft.Build.Framework": "17.8.3",
+              "Microsoft.Build.Locator": "1.7.8",
+              "Microsoft.CodeAnalysis.CSharp": "4.8.0",
+              "Microsoft.CodeAnalysis.CSharp.Workspaces": "4.8.0",
+              "Microsoft.CodeAnalysis.Workspaces.MSBuild": "4.8.0",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.DependencyModel": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5",
+              "Mono.TextTemplating": "3.0.0",
+              "System.Text.Json": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.Design",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.Relational",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Data.SqlClient": "5.1.6",
+              "Microsoft.EntityFrameworkCore.Relational": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Configuration.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5",
+              "System.Formats.Asn1": "9.0.5",
+              "System.Text.Json": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore.SqlServer",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.EntityFrameworkCore.Abstractions": "9.0.5",
+              "Microsoft.EntityFrameworkCore.Analyzers": "9.0.5",
+              "Microsoft.Extensions.Caching.Memory": "9.0.5",
+              "Microsoft.Extensions.Logging": "9.0.5"
+            },
+            "id": "Microsoft.EntityFrameworkCore",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.ApiDescription.Server",
+            "version": "6.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Caching.Abstractions": "9.0.5",
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Caching.Memory",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Configuration.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.DependencyInjection",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.DependencyModel",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging.Abstractions",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection": "9.0.5",
+              "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Options": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Logging",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+              "Microsoft.Extensions.Primitives": "9.0.5"
+            },
+            "id": "Microsoft.Extensions.Options",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.Extensions.Primitives",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Identity.Client": "4.61.3",
+              "System.Security.Cryptography.ProtectedData": "4.5.0"
+            },
+            "id": "Microsoft.Identity.Client.Extensions.Msal",
+            "version": "4.61.3"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Abstractions": "6.35.0",
+              "System.Diagnostics.DiagnosticSource": "6.0.1"
+            },
+            "id": "Microsoft.Identity.Client",
+            "version": "4.61.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.IdentityModel.Abstractions",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Tokens": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.JsonWebTokens",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Abstractions": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.Logging",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Protocols": "8.0.1",
+              "System.IdentityModel.Tokens.Jwt": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.Protocols.OpenIdConnect",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Tokens": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.Protocols",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.Logging": "8.0.1"
+            },
+            "id": "Microsoft.IdentityModel.Tokens",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Platforms",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.NETCore.Targets",
+            "version": "1.1.3"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.OpenApi",
+            "version": "1.6.23"
+          },
+          {
+            "dependencies": {},
+            "id": "Microsoft.SqlServer.Server",
+            "version": "1.0.0"
+          },
+          {
+            "dependencies": {
+              "System.CodeDom": "6.0.0"
+            },
+            "id": "Mono.TextTemplating",
+            "version": "3.0.0"
+          },
+          {
+            "dependencies": {
+              "Newtonsoft.Json": "12.0.1"
+            },
+            "id": "Newtonsoft.Json.Bson",
+            "version": "1.0.2"
+          },
+          {
+            "dependencies": {},
+            "id": "Newtonsoft.Json",
+            "version": "13.0.3"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2"
+            },
+            "id": "Nito.AsyncEx.Context",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.AsyncEx.Tasks": "5.1.2",
+              "Nito.Collections.Deque": "1.1.1"
+            },
+            "id": "Nito.AsyncEx.Coordination",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {
+              "Nito.Disposables": "2.2.1"
+            },
+            "id": "Nito.AsyncEx.Tasks",
+            "version": "5.1.2"
+          },
+          {
+            "dependencies": {},
+            "id": "Nito.Collections.Deque",
+            "version": "1.1.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections.Immutable": "1.7.1"
+            },
+            "id": "Nito.Disposables",
+            "version": "2.2.1"
+          },
+          {
+            "dependencies": {},
+            "id": "NUglify",
+            "version": "1.21.15"
+          },
+          {
+            "dependencies": {
+              "Microsoft.OpenApi": "1.6.23"
+            },
+            "id": "Swashbuckle.AspNetCore.Swagger",
+            "version": "8.1.2"
+          },
+          {
+            "dependencies": {
+              "Swashbuckle.AspNetCore.Swagger": "8.1.2"
+            },
+            "id": "Swashbuckle.AspNetCore.SwaggerGen",
+            "version": "8.1.2"
+          },
+          {
+            "dependencies": {},
+            "id": "Swashbuckle.AspNetCore.SwaggerUI",
+            "version": "8.1.2"
+          },
+          {
+            "dependencies": {
+              "Microsoft.Extensions.ApiDescription.Server": "6.0.5",
+              "Swashbuckle.AspNetCore.Swagger": "8.1.2",
+              "Swashbuckle.AspNetCore.SwaggerGen": "8.1.2",
+              "Swashbuckle.AspNetCore.SwaggerUI": "8.1.2"
+            },
+            "id": "Swashbuckle.AspNetCore",
+            "version": "8.1.2"
+          },
+          {
+            "dependencies": {
+              "System.Memory.Data": "1.0.2",
+              "System.Text.Json": "4.7.2"
+            },
+            "id": "System.ClientModel",
+            "version": "1.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.CodeDom",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Collections.Immutable",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Collections",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.ComponentModel.Annotations",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Composition.AttributedModel",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Composition.AttributedModel": "7.0.0"
+            },
+            "id": "System.Composition.Convention",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Composition.Runtime": "7.0.0"
+            },
+            "id": "System.Composition.Hosting",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Composition.Runtime",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Composition.AttributedModel": "7.0.0",
+              "System.Composition.Hosting": "7.0.0",
+              "System.Composition.Runtime": "7.0.0"
+            },
+            "id": "System.Composition.TypedParts",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Composition.AttributedModel": "7.0.0",
+              "System.Composition.Convention": "7.0.0",
+              "System.Composition.Hosting": "7.0.0",
+              "System.Composition.Runtime": "7.0.0",
+              "System.Composition.TypedParts": "7.0.0"
+            },
+            "id": "System.Composition",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Diagnostics.EventLog": "9.0.5",
+              "System.Security.Cryptography.ProtectedData": "9.0.5"
+            },
+            "id": "System.Configuration.ConfigurationManager",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Text.RegularExpressions": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Data.Common",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Diagnostics.Debug",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Diagnostics.DiagnosticSource",
+            "version": "6.0.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Diagnostics.EventLog",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Formats.Asn1",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Globalization",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.IdentityModel.JsonWebTokens": "8.0.1",
+              "Microsoft.IdentityModel.Tokens": "8.0.1"
+            },
+            "id": "System.IdentityModel.Tokens.Jwt",
+            "version": "8.0.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.IO.Pipelines",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0",
+              "System.Text.Encoding": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.IO",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Linq.Dynamic.Core",
+            "version": "1.6.4"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.ObjectModel": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Emit.Lightweight": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Reflection.TypeExtensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.Linq.Expressions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Linq": "4.3.0",
+              "System.Linq.Expressions": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Extensions": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Linq.Queryable",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0"
+            },
+            "id": "System.Linq",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Text.Encodings.Web": "4.7.2",
+              "System.Text.Json": "4.6.0"
+            },
+            "id": "System.Memory.Data",
+            "version": "1.0.2"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Memory",
+            "version": "4.5.4"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Numerics.Vectors",
+            "version": "4.5.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Diagnostics.Debug": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Threading": "4.3.0"
+            },
+            "id": "System.ObjectModel",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.ILGeneration",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit.Lightweight",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.IO": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.Emit.ILGeneration": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Emit",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Collections.Immutable": "7.0.0"
+            },
+            "id": "System.Reflection.Metadata",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.Primitives",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection.TypeExtensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.IO": "4.3.0",
+              "System.Reflection.Primitives": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Reflection",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Globalization": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Resources.ResourceManager",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Configuration.ConfigurationManager": "6.0.0"
+            },
+            "id": "System.Runtime.Caching",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.CompilerServices.Unsafe",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Runtime.Extensions",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Runtime.Serialization.Formatters",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.1",
+              "Microsoft.NETCore.Targets": "1.1.3"
+            },
+            "id": "System.Runtime",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {
+              "System.Collections": "4.3.0",
+              "System.Globalization": "4.3.0",
+              "System.IO": "4.3.0",
+              "System.Resources.ResourceManager": "4.3.0",
+              "System.Runtime": "4.3.0",
+              "System.Runtime.Extensions": "4.3.0",
+              "System.Security.Principal": "4.3.0"
+            },
+            "id": "System.Security.Claims",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Formats.Asn1": "5.0.0"
+            },
+            "id": "System.Security.Cryptography.Cng",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Security.Cryptography.ProtectedData",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Security.Principal.Windows",
+            "version": "5.0.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Security.Principal",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Text.Encoding.CodePages",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Text.Encoding",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+            },
+            "id": "System.Text.Encodings.Web",
+            "version": "6.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Text.Json",
+            "version": "9.0.5"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.1"
+            },
+            "id": "System.Text.RegularExpressions",
+            "version": "4.3.1"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Threading.Channels",
+            "version": "7.0.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Threading.Tasks.Extensions",
+            "version": "4.5.4"
+          },
+          {
+            "dependencies": {
+              "Microsoft.NETCore.Platforms": "1.1.0",
+              "Microsoft.NETCore.Targets": "1.1.0",
+              "System.Runtime": "4.3.0"
+            },
+            "id": "System.Threading.Tasks",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {
+              "System.Runtime": "4.3.0",
+              "System.Threading.Tasks": "4.3.0"
+            },
+            "id": "System.Threading",
+            "version": "4.3.0"
+          },
+          {
+            "dependencies": {},
+            "id": "System.Xml.XPath.XmlDocument",
+            "version": "4.7.0"
+          },
+          {
+            "dependencies": {},
+            "id": "TimeZoneConverter",
+            "version": "7.0.0"
+          }
+        ],
+        "projectReferences": [
+          "aspnet-core/src/AbpCompanyName.AbpProjectName.Web.Core/AbpCompanyName.AbpProjectName.Web.Core.csproj"
+        ],
+        "sdkDownloads": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "cbnzIIFdIOut8r1T2kMtLDLamb5/spCxVahporFK2h7mWDdljGY5LYOgdDpA/8gAEvkJQJeU1jE2j6ZfgkJFkw==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.NETCore.App.Host.osx-arm64",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "declaredRange": "[9.0.23, 9.0.23]",
+            "id": "Microsoft.NETCore.App.Ref",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ],
+        "sdkUsedPacks": [
+          {
+            "contentSha512": "MUNxGww3XUjakcz1v+Zo/Jbk+bBsbylbWVqyx2SirSNuCstShEjQMunZDXtDMORGHCOVBiMOSroAq5juW6rB3w==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "d3a85030cacd48a5afd22459d07105b721be4a6fe9e039df3aadb3e55fecee19"
+            },
+            "id": "Microsoft.AspNetCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "+Cy9L1wwgLGekFgXlTSblFYxesRrhHN0zd5rrCLxW7KE4YHWGJ6koZuwl1ERSL0aOm1KtwicELGyaZAmfGuCyA==",
+            "file": {
+              "path": "data/FrameworkList.xml",
+              "sha256": "3305db0e0cb407d87ca2c9e0bb8dd7e27e98457b931f9b06fdb331ae084e0351"
+            },
+            "id": "Microsoft.NETCore.App.Ref",
+            "kind": "targeting",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          },
+          {
+            "contentSha512": "cbnzIIFdIOut8r1T2kMtLDLamb5/spCxVahporFK2h7mWDdljGY5LYOgdDpA/8gAEvkJQJeU1jE2j6ZfgkJFkw==",
+            "file": {
+              "path": "runtimes/osx-arm64/native/apphost",
+              "sha256": "5a0cc25f2d844f73146192d42d4fb69b00593c5014143044eb8931ad4d3f8a8c"
+            },
+            "id": "Microsoft.NETCore.App.Host.osx-arm64",
+            "kind": "apphost",
+            "origin": "nuget-download",
+            "source": "https://api.nuget.org/v3/index.json",
+            "version": "9.0.23"
+          }
+        ]
+      }
+    }
+  },
+  "schemaVersion": 2,
+  "templateCommit": "2e9536872673a7ff1986a19e798c51684d16afe5"
+}

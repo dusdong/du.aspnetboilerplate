@@ -131,7 +131,7 @@ class R0Run:
         self.stage = self.report["stages"][name]
         self.stage["status"] = "running"
         self.save()
-        print(f"R0 {name}", flush=True)
+        print(f"{self.report['profile'].upper()} {name}", flush=True)
         try:
             action(*args)
         except (VerificationError, OSError, ValueError, KeyError, TypeError) as error:
@@ -480,7 +480,7 @@ def make_run_directory(parent, prefix):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--profile", required=True, choices=("r0", "r2"))
+    parser.add_argument("--profile", required=True, choices=("r0", "r2", "r3-web-host"))
     parser.add_argument("--evidence-root", type=Path)
     parser.add_argument("--work-root", type=Path)
     parser.add_argument("--candidate-feed", type=Path)
@@ -499,6 +499,12 @@ def main():
         return execute(args)
     if any((args.candidate_feed, args.candidate_manifest, args.candidate_symbols, args.r1_evidence, args.dotnet)):
         parser.error("候选、R1 对照和私有 dotnet 参数适用于 r2")
+    if args.profile == "r3-web-host":
+        if not args.evidence_root or args.work_root:
+            parser.error("r3-web-host 需要 --evidence-root，并在其下建立隔离工作目录")
+        sys.dont_write_bytecode = True
+        from r3_web_host import execute
+        return execute(args)
     run = R0Run(ROOT, make_run_directory(args.evidence_root, "r0-"))
     print(f"R0 report: {run.report_path}", flush=True)
     return run.execute(args.work_root)

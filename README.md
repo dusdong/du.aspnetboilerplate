@@ -25,6 +25,8 @@ git submodule update --init --recursive
 
 R2 已归档。首批五个核心候选包 `10.5.1-r2.1` 已通过本机 macOS ARM64 上的 `net9.0`、`net10.0` 独立后端与 SQLite 验收。框架 `dev` 已交付同树的打包实现，主仓 gitlink 记录该框架提交。[R2 验收与复跑](docs/maintenance/r2-core-package-consumption.md) · [核心候选包消费规范](openspec/specs/core-package-consumption/spec.md)
 
+R3 首包已归档。固定模板的原版 Web.Host 已在 macOS ARM64 上完成 `net9.0` 干净还原、Release 构建和依赖核对，并确认六个维护包缺口。候选包补齐、模板迁移及宿主、SQL Server 和 Angular 验收仍待后续。[R3 首包验收与复跑](docs/maintenance/r3-web-host-baseline.md) · [模板 Web.Host 基线规范](openspec/specs/template-host-baseline/spec.md)
+
 在主仓根目录运行 `python3 eng/verify.py --profile r0` 可复验固定 R0 源码。统一复验已完成本地与 GitHub Actions 的配对验收并归档。[复验手册](docs/maintenance/baseline-evidence/README.md#统一入口) · [配对验收记录](docs/maintenance/baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
 
 参与维护时先阅读[项目协作约定](AGENTS.md)。

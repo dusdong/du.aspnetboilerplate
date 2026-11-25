@@ -1,0 +1,391 @@
+{
+  "documentation": "docs/maintenance/r2-core-package-consumption.md",
+  "evidenceSha256": {
+    "candidate": "8b45e835c96dad76ddcda47935a838c2fc0b5d280308f9e01b82c96d17b86f4d",
+    "manifest": "fed4d30960f9c25f444c35ffadedd3746baeefbca2a78e5938ccde1f38d0b3fc",
+    "net9Assets": "d088dec1e80e07d309d9b292db8b9959bafc67052d5b4724169000959d23a483",
+    "report": "50655837641217a9795913723444be044f56b9402b0185f9834ae78f8d262489"
+  },
+  "frameworkTree": "fb0abb6be5cb69b0e5ff395f4b010cf28511f9c8",
+  "keyNet9ConsumerPackages": {
+    "Castle.Windsor.MsDependencyInjection": {
+      "assets": {
+        "compile": {
+          "lib/net6.0/Castle.Windsor.MsDependencyInjection.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Castle.Windsor.MsDependencyInjection.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "dependencies": {
+        "Castle.Core": "5.1.1",
+        "Castle.Windsor": "6.0.0",
+        "Microsoft.Extensions.DependencyInjection": "7.0.0",
+        "Microsoft.Extensions.Options": "7.0.0"
+      },
+      "version": "4.1.0"
+    },
+    "JetBrains.Annotations": {
+      "assets": {
+        "compile": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {
+            "related": ".deps.json;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {
+            "related": ".deps.json;.xml"
+          }
+        }
+      },
+      "dependencies": {},
+      "version": "2026.2.0"
+    },
+    "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+      "assets": {
+        "compile": {
+          "lib/net9.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ],
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {
+        "Microsoft.AspNetCore.JsonPatch": "9.0.18",
+        "Newtonsoft.Json": "13.0.3",
+        "Newtonsoft.Json.Bson": "1.0.2"
+      },
+      "version": "9.0.18"
+    },
+    "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
+      "assets": {
+        "build": {
+          "buildTransitive/net9.0/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.targets": {}
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ],
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {
+        "Microsoft.AspNetCore.Mvc.Razor.Extensions": "6.0.0",
+        "Microsoft.CodeAnalysis.Razor": "6.0.0",
+        "Microsoft.Extensions.DependencyModel": "9.0.18"
+      },
+      "version": "9.0.18"
+    },
+    "Microsoft.Data.Sqlite.Core": {
+      "assets": {
+        "compile": {
+          "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {
+        "SQLitePCLRaw.core": "2.1.10"
+      },
+      "version": "9.0.18"
+    },
+    "Microsoft.EntityFrameworkCore": {
+      "assets": {
+        "build": {
+          "buildTransitive/net8.0/Microsoft.EntityFrameworkCore.props": {}
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {
+        "Microsoft.EntityFrameworkCore.Abstractions": "9.0.18",
+        "Microsoft.EntityFrameworkCore.Analyzers": "9.0.18",
+        "Microsoft.Extensions.Caching.Memory": "9.0.18",
+        "Microsoft.Extensions.Logging": "9.0.18"
+      },
+      "version": "9.0.18"
+    },
+    "Microsoft.EntityFrameworkCore.Abstractions": {
+      "assets": {
+        "compile": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {},
+      "version": "9.0.18"
+    },
+    "Microsoft.EntityFrameworkCore.Relational": {
+      "assets": {
+        "compile": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {
+        "Microsoft.EntityFrameworkCore": "9.0.18",
+        "Microsoft.Extensions.Caching.Memory": "9.0.18",
+        "Microsoft.Extensions.Configuration.Abstractions": "9.0.18",
+        "Microsoft.Extensions.Logging": "9.0.18"
+      },
+      "version": "9.0.18"
+    },
+    "Microsoft.EntityFrameworkCore.Sqlite": {
+      "assets": {
+        "compile": {
+          "lib/net8.0/_._": {}
+        },
+        "runtime": {
+          "lib/net8.0/_._": {}
+        }
+      },
+      "dependencies": {
+        "Microsoft.EntityFrameworkCore.Sqlite.Core": "9.0.18",
+        "Microsoft.Extensions.Caching.Memory": "9.0.18",
+        "Microsoft.Extensions.Configuration.Abstractions": "9.0.18",
+        "Microsoft.Extensions.DependencyModel": "9.0.18",
+        "Microsoft.Extensions.Logging": "9.0.18",
+        "SQLitePCLRaw.bundle_e_sqlite3": "2.1.10",
+        "SQLitePCLRaw.core": "2.1.10",
+        "System.Text.Json": "9.0.18"
+      },
+      "version": "9.0.18"
+    },
+    "Microsoft.EntityFrameworkCore.Sqlite.Core": {
+      "assets": {
+        "compile": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.Sqlite.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.Sqlite.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {
+        "Microsoft.Data.Sqlite.Core": "9.0.18",
+        "Microsoft.EntityFrameworkCore.Relational": "9.0.18",
+        "Microsoft.Extensions.Caching.Memory": "9.0.18",
+        "Microsoft.Extensions.Configuration.Abstractions": "9.0.18",
+        "Microsoft.Extensions.DependencyModel": "9.0.18",
+        "Microsoft.Extensions.Logging": "9.0.18",
+        "SQLitePCLRaw.core": "2.1.10",
+        "System.Text.Json": "9.0.18"
+      },
+      "version": "9.0.18"
+    },
+    "NUglify": {
+      "assets": {
+        "compile": {
+          "lib/netstandard2.0/NUglify.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/NUglify.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {},
+      "version": "1.22.0"
+    },
+    "Newtonsoft.Json": {
+      "assets": {
+        "compile": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {},
+      "version": "13.0.4"
+    },
+    "System.Linq.Dynamic.Core": {
+      "assets": {
+        "compile": {
+          "lib/net9.0/System.Linq.Dynamic.Core.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/System.Linq.Dynamic.Core.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "dependencies": {},
+      "version": "1.7.3"
+    },
+    "TimeZoneConverter": {
+      "assets": {
+        "compile": {
+          "lib/net9.0/TimeZoneConverter.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/TimeZoneConverter.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "dependencies": {},
+      "version": "7.2.0"
+    }
+  },
+  "packages": {
+    "Du.Abp": {
+      "assemblyName": "Abp",
+      "nupkgSha256": "0f6d9da908af7b6b51bedb5b942be8fcdc54fa6b07897224dfb2a647c4e75769",
+      "rootNamespace": "Abp",
+      "targets": {
+        "net10.0": {
+          "assetPath": "lib/net10.0/Abp.dll",
+          "assetSha256": "5736efa12356e69f723ca8aaead8d9d28ed8011d0345344235b0d48db1e6fc36",
+          "internalDependencies": {}
+        },
+        "net9.0": {
+          "assetPath": "lib/net9.0/Abp.dll",
+          "assetSha256": "142c0f3d540e909c720996086386089394a180c16289e237cc1a228601bfbc35",
+          "internalDependencies": {}
+        }
+      }
+    },
+    "Du.Abp.AspNetCore": {
+      "assemblyName": "Abp.AspNetCore",
+      "nupkgSha256": "53f1fcbdf3be677e62f36d49b7b37b9d4146e3c2b0bade7e40716025136dd091",
+      "rootNamespace": "Abp",
+      "targets": {
+        "net10.0": {
+          "assetPath": "lib/net10.0/Abp.AspNetCore.dll",
+          "assetSha256": "fdb4b71c5247db0130a07e64b54e5722b00a605bc159d0bbed0801836fc7fe9b",
+          "internalDependencies": {
+            "Du.Abp.Web.Common": "10.5.1-r2.1"
+          }
+        },
+        "net9.0": {
+          "assetPath": "lib/net9.0/Abp.AspNetCore.dll",
+          "assetSha256": "25268dd6d8170c5d98b0d03da23d766a73697de9fc9061ab7e2445fc1b435c6a",
+          "internalDependencies": {
+            "Du.Abp.Web.Common": "10.5.1-r2.1"
+          }
+        }
+      }
+    },
+    "Du.Abp.EntityFramework.Common": {
+      "assemblyName": "Abp.EntityFramework.Common",
+      "nupkgSha256": "cc8be8158fd8bde6b8c2a6374ca1fb362b14965e17435df2f1b8780217a57234",
+      "rootNamespace": "Abp.EntityFramework",
+      "targets": {
+        "net10.0": {
+          "assetPath": "lib/net10.0/Abp.EntityFramework.Common.dll",
+          "assetSha256": "10fde5d36fce4d027022f4a769a9d5c6fbf15766a7522ee036f01cc59e30c040",
+          "internalDependencies": {
+            "Du.Abp": "10.5.1-r2.1"
+          }
+        },
+        "net9.0": {
+          "assetPath": "lib/net9.0/Abp.EntityFramework.Common.dll",
+          "assetSha256": "6db9c08c5baf7620ff96fa259cda7157cf26f1a36fbd7eca2594e51784330d35",
+          "internalDependencies": {
+            "Du.Abp": "10.5.1-r2.1"
+          }
+        }
+      }
+    },
+    "Du.Abp.EntityFrameworkCore": {
+      "assemblyName": "Abp.EntityFrameworkCore",
+      "nupkgSha256": "a3e8caf24c765be13877ee7cd48908b951d25a1a61fb837a99eb5fece9d8dbb6",
+      "rootNamespace": "Abp",
+      "targets": {
+        "net10.0": {
+          "assetPath": "lib/net10.0/Abp.EntityFrameworkCore.dll",
+          "assetSha256": "3a1e77d385044ec0c7bad9fd1b5f3ef149e88854f990631a116e487b508c0f0a",
+          "internalDependencies": {
+            "Du.Abp.EntityFramework.Common": "10.5.1-r2.1"
+          }
+        },
+        "net9.0": {
+          "assetPath": "lib/net9.0/Abp.EntityFrameworkCore.dll",
+          "assetSha256": "243486fb3e5baeed05453739db180ece03e8631d0d159ea9976cdd3b325c0932",
+          "internalDependencies": {
+            "Du.Abp.EntityFramework.Common": "10.5.1-r2.1"
+          }
+        }
+      }
+    },
+    "Du.Abp.Web.Common": {
+      "assemblyName": "Abp.Web.Common",
+      "nupkgSha256": "4724bd69ce91286ba641fec37da556b0d80fec6b1b6e8c43c06e3f499d81f84a",
+      "rootNamespace": "Abp",
+      "targets": {
+        "net10.0": {
+          "assetPath": "lib/net10.0/Abp.Web.Common.dll",
+          "assetSha256": "b9da8ea73707a9996e5458e911ec9a217d1ddd4545ede5ec641fa60529398eee",
+          "internalDependencies": {
+            "Du.Abp": "10.5.1-r2.1"
+          }
+        },
+        "net9.0": {
+          "assetPath": "lib/net9.0/Abp.Web.Common.dll",
+          "assetSha256": "a7ea8dff8aa08cd84ccd050e6a4afebc01544c61946a578cd2150ba437dfc926",
+          "internalDependencies": {
+            "Du.Abp": "10.5.1-r2.1"
+          }
+        }
+      }
+    }
+  },
+  "version": "10.5.1-r2.1"
+}
