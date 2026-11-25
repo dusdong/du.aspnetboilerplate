@@ -35,7 +35,9 @@ R3 原版模板的 SQL Server 恢复、Angular 租户登录和授权查询已通
 
 R3 固定模板 `net9.0` 同目标换包已验收并归档。13 个冻结维护包在 macOS ARM64、.NET 9.0.10、SQL Server 和原版 Angular production 客户端组合下复现租户登录与授权查询。候选库新增一条成功登录记录，独立对照库计数未变。[验收与复跑](docs/maintenance/r3-template-net9-packages.md) · [稳定规范](openspec/specs/template-maintenance-package-consumption/spec.md) · [归档](openspec/changes/archive/2026-11-25-validate-r3-net9-template-package-migration/)
 
-R3 固定维护版模板的 .NET 10 / EF Core 10 升级已通过本机实测，OpenSpec 已同步并归档。在同一候选库完成两代迁移、租户登录与权限查询，两库成功登录计数从 `1/1` 经 `2/1` 到 `3/1`。升级前后备份分别恢复至独立新库，原版应用回退待验。[正式运行与恢复点](docs/maintenance/r3-template-net10-upgrade.md#2026-11-25-正式运行验收) · [稳定规范](openspec/specs/template-runtime-upgrade/spec.md) · [归档](openspec/changes/archive/2026-11-25-validate-r3-net10-template-runtime-upgrade/)
+R3 固定维护版模板的 .NET 10 / EF Core 10 升级已通过本机实测，OpenSpec 已同步并归档。在同一候选库完成两代迁移、租户登录与权限查询，两库成功登录计数从 `1/1` 经 `2/1` 到 `3/1`。升级前后备份均已恢复至独立新库。[正式运行与恢复点](docs/maintenance/r3-template-net10-upgrade.md#2026-11-25-正式运行验收) · [稳定规范](openspec/specs/template-runtime-upgrade/spec.md) · [归档](openspec/changes/archive/2026-11-25-validate-r3-net10-template-runtime-upgrade/)
+
+R3 固定原版模板已在升级前后两个 SQL Server 恢复点通过本机回退实测，OpenSpec 已同步并归档。原版 Migrator 保留 30 条迁移与已核对的表结构，原版 Host 完成 Angular 租户登录和授权查询。直接在升级后状态切回应用会保留 .NET 10 成功登录行。恢复到升级前状态会舍弃该写入。[回退步骤与正式证据](docs/maintenance/r3-original-template-rollback.md#正式运行结果) · [稳定规范](openspec/specs/template-application-rollback/spec.md) · [归档](openspec/changes/archive/2026-11-26-validate-r3-original-template-rollback/)
 
 在主仓根目录运行 `python3 eng/verify.py --profile r0` 可复验固定 R0 源码。统一复验已完成本地与 GitHub Actions 的配对验收并归档。[复验手册](docs/maintenance/baseline-evidence/README.md#统一入口) · [配对验收记录](docs/maintenance/baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
 

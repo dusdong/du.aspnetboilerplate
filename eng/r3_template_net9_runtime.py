@@ -88,41 +88,51 @@ def verify_shared_runtime(rows, launch, report, expected_version, *, anchors=SHA
 
 
 def verify_host_assemblies(observed, launch, output, expected, report, *, runtime_version=EXPECTED_RUNTIME):
-    pid = launch.get("pid")
-    require(pid and observed.get("pid") == pid,
-            f"运行程序集证据 PID 不符，Host {pid}，观测 {observed.get('pid')}")
-    rows = observed["assemblies"]
-    verify_shared_runtime(rows, launch, report, runtime_version)
-
     framework_names = {Path(path).stem for path, item in expected["maintenanceDlls"].items()
                        if item["package"].startswith("Du.Abp")}
     require(len(framework_names) == 11, f"Host 预期维护框架程序集不满 11 项：{sorted(framework_names)}")
+    verify_entry_assemblies(observed, launch, output, expected, report, runtime_version, "Web.Host",
+                            framework_names)
+
+
+def verify_entry_assemblies(observed, launch, output, expected, report, runtime_version, entry,
+                            framework_names, *, anchors=SHARED, optional_assemblies=()):
+    pid = launch.get("pid")
+    process_name = "Host" if entry == "Web.Host" else entry
+    require(pid and observed.get("pid") == pid,
+            f"运行程序集证据 PID 不符，{process_name} {pid}，观测 {observed.get('pid')}")
+    rows = observed["assemblies"]
+    verify_shared_runtime(rows, launch, report, runtime_version, anchors=anchors, process_name=process_name)
+
+    entry_name = PREFIX + entry
     tracked = report["assemblies"] = {}
-    for name in sorted(framework_names | set(HOST_LIBRARIES) | {"AutoMapper.Collection", PREFIX + "Web.Host"}):
-        row = unique_loaded(rows, name, pid, optional=name == "AutoMapper.Collection")
-        if name == PREFIX + "Web.Host":
+    for name in sorted(framework_names | set(HOST_LIBRARIES) | {"AutoMapper.Collection", entry_name}):
+        row = unique_loaded(rows, name, pid, optional=name == "AutoMapper.Collection" or name in optional_assemblies,
+                            process_name=process_name)
+        if name == entry_name:
             origins = {expected["entry"]["path"]: expected["entry"]}
         else:
             origins = {path: item for path, item in expected["packageCopies"].items()
                        if Path(path).name == name + ".dll"}
-        require(origins, f"Host PID {pid} 的 {name} 缺少包或入口输出来源")
+        require(origins, f"{process_name} PID {pid} 的 {name} 缺少包或入口输出来源")
         if not row:
             tracked[name] = {"loaded": False, "outputOrigins": origins}
             continue
         path = Path(row["path"])
         tracked[name] = {"loaded": True, **row, "outputOrigins": origins}
         require(path.is_relative_to(output) and path == path.resolve(),
-                f"Host PID {pid} 的 {name} 从本轮输出之外加载：{path}")
+                f"{process_name} PID {pid} 的 {name} 从本轮输出之外加载：{path}")
         relative = path.relative_to(output).as_posix()
         origin = origins.get(relative)
         require(origin and origin["sha256"] == expected["files"]["files"].get(relative)
                 == sha256(path) == row["sha256"],
-                f"Host PID {pid} 的 {name} 加载位置或摘要与登记归档、输出不一致：{path}")
+                f"{process_name} PID {pid} 的 {name} 加载位置或摘要与登记归档、输出不一致：{path}")
         if name == "Microsoft.Data.SqlClient":
-            require(relative.startswith("runtimes/unix/"), f"Host PID {pid} 的 SqlClient 未加载 Unix 资产：{relative}")
+            require(relative.startswith("runtimes/unix/"),
+                    f"{process_name} PID {pid} 的 SqlClient 未加载 Unix 资产：{relative}")
     contexts = {item["contextId"] for item in tracked.values() if item["loaded"]}
     contexts.update(item["loaded"]["contextId"] for item in report["sharedRuntime"].values())
-    require(len(contexts) == 1, f"Host PID {pid} 运行程序集分属多个默认上下文：{contexts}")
+    require(len(contexts) == 1, f"{process_name} PID {pid} 运行程序集分属多个默认上下文：{contexts}")
 
 
 class CandidateRuntime(RuntimeSupport, CandidateRun):
@@ -193,32 +203,7 @@ class CandidateRuntime(RuntimeSupport, CandidateRun):
                 "R3_TEMPLATE_OBSERVER_EVIDENCE": str(self.evidence_file(filename))}
 
     def angular(self):
-        require(len(self.original_angular["files"]) == 1193
-                and not any(path.is_symlink() for path in self.original_frontend.rglob("*"))
-                and inventory(self.original_frontend, include_app_data=True) == self.original_angular,
-                "最终返修轮 Angular production 实物与冻结清单不符")
-        shutil.copytree(self.original_frontend, self.browser_output)
-        config_path = self.browser_output / "assets/appconfig.production.json"
-        config = read_json(config_path)
-        overrides = {"remoteServiceBaseUrl": self.runtime["host"], "appBaseUrl": self.runtime["frontend"]}
-        changes = {key: {"before": config[key], "after": value} for key, value in overrides.items()
-                   if config[key] != value}
-        if changes:
-            write_json(config_path, config | overrides)
-        self.angular_inventory = inventory(self.browser_output, include_app_data=True)
-        expected = dict(self.original_angular["files"])
-        config_name = config_path.relative_to(self.browser_output).as_posix()
-        config_before = expected[config_name]
-        if changes:
-            expected[config_name] = sha256(config_path)
-        require(self.angular_inventory["files"] == expected, "本轮 Angular 副本出现未登记文件变化")
-        self.report["inputs"]["angular"] = {
-            "originalManifestSha256": ANGULAR_MANIFEST, "originalInventory": self.original_angular["sha256"],
-            "servedInventory": self.angular_inventory["sha256"], "files": len(expected),
-            "configOriginalSha256": config_before, "configServedSha256": expected[config_name],
-            "configChanges": changes, "cors": self.runtime["frontend"],
-        }
-        write_json(self.evidence_file("angular-production-files.json"), self.angular_inventory)
+        self.frozen_angular(ANGULAR_MANIFEST)
 
     def sql_preflight(self):
         self.sql_inputs(self.backup)

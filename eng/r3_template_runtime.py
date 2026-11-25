@@ -51,9 +51,10 @@ def check_login_deltas(before, after, source, restored):
     return deltas
 
 
-def inventory(root, *, include_app_data=False):
+def inventory(root, *, include_app_data=False, exclude=()):
     rows = {path.relative_to(root).as_posix(): sha256(path) for path in sorted(root.rglob("*"))
-            if path.is_file() and (include_app_data or "App_Data" not in path.relative_to(root).parts)}
+            if path.is_file() and path.relative_to(root).as_posix() not in exclude
+            and (include_app_data or "App_Data" not in path.relative_to(root).parts)}
     require(rows, f"找不到产物：{root}")
     summary = hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest()
     return {"sha256": summary, "files": rows}
@@ -260,7 +261,7 @@ class RuntimeSupport:
         require(record["exitCode"] == 0, f"Release Host {label} 未正常停止，退出 {record['exitCode']}")
 
 
-    def round(self, database, label, *, before_login=None):
+    def round(self, database, label, *, before_login=None, after_browser=None, search_request_id=None):
         require(inventory(self.browser_output, include_app_data=True) == self.angular_inventory,
                 "实际提供的 Angular production 产物已改变")
         outcome = {"database": database, "inputs": self.report["inputs"]["host"]["entry"],
@@ -275,10 +276,14 @@ class RuntimeSupport:
                     thread.start()
                     try:
                         browser_round(self.runtime, self.browser_output, self.business, self.admin_password,
-                                      outcome, before_login=before_login)
+                                      outcome, before_login=before_login, search_request_id=search_request_id)
                     finally:
-                        server.shutdown()
-                        thread.join()
+                        try:
+                            if after_browser:
+                                after_browser()
+                        finally:
+                            server.shutdown()
+                            thread.join()
             outcome["exitCode"] = 0
         except Exception as failure:
             outcome["reason"] = self.redact(str(failure))
@@ -287,6 +292,34 @@ class RuntimeSupport:
             write_json(self.evidence_file(f"{label}-round.json"), outcome)
         return outcome
 
+
+    def frozen_angular(self, manifest_sha256):
+        require(len(self.original_angular["files"]) == 1193
+                and not any(path.is_symlink() for path in self.original_frontend.rglob("*"))
+                and inventory(self.original_frontend, include_app_data=True) == self.original_angular,
+                "最终返修轮 Angular production 实物与冻结清单不符")
+        shutil.copytree(self.original_frontend, self.browser_output)
+        config_path = self.browser_output / "assets/appconfig.production.json"
+        config = read_json(config_path)
+        overrides = {"remoteServiceBaseUrl": self.runtime["host"], "appBaseUrl": self.runtime["frontend"]}
+        changes = {key: {"before": config[key], "after": value} for key, value in overrides.items()
+                   if config[key] != value}
+        if changes:
+            write_json(config_path, config | overrides)
+        self.angular_inventory = inventory(self.browser_output, include_app_data=True)
+        expected = dict(self.original_angular["files"])
+        config_name = config_path.relative_to(self.browser_output).as_posix()
+        config_before = expected[config_name]
+        if changes:
+            expected[config_name] = sha256(config_path)
+        require(self.angular_inventory["files"] == expected, "本轮 Angular 副本出现未登记文件变化")
+        self.report["inputs"]["angular"] = {
+            "originalManifestSha256": manifest_sha256, "originalInventory": self.original_angular["sha256"],
+            "servedInventory": self.angular_inventory["sha256"], "files": len(expected),
+            "configOriginalSha256": config_before, "configServedSha256": expected[config_name],
+            "configChanges": changes, "cors": self.runtime["frontend"],
+        }
+        write_json(self.evidence_file("angular-production-files.json"), self.angular_inventory)
 
     def cleanup(self):
         ports = {key: {"number": port, "released": available(port)} for key, port in self.ports.items()} \

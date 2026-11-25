@@ -17,6 +17,10 @@ internal static class StartupHook
         {
             case "host":
                 new AssemblyObserver(evidence).Start();
+                if (Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_REQUESTS") is { } requests)
+                {
+                    DiagnosticListener.AllListeners.Subscribe(new UserQueryObserver(requests));
+                }
                 break;
             case "migrator":
                 DiagnosticListener.AllListeners.Subscribe(new MigrationObserver(evidence));
@@ -166,6 +170,159 @@ internal static class StartupHook
                 eventName = diagnostic.Key,
             };
             File.AppendAllText(evidence, JsonSerializer.Serialize(row) + Environment.NewLine);
+        }
+
+        public void OnCompleted() { }
+
+        public void OnError(Exception error) { }
+    }
+
+    private sealed class UserQueryObserver(string evidence)
+        : IObserver<DiagnosticListener>, IObserver<KeyValuePair<string, object?>>
+    {
+        private const string RequestStart = "Microsoft.AspNetCore.Hosting.HttpRequestIn.Start";
+        private const string RequestStop = "Microsoft.AspNetCore.Hosting.HttpRequestIn.Stop";
+        private const string CommandExecuting = "Microsoft.EntityFrameworkCore.Database.Command.CommandExecuting";
+        private const string CommandExecuted = "Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted";
+        private const string UserListPath = "/api/services/app/User/GetAll";
+        private readonly string requestId = Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_REQUEST_ID")!;
+        private readonly string keyword = Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_KEYWORD")!;
+        private readonly bool failList = Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_FAIL_LIST") == "1";
+        private readonly ConditionalWeakTable<Activity, object> requests = new();
+        private readonly System.Collections.Concurrent.ConcurrentDictionary<string, string> commands = new();
+        private readonly object gate = new();
+
+        public void OnNext(DiagnosticListener listener)
+        {
+            if (listener.Name == "Microsoft.AspNetCore")
+            {
+                listener.Subscribe(this, name => name is RequestStart or RequestStop);
+            }
+            else if (listener.Name == "Microsoft.EntityFrameworkCore")
+            {
+                listener.Subscribe(this, name => name is CommandExecuting or CommandExecuted);
+            }
+        }
+
+        public void OnNext(KeyValuePair<string, object?> diagnostic)
+        {
+            if (diagnostic.Value is not { } payload || Activity.Current is not { } current)
+            {
+                return;
+            }
+
+            if (diagnostic.Key is RequestStart or RequestStop)
+            {
+                ObserveRequest(diagnostic.Key, payload, current);
+                return;
+            }
+
+            Activity? request = current;
+            while (request is not null && !requests.TryGetValue(request, out _))
+            {
+                request = request.Parent;
+            }
+
+            if (request is null || Property(payload, "CommandId")?.ToString() is not { } commandId)
+            {
+                return;
+            }
+
+            var pid = Environment.ProcessId;
+            var activityId = request.Id;
+            if (diagnostic.Key == CommandExecuted)
+            {
+                if (commands.TryRemove(commandId, out var completedStep))
+                {
+                    Write(new { kind = "completed", pid, requestId, activityId, step = completedStep, commandId });
+                }
+                return;
+            }
+
+            if (Property(payload, "Command") is not DbCommand command
+                || command.Connection is not { State: ConnectionState.Open } connection
+                || !command.CommandText.Contains("FROM [AbpUsers]", StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            // 只跟踪关键词分页的计数和取数。权限、会话等访问 AbpUsers 的命令不带该筛选。
+            if (!command.Parameters.Cast<DbParameter>().Any(parameter =>
+                parameter.Value is string value && value.Contains(keyword, StringComparison.Ordinal)))
+            {
+                return;
+            }
+            var step = command.CommandText.Contains("COUNT(", StringComparison.OrdinalIgnoreCase) ? "count" : "list";
+
+            // 在该 EF 命令实际使用的连接及事务内读取服务器身份。
+            using (var probe = connection.CreateCommand())
+            {
+                probe.Transaction = command.Transaction;
+                probe.CommandText = "SELECT CONVERT(nvarchar(128), SERVERPROPERTY('ServerName')), DB_NAME(), @@SPID";
+                using var reader = probe.ExecuteReader();
+                if (!reader.Read())
+                {
+                    return;
+                }
+                Write(new
+                {
+                    kind = "connection", pid, requestId, activityId, step, commandId,
+                    serverName = reader.GetString(0), database = reader.GetString(1), sessionId = reader.GetInt16(2),
+                    connectionId = Property(payload, "ConnectionId")?.ToString(),
+                    clientConnectionId = Property(connection, "ClientConnectionId")?.ToString(),
+                    context = Property(payload, "Context")?.GetType().FullName,
+                });
+            }
+
+            commands.TryAdd(commandId, step);
+            if (failList && step == "list")
+            {
+                throw new InvalidOperationException("R3 回退诊断：关键词用户列表命令失败");
+            }
+        }
+
+        private void ObserveRequest(string phase, object payload, Activity activity)
+        {
+            var context = Property(payload, "HttpContext");
+            var pid = Environment.ProcessId;
+            var activityId = activity.Id;
+            if (phase == RequestStop)
+            {
+                if (requests.TryGetValue(activity, out _))
+                {
+                    var status = Property(Property(context, "Response"), "StatusCode");
+                    Write(new { kind = "response", pid, requestId, activityId, status });
+                }
+                return;
+            }
+
+            var request = Property(context, "Request");
+            var method = Property(request, "Method")?.ToString();
+            var path = Property(request, "Path")?.ToString();
+            if (method != "GET" || path != UserListPath || requestId.Length == 0 || keyword.Length == 0)
+            {
+                return;
+            }
+
+            var query = Property(request, "QueryString")?.ToString() ?? "";
+            var fields = query.TrimStart('?').Split('&').Select(Uri.UnescapeDataString).ToArray();
+            if (fields.Count(field => field == $"Keyword={keyword}") != 1
+                || fields.Count(field => field == $"r3RollbackRequest={requestId}") != 1)
+            {
+                return;
+            }
+            requests.Add(activity, gate);
+            Write(new { kind = "request", pid, requestId, activityId, method, path, keyword });
+        }
+
+        private static object? Property(object? value, string name) => value?.GetType().GetProperty(name)?.GetValue(value);
+
+        private void Write<T>(T row)
+        {
+            lock (gate)
+            {
+                File.AppendAllText(evidence, JsonSerializer.Serialize(row) + Environment.NewLine);
+            }
         }
 
         public void OnCompleted() { }

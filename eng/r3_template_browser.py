@@ -57,7 +57,7 @@ def response_json(response, origin=None, *, wrapped=True):
     return data
 
 
-def browser_round(config, browser_output, baseline, password, report, *, before_login=None):
+def browser_round(config, browser_output, baseline, password, report, *, before_login=None, search_request_id=None):
     from playwright.sync_api import Error, TimeoutError, expect, sync_playwright
 
     frontend, host = config["frontend"], config["host"]
@@ -160,16 +160,32 @@ def browser_round(config, browser_output, baseline, password, report, *, before_
                     action = f"提交搜索并等候 Keyword={baseline['keyword']} 的列表响应"
                     search = page.locator("input[name=keyword]")
                     search.fill(baseline["keyword"])
+                    tagged = []
+                    if search_request_id:
+                        def tag_search(route):
+                            request = route.request
+                            url = urlsplit(request.url)
+                            if (f"{url.scheme}://{url.netloc}", url.path, request.method,
+                                    keyword_for(request.url)) == (host, USERS, "GET", [baseline["keyword"]]):
+                                tagged.append(request)
+                                route.continue_(url=request.url + "&r3RollbackRequest=" + search_request_id)
+                            else:
+                                route.continue_()
+
+                        page.route(host + USERS + "?*", tag_search)
                     with page.expect_response(lambda r: matches(r, host, USERS) and
                                               keyword_for(r.url) == [baseline["keyword"]]) as result:
                         search.press("Enter")
                     response = result.value
+                    step = steps["search"] = {"path": USERS, "method": response.request.method,
+                                              "keyword": keyword_for(response.url), "status": response.status}
+                    if search_request_id:
+                        require(tagged == [response.request], "浏览器搜索响应与本轮标记请求不一致")
+                        step["requestId"] = search_request_id
                     payload = response_json(response, frontend)
                     items = [{"id": item.get("id"), "userName": item.get("userName")}
                              for item in payload.get("items", [])]
-                    step = steps["search"] = {"path": USERS, "method": response.request.method,
-                                              "keyword": keyword_for(response.url), "status": response.status,
-                                              "totalCount": payload.get("totalCount"), "items": items}
+                    step.update(totalCount=payload.get("totalCount"), items=items)
                     check_query(step["keyword"], step["totalCount"], items, baseline)
                     action = "等待搜索渲染并核对唯一行的用户名列"
                     expect(rows).to_have_count(1, timeout=20000)

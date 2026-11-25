@@ -141,12 +141,17 @@ FROM sys.database_recovery_status WHERE database_id = DB_ID()
         medium.local_backup = self.config["localBackupDirectory"] / medium.name
         return medium
 
-    def restore_diagnostic_start(self, backup):
-        # 在隔离诊断轮使用正式轮的介质，新库的名字和物理路径仍归诊断轮。
-        self.require_new_database(self.source)
+    def frozen_medium(self, backup):
+        # 介质位于当前实例的只读输入目录，恢复目标仍归当前运行轮。
         medium = copy(self)
         medium.name = posixpath.basename(backup["serverPath"])
         medium.backup_source = backup["database"]
         medium.server_backup = posixpath.join(self.config["sqlBackupDirectory"], medium.name)
         medium.local_backup = self.config["localBackupDirectory"] / medium.name
+        return medium
+
+    def restore_diagnostic_start(self, backup):
+        # 在隔离诊断轮使用正式轮的介质，新库的名字和物理路径仍归诊断轮。
+        self.require_new_database(self.source)
+        medium = self.frozen_medium(backup)
         return medium.restore(backup, database=self.source)

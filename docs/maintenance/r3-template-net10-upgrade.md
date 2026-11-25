@@ -140,7 +140,7 @@ python -B eng/tests/verify_r3_template_net10_runtime.py --fixtures-only \
 | 升级前 | `r3_template_c8e9e2cca8c981df_before_upgrade.bak` · `fa559c46-091e-457c-9c7e-5c64e7085643` · `15a246b74c1b07ae3459525eb67923058151b39590dad14c2903979b8d7ffa3d` | `r3_template_c8e9e2cca8c981df_before_upgrade` · `1, 2` |
 | 升级后 | `r3_template_c8e9e2cca8c981df_after_upgrade.bak` · `8df1e277-cde8-4683-a350-9bbf55a48975` · `21fd40d536999e40dbf014b47ae450d04736a8c9da96c3bcb2d44603610a1479` | `r3_template_c8e9e2cca8c981df_after_upgrade` · `1, 2, 3` |
 
-恢复到升级前会缺少 .NET 10 当轮新增的成功登录行 ID `3`（租户 1，账号 2）。行 ID `2` 是本轮 .NET 9 业务写入，两个恢复点都已读回。原版应用回退待验。
+恢复到升级前会缺少 .NET 10 当轮新增的成功登录行 ID `3`（租户 1，账号 2）。行 ID `2` 是本轮 .NET 9 业务写入，两个恢复点都已读回。原版应用在升级验收时待验，后续已完成两个恢复点的业务复验。[原版应用回退](r3-original-template-rollback.md#正式运行结果)
 
 验证机在 `.git/r3-template-net10-upgrade/package-2/` 留有小型证据索引、保留路径和复跑日志。通过轮与两份可恢复介质分别存于该目录的 `execution/` 所指专用证据目录内的 `runs/` 和 `sql-mount/`。
 
