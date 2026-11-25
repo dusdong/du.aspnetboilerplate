@@ -132,6 +132,6 @@ OpenSpec 3.1 至 3.3 已通过。本次本地验收补齐最后一项，固定 W
 
 引擎 gitlink 比冻结生产源码多一笔提交，仅用于补充应用层异常恢复的复跑入口和说明。实际 CLR 低栈触发未观测。[引擎冻结源码提交](https://github.com/dusdong/AutoMapper/commit/f9fc56aeedd64d3f5e992f2b22fd9260d906fd05) · [引擎组合验收](r3-automapper-engine.md#clr-低栈分支的组合证据)
 
-从交付版主仓根目录运行 `git ls-tree HEAD -- AutoMapper AutoMapper.Collection aspnetboilerplate` 可核对上述 gitlink。固定模板仍为 `2e9536872673a7ff1986a19e798c51684d16afe5`。[稳定消费规范](../../openspec/specs/automapper-package-consumption/spec.md) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-25-add-r3-automapper-candidates/)
+主仓交付提交为 `150f5260ced643610fa05f16a98d79dad10a0f29`。从主仓根目录运行 `git ls-tree 150f526 -- AutoMapper AutoMapper.Collection aspnetboilerplate` 可核对该提交实际记录的 gitlink。固定模板仍为 `2e9536872673a7ff1986a19e798c51684d16afe5`。[主仓交付提交](https://github.com/dusdong/du.aspnetboilerplate/commit/150f5260ced643610fa05f16a98d79dad10a0f29) · [稳定消费规范](../../openspec/specs/automapper-package-consumption/spec.md) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-25-add-r3-automapper-candidates/)
 
 主仓 GitHub Actions 的「R0 基线复验」验证固定的原版 R0 源码。R3.4 的冻结映射包与业务结果来自本页和引擎维护页的本机实测。[R0 工作流](../../.github/workflows/verify-r0.yml) · [R3.4 消费验收](#消费验收记录)
