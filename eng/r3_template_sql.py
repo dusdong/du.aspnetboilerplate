@@ -1,4 +1,4 @@
-"""原版模板专用 SQL Server 测试库的迁移前预检、独立读回和恢复。"""
+"""模板专用 SQL Server 测试库的迁移前预检、独立读回和恢复。"""
 
 from contextlib import closing
 import posixpath
@@ -17,16 +17,17 @@ def sql_literal(value):
 
 
 class RuntimeDatabase:
-    def __init__(self, config, user, password, run_id):
+    def __init__(self, config, user, password, run_id, *, frozen_backup=None):
         import pymssql
 
         self.client = pymssql
         self.config = config
         self.user = user
         self.password = password
-        self.source = f"r3_template_{run_id}_source"
-        self.restored = f"r3_template_{run_id}_restore"
-        self.name = f"r3_template_{run_id}.bak"
+        self.source = f"r3_template_{run_id}_{'candidate' if frozen_backup else 'source'}"
+        self.restored = f"r3_template_{run_id}_{'control' if frozen_backup else 'restore'}"
+        self.name = frozen_backup["name"] if frozen_backup else f"r3_template_{run_id}.bak"
+        self.backup_source = frozen_backup["database"] if frozen_backup else self.source
         self.server_backup = posixpath.join(config["sqlBackupDirectory"], self.name)
         self.local_backup = config["localBackupDirectory"] / self.name
         require(re.fullmatch(r"[0-9a-f]{16}", run_id), "SQL Server 本轮标识不符")
@@ -50,7 +51,7 @@ class RuntimeDatabase:
         record["exitCode"] = 0
         return rows
 
-    def preflight(self):
+    def preflight(self, *, frozen_backup=None):
         identity, = self.query("master", """
 SELECT DB_NAME() AS [database], CONVERT(nvarchar(128), SERVERPROPERTY('ServerName')) AS serverName,
        CONVERT(nvarchar(128), SERVERPROPERTY('ProductVersion')) AS productVersion,
@@ -76,9 +77,13 @@ SELECT DB_NAME() AS [database], CONVERT(nvarchar(128), SERVERPROPERTY('ServerNam
                                (self.config["sqlBackupDirectory"],))
         require(directory == [{"file_is_a_directory": 1}] and self.local_backup.parent.is_dir(),
                 "SQL Server 备份目录或本机映射目录不可用")
-        self.require_new_backup()
-        for target in self.restore_destinations().values():
-            self.require_new_server_file(target, "恢复目标")
+        if frozen_backup:
+            identity["backup"] = self.verify_frozen_backup(frozen_backup)
+        else:
+            self.require_new_backup()
+        for database in ((self.source, self.restored) if frozen_backup else (self.restored,)):
+            for target in self.restore_destinations(database).values():
+                self.require_new_server_file(target, "恢复目标")
         return {**identity, "sourceDatabase": self.source, "restoreDatabase": self.restored,
                 "serverBackupDirectory": self.config["sqlBackupDirectory"],
                 "localBackupDirectory": str(self.local_backup.parent)}
@@ -104,9 +109,9 @@ FROM sys.dm_os_file_exists(%s)
                 f"本轮备份文件已存在：{self.name}")
         self.require_new_server_file(self.server_backup, "备份目标")
 
-    def restore_destinations(self):
-        return {"D": posixpath.join(self.identity["dataPath"], self.restored + ".mdf"),
-                "L": posixpath.join(self.identity["logPath"], self.restored + "_log.ldf")}
+    def restore_destinations(self, database):
+        return {"D": posixpath.join(self.identity["dataPath"], database + ".mdf"),
+                "L": posixpath.join(self.identity["logPath"], database + "_log.ldf")}
 
     def create_source(self):
         self.require_new_database(self.source)
@@ -192,32 +197,43 @@ WHERE TenantId = %s AND UserId = %s AND Result = %s
         headers = self.query("master", "RESTORE HEADERONLY FROM DISK = %s", (self.server_backup,))
         require(len(headers) == 1, f"备份介质须只包含本轮备份：{self.name}")
         header = headers[0]
-        require(header["DatabaseName"] == self.source and header["BackupType"] == 1
+        require(header["DatabaseName"] == self.backup_source and header["BackupType"] == 1
                 and header["HasBackupChecksums"] and header["IsCopyOnly"] and not header["IsDamaged"],
                 f"备份标头的源库、类型或校验状态不符：{self.name}")
         return header
 
-    def restore(self, backup):
-        self.require_new_database(self.restored)
+    def verify_frozen_backup(self, expected):
+        require(sha256(self.local_backup) == expected["sha256"], f"冻结备份摘要不符：{self.local_backup.name}")
+        header = self.backup_header()
+        actual_id = str(uuid.UUID(str(header["BackupSetGUID"])))
+        require(actual_id == expected["backupSetId"], f"冻结介质备份集不符：{actual_id}")
+        self.query("master", "RESTORE VERIFYONLY FROM DISK = %s WITH CHECKSUM", (self.server_backup,))
+        return {**expected, "localPath": str(self.local_backup), "serverPath": self.server_backup,
+                "size": self.local_backup.stat().st_size, "position": header["Position"], "verified": True}
+
+    def restore(self, backup, *, database=None):
+        database = database or self.restored
+        require(database in (self.source, self.restored), f"恢复连接超出本轮数据库：{database}")
+        self.require_new_database(database)
         require(sha256(self.local_backup) == backup["sha256"], f"备份摘要变化：{self.local_backup.name}")
         backup_set_id = str(uuid.UUID(str(self.backup_header()["BackupSetGUID"])))
         require(backup_set_id == backup["backupSetId"], f"恢复介质备份集不符：{backup_set_id}")
         files = self.query("master", "RESTORE FILELISTONLY FROM DISK = %s", (self.server_backup,))
         require(len(files) == 2 and {row["Type"] for row in files} == {"D", "L"},
                 f"预期单数据文件和单日志文件：{self.name}")
-        destinations = self.restore_destinations()
+        destinations = self.restore_destinations(database)
         moves = []
         for file in files:
             target = destinations[file["Type"]]
             self.require_new_server_file(target, "恢复目标")
             moves.append(f"MOVE {sql_literal(file['LogicalName'])} TO {sql_literal(target)}")
-        statement = f"RESTORE DATABASE [{self.restored}] FROM DISK = %s WITH CHECKSUM, RECOVERY, {', '.join(moves)}"
+        statement = f"RESTORE DATABASE [{database}] FROM DISK = %s WITH CHECKSUM, RECOVERY, {', '.join(moves)}"
         self.query("master", statement, (self.server_backup,))
-        status, = self.query(self.restored, """
+        status, = self.query(database, """
 SELECT DB_NAME() AS name, CONVERT(nvarchar(60), DATABASEPROPERTYEX(DB_NAME(), 'Status')) AS state_desc
 """)
-        actual_files = self.query(self.restored, "SELECT type AS fileType, physical_name AS path FROM sys.database_files")
-        require(status == {"name": self.restored, "state_desc": "ONLINE"} and len(actual_files) == 2
+        actual_files = self.query(database, "SELECT type AS fileType, physical_name AS path FROM sys.database_files")
+        require(status == {"name": database, "state_desc": "ONLINE"} and len(actual_files) == 2
                 and {row["fileType"]: row["path"] for row in actual_files} == {0: destinations["D"], 1: destinations["L"]},
                 f"恢复库名称、状态或实际物理文件不符：{status} {actual_files}")
         require(sha256(self.local_backup) == backup["sha256"], f"恢复后备份摘要变化：{self.local_backup.name}")

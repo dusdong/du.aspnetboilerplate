@@ -18,6 +18,7 @@ import sys
 from threading import Thread
 import time
 from urllib import error, request
+import xml.etree.ElementTree as ET
 
 from r3_template_browser import AUTH, USER_CONFIG, browser_round
 from r3_template_sql import ADMIN, RuntimeDatabase
@@ -50,9 +51,9 @@ def check_login_deltas(before, after, source, restored):
     return deltas
 
 
-def inventory(root):
+def inventory(root, *, include_app_data=False):
     rows = {path.relative_to(root).as_posix(): sha256(path) for path in sorted(root.rglob("*"))
-            if path.is_file() and "App_Data" not in path.relative_to(root).parts}
+            if path.is_file() and (include_app_data or "App_Data" not in path.relative_to(root).parts)}
     require(rows, f"找不到产物：{root}")
     summary = hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest()
     return {"sha256": summary, "files": rows}
@@ -80,32 +81,14 @@ class SpaHandler(SimpleHTTPRequestHandler):
         return super().send_head()
 
 
-class RuntimeRun(R3Run):
-    def __init__(self, repo, evidence, config_file):
-        super().__init__(repo, evidence)
+class RuntimeSupport:
+    def setup_runtime(self, config_file):
         self.config_file = config_file
         self.run_id = secrets.token_hex(8)
-        self.angular = self.root.parent / "angular"
-        self.browser_output = self.angular / "dist/browser"
-        self.migrator_entry = project_path("Migrator")
-        self.migrator_output = self.root / self.migrator_entry.parent / f"bin/Release/{TFM}"
-        self.report.update(profile="r3-template-runtime", runId=self.run_id,
-                           coverageNotRun=["同目标维护包替换", ".NET 10 / EF Core 10 升级",
-                                           "升级后回退", "其他消费组合、平台、CI 和部署"])
-        self.report["stages"].update(
-            {stage: {"status": "not_run", "exitCode": None, "commands": [], "evidence": []}
-             for stage in RUNTIME_STAGES})
         self.credentials = tuple(os.environ.pop(name, None) for name in CREDENTIALS)
         self.passwords = [value for value in self.credentials[1:] if value]
         self.processes = []
         self.ports = {}
-
-    def preflight(self):
-        fixed = self.git(self.repo, "runtime-template-gitlink.log", "ls-tree", PLANNING_COMMIT, "--", TEMPLATE)
-        require(fixed.split() == ["160000", "commit", INPUTS[TEMPLATE][0], TEMPLATE],
-                f"R3 运行设计基点 {PLANNING_COMMIT} 的模板 gitlink 不符：{fixed}")
-        self.report["inputs"]["runtimePlanningCommit"] = PLANNING_COMMIT
-        super().preflight()
 
     def inputs(self):
         config = read_json(self.config_file)
@@ -137,6 +120,197 @@ class RuntimeRun(R3Run):
             "HOME": "本轮隔离目录，隔离本机用户机密配置"
         }
         (self.evidence / "runtime-home").mkdir()
+
+
+    def sql_inputs(self, frozen_backup=None):
+        config = self.config_input
+        missing = [key for key in SQL_FIELDS if config.get(key) in (None, "")]
+        missing.extend(key for key, value in zip(CREDENTIALS, self.credentials) if not value)
+        require(not missing, f"缺少 SQL Server 或登录输入：{', '.join(missing)}")
+        port = config["sqlPort"]
+        require(type(port) is int and 1024 <= port <= 65535 and port not in self.ports.values(),
+                "sqlPort 必须是独立于 Host 和 Angular 的有效环回端口")
+        require(isinstance(config["sqlServerName"], str)
+                and re.fullmatch(r"[a-zA-Z0-9_-]{1,63}", config["sqlServerName"]),
+                "sqlServerName 须明确指定专用测试实例名")
+        require(isinstance(config["sqlBackupDirectory"], str)
+                and re.fullmatch(r"/[a-zA-Z0-9_/-]+", config["sqlBackupDirectory"]),
+                "sqlBackupDirectory 须使用明确的 SQL Server Linux 绝对路径")
+        local = config["localBackupDirectory"]
+        require(isinstance(local, str) and Path(local).is_absolute() and Path(local).is_dir(),
+                "localBackupDirectory 须指向运行机可读取的现有备份目录")
+        sql_config = {key: config[key] for key in SQL_FIELDS}
+        sql_config["localBackupDirectory"] = Path(local).resolve(strict=True)
+        self.report["inputs"]["runtimeConfig"].update(
+            sql_config | {"localBackupDirectory": str(sql_config["localBackupDirectory"])})
+        user, sql_password, self.admin_password = self.credentials
+        try:
+            self.db = RuntimeDatabase(sql_config, user, sql_password, self.run_id, frozen_backup=frozen_backup)
+            self.report["environment"]["pymssql"] = version("pymssql")
+        except (ImportError, PackageNotFoundError) as error:
+            raise VerificationError("SQL Server 客户端 pymssql 不可用，请在入口的 Python 环境安装") from error
+        chrome = config.get("chrome")
+        self.runtime["chrome"] = str(Path(chrome).resolve(strict=True)) if chrome else None
+        self.report["inputs"]["runtimeConfig"]["chrome"] = self.runtime["chrome"]
+        self.report["environment"]["playwright"] = version("playwright")
+
+
+    def redact(self, message):
+        for password in self.passwords:
+            message = message.replace(password, "[已脱敏]")
+        message = re.sub(r"(?im)^(.*(?:Host database|Connection string)\s*:\s*).*$", r"\1[已脱敏]", message)
+        return message
+
+
+    def process_environment(self, entry):
+        return {}
+
+    @contextmanager
+    def process(self, output, entry, arguments, database, label, *, trace=False):
+        log = self.evidence_file(f"{label}.console.log")
+        command = [str(self.dotnet), str(output / (PREFIX + entry + ".dll")), *arguments]
+        overrides = self.report["inputs"]["runtimeOverrides"]
+        env = {key: value for key, value in os.environ.items() if key in ("PATH", "TMPDIR", "LANG", "LC_ALL")}
+        env.update(self.env)
+        env.update({key: value for key, value in overrides.items() if key not in ("ConnectionStrings__Default", "HOME")})
+        env.update(HOME=str(self.evidence / "runtime-home"),
+                   ConnectionStrings__Default=self.db.connection_string(database))
+        env.update(self.process_environment(entry))
+        if trace:
+            env.update(COREHOST_TRACE="1", COREHOST_TRACE_VERBOSITY="4")
+        file_setting = ET.parse(output / "log4net.config").find("./appender/file")
+        require(file_setting is not None and file_setting.get("value"), "缺少固定模板的 Log4Net 文件路径")
+        file_log = Path(os.path.abspath(output / file_setting.get("value")))
+        require(file_log.parent.resolve().is_relative_to(self.evidence), f"文件日志路径超出本轮目录：{file_log}")
+        file_log.parent.mkdir(parents=True, exist_ok=True)
+        require((not file_log.exists() and not file_log.is_symlink())
+                or (file_log.is_symlink() and file_log.readlink() == Path("/dev/null")),
+                f"应用文件日志路径已存在：{file_log}")
+        if not file_log.is_symlink():
+            file_log.symlink_to("/dev/null")
+        record = {"argv": command, "cwd": str(output), "log": log.name, "database": database,
+                  "entrySha256": sha256(Path(command[1])), "exitCode": None}
+        self.stage["commands"].append(record)
+        with log.open("w", encoding="utf-8") as sink, subprocess.Popen(
+            command, cwd=output, env=env, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, encoding="utf-8", errors="replace",
+        ) as process:
+            def copy_console():
+                for line in process.stdout:
+                    sink.write(self.redact(line))
+                    sink.flush()
+
+            thread = Thread(target=copy_console, daemon=True)
+            thread.start()
+            record["pid"] = process.pid
+            self.processes.append(process)
+            self.save()
+            try:
+                yield process, log, record
+            finally:
+                if process.poll() is None:
+                    process.terminate()
+                    try:
+                        process.wait(timeout=15)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+                        process.wait(timeout=5)
+                thread.join(timeout=5)
+                record["exitCode"] = process.returncode
+                self.save()
+
+
+    @contextmanager
+    def launch_host(self, database, label):
+        require(inventory(self.output) == self.host_inventory, "实际启动的 Release Host 产物与构建证据不符")
+        require(available(self.ports["hostPort"]), f"Host 端口已被占用：{self.ports['hostPort']}")
+        with self.process(self.output, "Web.Host", [], database, label, trace=True) as (process, log, record):
+            deadline = time.monotonic() + 75
+            log_text = ""
+            while time.monotonic() < deadline:
+                require(process.poll() is None, f"Release Host 启动退出 {process.returncode}，详见 {log.name}")
+                log_text = log.read_text(encoding="utf-8")
+                environment = re.search(r"Hosting environment:\s+(\w+)", log_text)
+                if environment:
+                    require(environment[1] == "Development", f"Host 实际环境为 {environment[1]}，预期 Development")
+                    if f"Now listening on: {self.runtime['host']}" in log_text:
+                        break
+                time.sleep(0.2)
+            else:
+                raise VerificationError(f"Release Host 未报告本轮地址和实际 Development 环境，详见 {log.name}")
+            shared = {}
+            for name in ("Microsoft.NETCore.App", "Microsoft.AspNetCore.App"):
+                found = sorted(set(re.findall(r"(?:Chose FX version|Resolved framework:)\s*\[([^\]]+/shared/"
+                                              + re.escape(name) + r"/[^\]]+)\]", log_text)))
+                require(len(found) == 1, f"Host 启动记录缺少唯一 {name} 路径，详见 {log.name}")
+                shared[name] = {"path": found[0], "version": Path(found[0]).name}
+            record.update(environment=environment[1], address=self.runtime["host"], sharedRuntime=shared)
+            with HTTP.open(self.runtime["host"] + USER_CONFIG, timeout=10) as response:
+                require(response.status == 200, f"Host 应用配置 HTTP {response.status}")
+            yield record
+            require(process.poll() is None, f"Release Host 在 {label} 完成前退出，详见 {log.name}")
+        require(record["exitCode"] == 0, f"Release Host {label} 未正常停止，退出 {record['exitCode']}")
+
+
+    def round(self, database, label, *, before_login=None):
+        require(inventory(self.browser_output, include_app_data=True) == self.angular_inventory,
+                "实际提供的 Angular production 产物已改变")
+        outcome = {"database": database, "inputs": self.report["inputs"]["host"]["entry"],
+                   "frontendSha256": self.angular_inventory["sha256"], "exitCode": 1}
+        self.report.setdefault("rounds", {})[label] = outcome
+        try:
+            with self.launch_host(database, "host-" + label) as record:
+                outcome["host"] = record
+                handler = partial(SpaHandler, directory=str(self.browser_output))
+                with ThreadingHTTPServer(("127.0.0.1", self.ports["frontendPort"]), handler) as server:
+                    thread = Thread(target=server.serve_forever, daemon=True)
+                    thread.start()
+                    try:
+                        browser_round(self.runtime, self.browser_output, self.business, self.admin_password,
+                                      outcome, before_login=before_login)
+                    finally:
+                        server.shutdown()
+                        thread.join()
+            outcome["exitCode"] = 0
+        except Exception as failure:
+            outcome["reason"] = self.redact(str(failure))
+            raise
+        finally:
+            write_json(self.evidence_file(f"{label}-round.json"), outcome)
+        return outcome
+
+
+    def cleanup(self):
+        ports = {key: {"number": port, "released": available(port)} for key, port in self.ports.items()} \
+            if getattr(self, "ports_checked", False) else {}
+        processes = {process.pid: process.poll() for process in self.processes}
+        self.report["cleanup"] = {"ports": ports, "processes": processes}
+        require(all(item["released"] for item in ports.values()) and all(code is not None for code in processes.values()),
+                f"本轮进程或应用端口仍在使用：{self.report['cleanup']}")
+
+
+
+class RuntimeRun(RuntimeSupport, R3Run):
+    def __init__(self, repo, evidence, config_file):
+        super().__init__(repo, evidence)
+        self.setup_runtime(config_file)
+        self.angular = self.root.parent / "angular"
+        self.browser_output = self.angular / "dist/browser"
+        self.migrator_entry = project_path("Migrator")
+        self.migrator_output = self.root / self.migrator_entry.parent / f"bin/Release/{TFM}"
+        self.report.update(profile="r3-template-runtime", runId=self.run_id,
+                           coverageNotRun=["同目标维护包替换", ".NET 10 / EF Core 10 升级",
+                                           "升级后回退", "其他消费组合、平台、CI 和部署"])
+        self.report["stages"].update(
+            {stage: {"status": "not_run", "exitCode": None, "commands": [], "evidence": []}
+             for stage in RUNTIME_STAGES})
+
+    def preflight(self):
+        fixed = self.git(self.repo, "runtime-template-gitlink.log", "ls-tree", PLANNING_COMMIT, "--", TEMPLATE)
+        require(fixed.split() == ["160000", "commit", INPUTS[TEMPLATE][0], TEMPLATE],
+                f"R3 运行设计基点 {PLANNING_COMMIT} 的模板 gitlink 不符：{fixed}")
+        self.report["inputs"]["runtimePlanningCommit"] = PLANNING_COMMIT
+        super().preflight()
 
     def inspect_output(self):
         super().inspect_output()
@@ -224,92 +398,9 @@ class RuntimeRun(R3Run):
         }
 
     def sql_preflight(self):
-        config = self.config_input
-        missing = [key for key in SQL_FIELDS if config.get(key) in (None, "")]
-        missing.extend(key for key, value in zip(CREDENTIALS, self.credentials) if not value)
-        require(not missing, f"缺少 SQL Server 或登录输入：{', '.join(missing)}")
-        port = config["sqlPort"]
-        require(type(port) is int and 1024 <= port <= 65535 and port not in self.ports.values(),
-                "sqlPort 必须是独立于 Host 和 Angular 的有效环回端口")
-        require(isinstance(config["sqlServerName"], str)
-                and re.fullmatch(r"[a-zA-Z0-9_-]{1,63}", config["sqlServerName"]),
-                "sqlServerName 须明确指定专用测试实例名")
-        require(isinstance(config["sqlBackupDirectory"], str)
-                and re.fullmatch(r"/[a-zA-Z0-9_/-]+", config["sqlBackupDirectory"]),
-                "sqlBackupDirectory 须使用明确的 SQL Server Linux 绝对路径")
-        local = config["localBackupDirectory"]
-        require(isinstance(local, str) and Path(local).is_absolute() and Path(local).is_dir(),
-                "localBackupDirectory 须指向运行机可读取的现有备份目录")
-        sql_config = {key: config[key] for key in SQL_FIELDS}
-        sql_config["localBackupDirectory"] = Path(local).resolve(strict=True)
-        self.report["inputs"]["runtimeConfig"].update(
-            sql_config | {"localBackupDirectory": str(sql_config["localBackupDirectory"])})
-        user, sql_password, self.admin_password = self.credentials
-        try:
-            self.db = RuntimeDatabase(sql_config, user, sql_password, self.run_id)
-            self.report["environment"]["pymssql"] = version("pymssql")
-        except (ImportError, PackageNotFoundError) as error:
-            raise VerificationError("SQL Server 客户端 pymssql 不可用，请在入口的 Python 环境安装") from error
+        self.sql_inputs()
         self.report["sql"] = self.db.preflight()
-        chrome = config.get("chrome")
-        self.runtime["chrome"] = str(Path(chrome).resolve(strict=True)) if chrome else None
-        self.report["inputs"]["runtimeConfig"]["chrome"] = self.runtime["chrome"]
-        self.report["environment"]["playwright"] = version("playwright")
         self.report["sql"]["sourceCreation"] = self.db.create_source()
-
-    def redact(self, message):
-        for password in self.passwords:
-            message = message.replace(password, "[已脱敏]")
-        message = re.sub(r"(?im)^(.*(?:Host database|Connection string)\s*:\s*).*$", r"\1[已脱敏]", message)
-        return message
-
-    @contextmanager
-    def process(self, output, entry, arguments, database, label, *, trace=False):
-        log = self.evidence_file(f"{label}.console.log")
-        command = [str(self.dotnet), str(output / (PREFIX + entry + ".dll")), *arguments]
-        overrides = self.report["inputs"]["runtimeOverrides"]
-        env = {key: value for key, value in os.environ.items() if key in ("PATH", "TMPDIR", "LANG", "LC_ALL")}
-        env.update(self.env)
-        env.update({key: value for key, value in overrides.items() if key not in ("ConnectionStrings__Default", "HOME")})
-        env.update(HOME=str(self.evidence / "runtime-home"),
-                   ConnectionStrings__Default=self.db.connection_string(database))
-        if trace:
-            env.update(COREHOST_TRACE="1", COREHOST_TRACE_VERBOSITY="4")
-        file_log = output / "App_Data/Logs/Logs.txt"
-        file_log.parent.mkdir(parents=True, exist_ok=True)
-        require(not file_log.exists() or file_log.is_symlink(), f"应用文件日志路径已存在：{file_log}")
-        if not file_log.is_symlink():
-            file_log.symlink_to("/dev/null")
-        record = {"argv": command, "cwd": str(output), "log": log.name, "database": database,
-                  "entrySha256": sha256(Path(command[1])), "exitCode": None}
-        self.stage["commands"].append(record)
-        with log.open("w", encoding="utf-8") as sink, subprocess.Popen(
-            command, cwd=output, env=env, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT, encoding="utf-8", errors="replace",
-        ) as process:
-            def copy_console():
-                for line in process.stdout:
-                    sink.write(self.redact(line))
-                    sink.flush()
-
-            thread = Thread(target=copy_console, daemon=True)
-            thread.start()
-            record["pid"] = process.pid
-            self.processes.append(process)
-            self.save()
-            try:
-                yield process, log, record
-            finally:
-                if process.poll() is None:
-                    process.terminate()
-                    try:
-                        process.wait(timeout=15)
-                    except subprocess.TimeoutExpired:
-                        process.kill()
-                        process.wait(timeout=5)
-                thread.join(timeout=5)
-                record["exitCode"] = process.returncode
-                self.save()
 
     def migrate(self):
         require(inventory(self.migrator_output) == self.migrator_inventory, "实际启动的 Migrator 产物已改变")
@@ -322,37 +413,6 @@ class RuntimeRun(R3Run):
                                           and not path.name.endswith(".Designer.cs"))
         require(self.expected_migrations, "固定模板迁移源码为空")
         self.report["sql"]["sourceSeed"] = self.db.seed(self.db.source, self.expected_migrations)
-
-    @contextmanager
-    def launch_host(self, database, label):
-        require(inventory(self.output) == self.host_inventory, "实际启动的 Release Host 产物与构建证据不符")
-        require(available(self.ports["hostPort"]), f"Host 端口已被占用：{self.ports['hostPort']}")
-        with self.process(self.output, "Web.Host", [], database, label, trace=True) as (process, log, record):
-            deadline = time.monotonic() + 75
-            log_text = ""
-            while time.monotonic() < deadline:
-                require(process.poll() is None, f"Release Host 启动退出 {process.returncode}，详见 {log.name}")
-                log_text = log.read_text(encoding="utf-8")
-                environment = re.search(r"Hosting environment:\s+(\w+)", log_text)
-                if environment:
-                    require(environment[1] == "Development", f"Host 实际环境为 {environment[1]}，预期 Development")
-                    if f"Now listening on: {self.runtime['host']}" in log_text:
-                        break
-                time.sleep(0.2)
-            else:
-                raise VerificationError(f"Release Host 未报告本轮地址和实际 Development 环境，详见 {log.name}")
-            shared = {}
-            for name in ("Microsoft.NETCore.App", "Microsoft.AspNetCore.App"):
-                found = sorted(set(re.findall(r"(?:Chose FX version|Resolved framework:)\s*\[([^\]]+/shared/"
-                                              + re.escape(name) + r"/9\.[^\]]+)\]", log_text)))
-                require(len(found) == 1, f"Host 启动记录缺少唯一 .NET 9 {name} 路径，详见 {log.name}")
-                shared[name] = {"path": found[0], "version": Path(found[0]).name}
-            record.update(environment=environment[1], address=self.runtime["host"], sharedRuntime=shared)
-            with HTTP.open(self.runtime["host"] + USER_CONFIG, timeout=10) as response:
-                require(response.status == 200, f"Host 应用配置 HTTP {response.status}")
-            yield record
-            require(process.poll() is None, f"Release Host 在 {label} 完成前退出，详见 {log.name}")
-        require(record["exitCode"] == 0, f"Release Host {label} 未正常停止，退出 {record['exitCode']}")
 
     def api(self, path, payload, headers):
         req = request.Request(self.runtime["host"] + path, json.dumps(payload).encode(),
@@ -391,32 +451,6 @@ class RuntimeRun(R3Run):
         self.report["sql"].update(expected=self.business,
                                   loginCountAtBackup=self.db.login_count(source, self.business))
         self.report["sql"]["backup"] = self.db.backup()
-
-    def round(self, database, label, *, before_login=None):
-        require(inventory(self.browser_output) == self.angular_inventory, "实际提供的 Angular production 产物已改变")
-        outcome = {"database": database, "inputs": self.report["inputs"]["host"]["entry"],
-                   "frontendSha256": self.angular_inventory["sha256"], "exitCode": 1}
-        self.report.setdefault("rounds", {})[label] = outcome
-        try:
-            with self.launch_host(database, "host-" + label) as record:
-                outcome["host"] = record
-                handler = partial(SpaHandler, directory=str(self.browser_output))
-                with ThreadingHTTPServer(("127.0.0.1", self.ports["frontendPort"]), handler) as server:
-                    thread = Thread(target=server.serve_forever, daemon=True)
-                    thread.start()
-                    try:
-                        browser_round(self.runtime, self.browser_output, self.business, self.admin_password,
-                                      outcome, before_login=before_login)
-                    finally:
-                        server.shutdown()
-                        thread.join()
-            outcome["exitCode"] = 0
-        except Exception as failure:
-            outcome["reason"] = self.redact(str(failure))
-            raise
-        finally:
-            write_json(self.evidence_file(f"{label}-round.json"), outcome)
-        return outcome
 
     def source_round(self):
         database = self.db.source
@@ -467,14 +501,6 @@ class RuntimeRun(R3Run):
         finally:
             second["loginCountComparison"] = record
             write_json(self.evidence_file("restore-round.json"), second)
-
-    def cleanup(self):
-        ports = {key: {"number": port, "released": available(port)} for key, port in self.ports.items()} \
-            if getattr(self, "ports_checked", False) else {}
-        processes = {process.pid: process.poll() for process in self.processes}
-        self.report["cleanup"] = {"ports": ports, "processes": processes}
-        require(all(item["released"] for item in ports.values()) and all(code is not None for code in processes.values()),
-                f"本轮进程或应用端口仍在使用：{self.report['cleanup']}")
 
     def execute_runtime(self):
         actions = (self.preflight, self.materialize, self.toolchain, super().restore, self.inventory,

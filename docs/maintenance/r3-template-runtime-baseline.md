@@ -53,6 +53,8 @@ openspec-cn validate --all --strict --no-interactive
 
 同目标换包以最终返修轮为原版对照。报告和两轮结果位于 `.git/r3-template-runtime/revision-1/runs/r3-template-runtime-89igcw5r/`，接受的脚本与证据摘要见 `.git/r3-template-runtime/revision-1/candidate/manifest.json`。[最终返修验收](#2026-11-25-返修复验)
 
+维护包的全流程入口复用此处登记的备份、前端和业务结果，按两份独立恢复库比较登录写入。[R3 模板换包运行复验](r3-template-net9-packages.md#运行复验) · [同一恢复点的换包结果](r3-template-net9-packages.md#正式运行结果)
+
 - 恢复 `.git/r3-template-runtime/sql-server/backup/r3_template_cf4314cdfe038c35.bak`。先按最终报告的 `sql.backup` 核对 SHA-256 和备份集 ID，再按同目录的 `sql-commands.json` 对照运行 `RESTORE VERIFYONLY`、`RESTORE FILELISTONLY` 和 `RESTORE DATABASE ... WITH CHECKSUM, RECOVERY, MOVE ...`，目标使用新的库名与物理文件。
 - 沿用固定模板提交、Angular 锁文件及 production 客户端输入，保持 `net9.0` 与 Release Host 的 `Development` 环境。按最终报告的 `sql.expected` 和两轮结果，对比 30 条迁移、`Default` 租户 ID `1`、管理员 ID `2`、`Pages.Users` 及 `Keyword=r3usercf4314cdfe038c35` 对应的唯一用户 ID `3` 和用户名单元格。
 

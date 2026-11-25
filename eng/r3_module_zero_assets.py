@@ -113,7 +113,7 @@ def check_assets(data, project, cache, feeds, packages):
             "restoreFrameworkReferences": framework["frameworkReferences"], "sdkDownloads": downloads}
 
 
-def runtime_packages(libraries, assets, selection, references):
+def runtime_packages(libraries, assets, selection, references, *, cache=None):
     resolved = assets["packages"]
     runtime = {key for key, entry in libraries.items() if entry["type"] == "package"}
     require(runtime <= resolved.keys(), f"Release .deps.json 出现未还原的包：{sorted(runtime - resolved.keys())}")
@@ -122,10 +122,17 @@ def runtime_packages(libraries, assets, selection, references):
         require(key not in selection and not framework_package(resolved[key]["id"]),
                 f"Release .deps.json 缺少应复制的运行或框架包 {key}")
         selected = resolved[key]["assets"]
-        require(not any(selected.get(section) for section in ("native", "runtimeTargets", "resources")),
-                f"Release .deps.json 遗漏 {key} 的原生或其他运行资产")
+        require(not any(selected.get(section) for section in ("native", "resources")),
+                f"Release .deps.json 遗漏 {key} 的原生或资源运行资产")
+        rid_assets = selected.get("runtimeTargets", {})
+        conflicts = {Path(row["FullPath"]).resolve() for row in references.get("_ConflictPackageFiles", [])}
+        require(not rid_assets or cache is not None and
+                all(info["assetType"] == "runtime" and Path(asset).suffix.casefold() == ".dll"
+                    and inside(cache, Path(resolved[key]["cachePath"]) / asset) in conflicts
+                    for asset, info in rid_assets.items()),
+                f"Release .deps.json 遗漏 {key} 的 RID 运行资产，缺少 SDK 冲突剔除记录")
         omitted[key] = {}
-        for filename in sorted({Path(asset).name for section in ("compile", "runtime")
+        for filename in sorted({Path(asset).name for section in ("compile", "runtime", "runtimeTargets")
                                 for asset in selected.get(section, {}) if asset.lower().endswith(".dll")}):
             matches = [item for item in references["ReferencePath"] if Path(item["FullPath"]).name == filename]
             require(len(matches) == 1 and matches[0].get("FrameworkReferenceName") in SHARED,
@@ -133,6 +140,8 @@ def runtime_packages(libraries, assets, selection, references):
             path = Path(matches[0]["FullPath"])
             omitted[key][filename] = {"framework": matches[0]["FrameworkReferenceName"],
                                       "path": str(path), "sha256": sha256(path)}
+            if discarded := [asset for asset in rid_assets if Path(asset).name == filename]:
+                omitted[key][filename]["discardedRidCandidates"] = discarded
     excluded = {resolved[key]["id"] for key in omitted}
     retained = {key: {**resolved[key], "dependencies": {name: value for name, value in
                  resolved[key]["dependencies"].items() if name not in excluded}} for key in runtime}

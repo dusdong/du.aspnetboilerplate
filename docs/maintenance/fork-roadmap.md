@@ -9,8 +9,9 @@
 - R3 首包已验收并归档。在 macOS ARM64 上构建了固定模板的原版 `net9.0` Web.Host，核对了实际还原图、运行资产与六个维护包缺口。首包记录保持原始验收口径。[R3 首包验收](r3-web-host-baseline.md) · [模板 Web.Host 基线规范](../../openspec/specs/template-host-baseline/spec.md) · [R3 首包归档](../../openspec/changes/archive/2026-11-25-baseline-r3-web-host-dependencies/)
 - R3 第二包已验收并归档。SignalR 与 Log4Net 的同批候选 `10.5.1-r3.1` 已通过 macOS ARM64 独立 `net9.0` 宿主验收，框架 `dev` 已交付同树实现。该批将候选缺口从六个减为四个。[R3 第二包验收](r3-signalr-log4net-candidates.md) · [集成候选包消费规范](../../openspec/specs/web-host-integration-package-consumption/spec.md) · [R3 第二包归档](../../openspec/changes/archive/2026-11-25-add-r3-signalr-log4net-candidates/)
 - R3 Module Zero 的三个候选包 `10.5.1-r3.3` 已在 macOS ARM64 的独立 `net9.0` 消费者中验证 SQLite 角色提交与双向租户隔离。主仓 `d54f782` 固定了与冻结候选同树的框架提交 `819c64cf`，OpenSpec 已归档，该主仓提交的 R0 基线 CI 已通过。[Module Zero 交付与 CI 记录](r3-module-zero-candidates.md#git-交付) · [Module Zero 归档](../../openspec/changes/archive/2026-11-25-add-r3-module-zero-candidates/)
-- R3 AutoMapper 的三份冻结候选完成本机验收，补齐固定 Web.Host 的最后一项候选包 `Abp.AutoMapper`。六项均已取得独立候选，剩余缺口为 **0**。三仓已交付，主仓固定相应 gitlink，稳定规范已同步并归档。完整模板换包、运行时升级和数据回退待后续验证。[AutoMapper 引擎验收](r3-automapper-engine.md) · [下游实包验收](r3-automapper-downstream.md#消费验收记录) · [Git 交付](r3-automapper-downstream.md#git-交付) · [完整模板验收](#r3验证升级路径和实际消费者)
-- R3 原版模板运行对照已验收并归档。最终返修轮在 macOS ARM64、SQL Server Developer 和 Angular production 客户端下以受限 SQL 账号完成两轮验收。恢复轮在恢复库新增 1 条成功登录记录，源库计数保持不变。下一步的同目标换包使用最终返修轮的登录前备份和业务预期。[返修验收](r3-template-runtime-baseline.md#2026-11-25-返修复验) · [恢复点](r3-template-runtime-baseline.md#交接数据恢复点) · [稳定规范](../../openspec/specs/template-runtime-baseline/spec.md) · [归档](../../openspec/changes/archive/2026-11-25-baseline-r3-original-template-runtime/)
+- R3 AutoMapper 的三份冻结候选完成本机验收，补齐固定 Web.Host 的最后一项候选包 `Abp.AutoMapper`。六项均已取得独立候选，剩余缺口为 **0**。三仓已交付，主仓固定相应 gitlink，稳定规范已同步并归档。[AutoMapper 引擎验收](r3-automapper-engine.md) · [下游实包验收](r3-automapper-downstream.md#消费验收记录) · [Git 交付](r3-automapper-downstream.md#git-交付)
+- R3 原版模板运行对照已验收并归档。最终返修轮在 macOS ARM64、SQL Server Developer 和 Angular production 客户端下以受限 SQL 账号完成两轮验收。恢复轮在恢复库新增 1 条成功登录记录，源库计数保持不变。[返修验收](r3-template-runtime-baseline.md#2026-11-25-返修复验) · [恢复点](r3-template-runtime-baseline.md#交接数据恢复点) · [稳定规范](../../openspec/specs/template-runtime-baseline/spec.md) · [归档](../../openspec/changes/archive/2026-11-25-baseline-r3-original-template-runtime/)
+- R3 固定模板 `net9.0` 同目标换包已通过正式运行验收并归档。Web.Host 和 Migrator 使用 13 个冻结维护包，在 macOS ARM64、两项 `.NET 9.0.10` 共享运行时、SQL Server Developer `16.0.4236.2` 和原版 Angular production 产物上复验。候选库与独立对照库均从最终返修轮的登录前备份恢复，浏览器复现相同的租户登录、授权和用户查询，两库成功登录计数从 `1/1` 变为 `2/1`。完整模板的 .NET 10 / EF Core 10 运行时升级和升级后回退待验。[正式运行结果](r3-template-net9-packages.md#正式运行结果) · [模板维护包消费规范](../../openspec/specs/template-maintenance-package-consumption/spec.md) · [归档](../../openspec/changes/archive/2026-11-25-validate-r3-net9-template-package-migration/) · [后续验收顺序](#r3验证升级路径和实际消费者)
 
 **原路线与研究说明**
 
@@ -221,9 +222,9 @@ R4 的发行对象是通过上述验收的具体候选。后续补丁进入 R5�
 | 顺序 | 操作 | 通过条件 |
 | --- | --- | --- |
 | 1. 原版运行对照（已通过） | 用原版 `net9.0` Host 连接 SQL Server，按模板的 `angular/yarn.lock` 安装客户端，保存登录前备份并实际恢复到新库。 | 两轮用 `Pages.Users` 账号登录，通过相同的关键词读到唯一预期用户。恢复轮在恢复库新增 1 条成功登录记录，源库增量为 0。[最终两轮结果](r3-template-runtime-baseline.md#2026-11-25-返修复验) |
-| 2. 同目标换包 | 从干净检出和空 NuGet 缓存开始，保持 `net9.0` 和前端输入，切换为维护候选，构建并启动 Web.Host。 | 核对还原图、Host 输出与实际加载的程序集来源，确认 11 个原版 ABP 包均由对应维护包提供。把最终返修轮的登录前备份恢复到新库，按该轮业务预期复跑登录与用户查询。[同目标换包交接](r3-template-runtime-baseline.md#交接数据恢复点) |
-| 3. 运行时升级 | 将模板迁到 .NET 10 / EF Core 10，明确各模块的兼容资产和 SQL Server Provider 版本，按迁移步骤升级上一步的应用与测试库。 | 完整 Host 在目标运行时启动，Angular 用同一账号和请求读回预期数据。保存选用的包版本、摘要、运行时及 Provider 组合和可复跑的操作步骤。 |
-| 4. 回退 | 切回原版应用。若数据库结构或数据格式已变化，执行约定的逆向迁移或恢复测试库备份，注明恢复点及其后的写入如何处理。 | 旧应用能重新登录并读取该恢复点预期的租户数据和权限。迁移指南记录实际使用的回退步骤与数据边界。 |
+| 2. 同目标换包（已通过） | 从干净检出和空 NuGet 缓存开始，保持 `net9.0` 和前端输入，切换为维护候选，构建并启动 Web.Host。 | 核对还原图、Host 输出与实际加载的程序集来源，确认 11 个原版 ABP 包均由对应维护包提供。把最终返修轮的登录前备份恢复到候选库和独立对照库，复跑登录与用户查询，两库计数从 `1/1` 变为 `2/1`。[正式运行结果](r3-template-net9-packages.md#正式运行结果) |
+| 3. 运行时升级（待验） | 将模板迁到 .NET 10 / EF Core 10，明确各模块的兼容资产和 SQL Server Provider 版本，按迁移步骤升级上一步的应用与测试库。 | 完整 Host 在目标运行时启动，Angular 用同一账号和请求读回预期数据。保存选用的包版本、摘要、运行时及 Provider 组合和可复跑的操作步骤。 |
+| 4. 回退（待验） | 切回原版应用。若数据库结构或数据格式已变化，执行约定的逆向迁移或恢复测试库备份，注明恢复点及其后的写入如何处理。 | 旧应用能重新登录并读取该恢复点预期的租户数据和权限。迁移指南记录实际使用的回退步骤与数据边界。 |
 
 建议使用来自真实业务的最小数据集，至少包含不同租户、软删除记录、权限、持久化任务、认证数据，以及业务实际使用的 Blob 或缓存结构。测试必须避免泄露真实生产个人数据。
 

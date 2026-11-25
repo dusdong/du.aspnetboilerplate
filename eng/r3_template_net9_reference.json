@@ -1,0 +1,192 @@
+{
+  "batches": {
+    "r2": {
+      "manifests": {
+        "framework": {
+          "path": "r2-core-consumption/package-1/10.5.1-r2.1/manifest.json",
+          "sha256": "fed4d30960f9c25f444c35ffadedd3746baeefbca2a78e5938ccde1f38d0b3fc"
+        }
+      },
+      "sources": {
+        "framework": "https://github.com/dusdong/aspnetboilerplate.git"
+      },
+      "packages": [
+        {
+          "id": "Du.Abp",
+          "version": "10.5.1-r2.1",
+          "archive": "r2-core-consumption/package-1/10.5.1-r2.1/feed/Du.Abp.10.5.1-r2.1.nupkg",
+          "archiveSha256": "0f6d9da908af7b6b51bedb5b942be8fcdc54fa6b07897224dfb2a647c4e75769",
+          "asset": "lib/net9.0/Abp.dll",
+          "assetSha256": "142c0f3d540e909c720996086386089394a180c16289e237cc1a228601bfbc35"
+        },
+        {
+          "id": "Du.Abp.AspNetCore",
+          "version": "10.5.1-r2.1",
+          "archive": "r2-core-consumption/package-1/10.5.1-r2.1/feed/Du.Abp.AspNetCore.10.5.1-r2.1.nupkg",
+          "archiveSha256": "53f1fcbdf3be677e62f36d49b7b37b9d4146e3c2b0bade7e40716025136dd091",
+          "asset": "lib/net9.0/Abp.AspNetCore.dll",
+          "assetSha256": "25268dd6d8170c5d98b0d03da23d766a73697de9fc9061ab7e2445fc1b435c6a"
+        },
+        {
+          "id": "Du.Abp.EntityFramework.Common",
+          "version": "10.5.1-r2.1",
+          "archive": "r2-core-consumption/package-1/10.5.1-r2.1/feed/Du.Abp.EntityFramework.Common.10.5.1-r2.1.nupkg",
+          "archiveSha256": "cc8be8158fd8bde6b8c2a6374ca1fb362b14965e17435df2f1b8780217a57234",
+          "asset": "lib/net9.0/Abp.EntityFramework.Common.dll",
+          "assetSha256": "6db9c08c5baf7620ff96fa259cda7157cf26f1a36fbd7eca2594e51784330d35"
+        },
+        {
+          "id": "Du.Abp.EntityFrameworkCore",
+          "version": "10.5.1-r2.1",
+          "archive": "r2-core-consumption/package-1/10.5.1-r2.1/feed/Du.Abp.EntityFrameworkCore.10.5.1-r2.1.nupkg",
+          "archiveSha256": "a3e8caf24c765be13877ee7cd48908b951d25a1a61fb837a99eb5fece9d8dbb6",
+          "asset": "lib/net9.0/Abp.EntityFrameworkCore.dll",
+          "assetSha256": "243486fb3e5baeed05453739db180ece03e8631d0d159ea9976cdd3b325c0932"
+        },
+        {
+          "id": "Du.Abp.Web.Common",
+          "version": "10.5.1-r2.1",
+          "archive": "r2-core-consumption/package-1/10.5.1-r2.1/feed/Du.Abp.Web.Common.10.5.1-r2.1.nupkg",
+          "archiveSha256": "4724bd69ce91286ba641fec37da556b0d80fec6b1b6e8c43c06e3f499d81f84a",
+          "asset": "lib/net9.0/Abp.Web.Common.dll",
+          "assetSha256": "a7ea8dff8aa08cd84ccd050e6a4afebc01544c61946a578cd2150ba437dfc926"
+        }
+      ]
+    },
+    "r3Integration": {
+      "manifests": {
+        "framework": {
+          "path": "r3-signalr-log4net/package-1/10.5.1-r3.1/manifest.json",
+          "sha256": "579443f73fecb9ebce47fb3efe7645cef6970b24ac603b130fb4d64a2e97dea5"
+        }
+      },
+      "sources": {
+        "framework": "https://github.com/dusdong/aspnetboilerplate.git"
+      },
+      "packages": [
+        {
+          "id": "Du.Abp.AspNetCore.SignalR",
+          "version": "10.5.1-r3.1",
+          "archive": "r3-signalr-log4net/package-1/10.5.1-r3.1/feed/Du.Abp.AspNetCore.SignalR.10.5.1-r3.1.nupkg",
+          "archiveSha256": "c047be4378a163cca85e4e9fae3fa60316d6d3a390094072ee1eab434e55e6c8",
+          "asset": "lib/net9.0/Abp.AspNetCore.SignalR.dll",
+          "assetSha256": "d3c638b7ea7a480103cd04ad56aae4c160ec73d9ea57d9fb55d3ce1253d5506c"
+        },
+        {
+          "id": "Du.Abp.Castle.Log4Net",
+          "version": "10.5.1-r3.1",
+          "archive": "r3-signalr-log4net/package-1/10.5.1-r3.1/feed/Du.Abp.Castle.Log4Net.10.5.1-r3.1.nupkg",
+          "archiveSha256": "4db7dcb9b0ced698c1d4f6ee1a12b0c67a9df43fca6c93f975b2bea8c8881dea",
+          "asset": "lib/net9.0/Abp.Castle.Log4Net.dll",
+          "assetSha256": "fa6567b9ecab3e415f6470ee21938e9fdafc8fc542bed3dab105c9c55cf3f8cb"
+        }
+      ]
+    },
+    "r3ModuleZero": {
+      "manifests": {
+        "framework": {
+          "path": "r3-module-zero/package-1/10.5.1-r3.3/manifest.json",
+          "sha256": "308e95aa52e3d58958987f2c82631b98ae12d1276449576a8d509080d1080193"
+        }
+      },
+      "sources": {
+        "framework": "https://github.com/dusdong/aspnetboilerplate.git"
+      },
+      "packages": [
+        {
+          "id": "Du.Abp.Zero.Common",
+          "version": "10.5.1-r3.3",
+          "archive": "r3-module-zero/package-1/10.5.1-r3.3/feed/Du.Abp.Zero.Common.10.5.1-r3.3.nupkg",
+          "archiveSha256": "f714811c53f9e5544e168fbf32971612652c0c5e5ede4d72f9942d076d4d3e93",
+          "asset": "lib/net9.0/Abp.Zero.Common.dll",
+          "assetSha256": "a3778dcbf473e127109c2aaae96fa58939cff8cb2fa2f5445d5a0786052c5731"
+        },
+        {
+          "id": "Du.Abp.ZeroCore",
+          "version": "10.5.1-r3.3",
+          "archive": "r3-module-zero/package-1/10.5.1-r3.3/feed/Du.Abp.ZeroCore.10.5.1-r3.3.nupkg",
+          "archiveSha256": "d31388aa0dce09f714ab9ffcd6cf1d1a013079f6a416a7f0685647a236444739",
+          "asset": "lib/net9.0/Abp.ZeroCore.dll",
+          "assetSha256": "1b75a7814d40321185e1d4e8ea60a8497d41f24c0b4c72dfbe66cf1f6926cde5"
+        },
+        {
+          "id": "Du.Abp.ZeroCore.EntityFrameworkCore",
+          "version": "10.5.1-r3.3",
+          "archive": "r3-module-zero/package-1/10.5.1-r3.3/feed/Du.Abp.ZeroCore.EntityFrameworkCore.10.5.1-r3.3.nupkg",
+          "archiveSha256": "67d0a16eb5fef9026f1c7f82c96e5147be66e7d80b2419d8762834ee2866d942",
+          "asset": "lib/net9.0/Abp.ZeroCore.EntityFrameworkCore.dll",
+          "assetSha256": "fa37276957ea9ce1a0dfab112795b3741fb76e6785c8f394e1a6f9fea8ef46fb"
+        }
+      ]
+    },
+    "r3Mapping": {
+      "manifests": {
+        "downstream": {
+          "path": "r3-automapper/package-3/manifest.json",
+          "sha256": "a442aa64237cc425fb9a9372bbb24314fdeabf4f4800e89562b3ad55ca3c9818"
+        },
+        "engine": {
+          "path": "r3-automapper/package-2/14.0.0-r3.4/manifest.json",
+          "sha256": "62c8becad5836bab7da0fd26e10d8cbfcef53a4e06a6c6dca1ae45c4a167f52f"
+        }
+      },
+      "sources": {
+        "engine": "https://github.com/dusdong/AutoMapper.git",
+        "collection": "https://github.com/dusdong/AutoMapper.Collection.git",
+        "framework": "https://github.com/dusdong/aspnetboilerplate.git"
+      },
+      "packages": [
+        {
+          "id": "Du.Abp.AutoMapper",
+          "version": "10.5.1-r3.4",
+          "archive": "r3-automapper/package-3/framework/feed/Du.Abp.AutoMapper.10.5.1-r3.4.nupkg",
+          "archiveSha256": "bef6ab4305110de967d334fd0db71ace4a83a5247939f94235086bf9da641b0a",
+          "asset": "lib/net9.0/Abp.AutoMapper.dll",
+          "assetSha256": "10200fe03a1a7965d27b7eadc7539bc476d8c19c40ef749d6a863724ad6cc4b3"
+        },
+        {
+          "id": "Du.AutoMapper",
+          "version": "14.0.0-r3.4",
+          "archive": "r3-automapper/package-2/14.0.0-r3.4/feed/Du.AutoMapper.14.0.0-r3.4.nupkg",
+          "archiveSha256": "7b3d0cc1df220454ad66d34ad4e9ec01699afc4410082698a392aa9db94bd86b",
+          "asset": "lib/net8.0/AutoMapper.dll",
+          "assetSha256": "aee0719706bb3d909550832dc7aafb276253e8bf0718151480ad8f76badde72b"
+        },
+        {
+          "id": "Du.AutoMapper.Collection",
+          "version": "11.0.0-r3.4",
+          "archive": "r3-automapper/package-3/collection/feed/Du.AutoMapper.Collection.11.0.0-r3.4.nupkg",
+          "archiveSha256": "ce6b4e822203a6e6c3cdca2e93c4b19f4268a58cbdda4dd78750d5f077b12931",
+          "asset": "lib/net8.0/AutoMapper.Collection.dll",
+          "assetSha256": "2b40c0b711cd0a8c32b96a4c3f14f2fea1937da1e9587f407833a9c279001d26"
+        }
+      ]
+    }
+  },
+  "originalAssets": {
+    "Application": {
+      "path": "r3-template-runtime/revision-1/runs/r3-template-runtime-89igcw5r/raw-assets/Application.project.assets.json",
+      "sha256": "7d02232e63e8b7cedf146fc419939810c2a9d0eff1726d7141e87df25d969d6e"
+    },
+    "Core": {
+      "path": "r3-template-runtime/revision-1/runs/r3-template-runtime-89igcw5r/raw-assets/Core.project.assets.json",
+      "sha256": "f9a962cfd8d452953b084dcb15fd3c56780451346c4d718a668a8e47ed57463b"
+    },
+    "EntityFrameworkCore": {
+      "path": "r3-template-runtime/revision-1/runs/r3-template-runtime-89igcw5r/raw-assets/EntityFrameworkCore.project.assets.json",
+      "sha256": "da586f8ac361a5142c5bd05f41a57fa9232cd89db7942bb603c13d51d406bfe3"
+    },
+    "Web.Core": {
+      "path": "r3-template-runtime/revision-1/runs/r3-template-runtime-89igcw5r/raw-assets/Web.Core.project.assets.json",
+      "sha256": "e75d021e711b8a574b05394f9b63dc4cf274571d7320e3c88b61e94669e893ba"
+    },
+    "Web.Host": {
+      "path": "r3-template-runtime/revision-1/runs/r3-template-runtime-89igcw5r/raw-assets/Web.Host.project.assets.json",
+      "sha256": "1152c396dc6b188ccd70f6abae9a2ce8ba28d6f841527c736bd55b2968ef1702"
+    },
+    "Migrator": {
+      "path": "r3-template-runtime/revision-1/runs/r3-template-runtime-89igcw5r/migrator.project.assets.json",
+      "sha256": "0afbd1e48c52310927056ef1f02e4e1f03631b1ed2765e4e10eb6b8a690c39ba"
+    }
+  }
+}

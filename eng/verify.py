@@ -482,7 +482,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--profile", required=True,
                         choices=("r0", "r2", "r3-web-host", "r3-signalr-log4net", "r3-module-zero",
-                                 "r3-automapper", "r3-template-runtime"))
+                                 "r3-automapper", "r3-template-runtime", "r3-template-net9-packages",
+                                 "r3-template-net9-packages-runtime"))
     parser.add_argument("--evidence-root", type=Path)
     parser.add_argument("--work-root", type=Path)
     parser.add_argument("--candidate-feed", type=Path)
@@ -494,8 +495,28 @@ def main():
     parser.add_argument("--engine-manifest", type=Path, help="R3 AutoMapper 冻结引擎清单")
     parser.add_argument("--module-zero-feed", type=Path, help="R3 AutoMapper 业务消费的冻结 Module Zero 源")
     parser.add_argument("--strict-runtime-baseline", action="store_true", help="要求实际共享运行时匹配 R3 候选基线")
-    parser.add_argument("--runtime-config", type=Path, help="R3 原版模板运行的无凭据环境配置")
+    parser.add_argument("--runtime-config", type=Path, help="R3 模板运行的无凭据环境配置")
+    parser.add_argument("--frozen-root", type=Path, help="R3 模板冻结包和原版比较证据的登记根目录")
     args = parser.parse_args()
+    if args.profile in ("r3-template-net9-packages", "r3-template-net9-packages-runtime"):
+        if not args.evidence_root or not args.frozen_root:
+            parser.error(f"{args.profile} 需要 --evidence-root 和 --frozen-root")
+        if any((args.work_root, args.candidate_feed, args.candidate_manifest, args.candidate_symbols,
+                args.r1_evidence, args.r2_feed, args.engine_manifest, args.module_zero_feed,
+                args.strict_runtime_baseline)):
+            parser.error("候选模板使用 --frozen-root 指定已登记的原件")
+        sys.dont_write_bytecode = True
+        if args.profile == "r3-template-net9-packages-runtime":
+            if not args.runtime_config:
+                parser.error(f"{args.profile} 需要 --runtime-config")
+            from r3_template_net9_runtime import execute
+            return execute(args)
+        if args.runtime_config:
+            parser.error("候选模板的 --runtime-config 用于 r3-template-net9-packages-runtime")
+        from r3_template_net9_packages import execute
+        return execute(args)
+    if args.frozen_root:
+        parser.error("--frozen-root 仅适用于 R3 候选模板入口")
     if args.profile == "r3-template-runtime":
         if not args.evidence_root or not args.runtime_config:
             parser.error("r3-template-runtime 需要 --evidence-root 和 --runtime-config")

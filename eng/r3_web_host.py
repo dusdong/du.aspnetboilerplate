@@ -109,14 +109,14 @@ def package_hashes(cache, key, relative, expected_source=NUGET_SOURCE):
             "archive": artifact(archive, cache), "cachePath": relative}
 
 
-def expected_projects(name):
+def expected_projects(name, topology=PROJECTS):
     projects = set()
-    pending = list(PROJECTS[name])
+    pending = list(topology[name])
     while pending:
         referenced = pending.pop()
         if referenced not in projects:
             projects.add(referenced)
-            pending.extend(PROJECTS[referenced])
+            pending.extend(topology[referenced])
     return {project_path(name).as_posix() for name in projects}
 
 
@@ -135,7 +135,8 @@ def download_records(framework, cache, lookup, graph_ids):
     return downloads
 
 
-def read_project(root, name, path, cache, config, lookup):
+def read_project(root, name, path, cache, config, lookup, *, topology=PROJECTS,
+                 sources=(NUGET_SOURCE,), managed=is_abp, managed_versions=None, forbidden=is_maintained):
     relative = project_path(name)
     data = read_json(path)
     project = data["project"]
@@ -143,7 +144,7 @@ def read_project(root, name, path, cache, config, lookup):
     require(Path(restore["projectPath"]).resolve() == root / relative, "资产登记的项目路径不符")
     require(Path(restore["packagesPath"]).resolve() == cache
             and {Path(p).resolve() for p in data["packageFolders"]} == {cache}, "资产登记的缓存不符")
-    require(set(restore["sources"]) == {NUGET_SOURCE}
+    require(set(restore["sources"]) == set(sources) and not restore.get("fallbackFolders")
             and [Path(p).resolve() for p in restore["configFilePaths"]] == [config],
             "资产登记的有效配置或包源不符")
     require(set(data["targets"]) == {TFM} and restore["originalTargetFrameworks"] == [TFM],
@@ -158,8 +159,10 @@ def read_project(root, name, path, cache, config, lookup):
     framework = project["frameworks"][TFM]
     raw_direct = framework.get("dependencies", {})
     direct = {name: info for name, info in raw_direct.items() if info["target"] == "Package"}
-    require({package for package in direct if is_abp(package)} == DIRECT_ABP.get(name, set()),
-            f"直接 ABP 引用不符：{sorted(direct)}")
+    if managed_versions is None:
+        managed_versions = {package: ABP_VERSION for package in DIRECT_ABP.get(name, ())}
+    require({package for package in direct if managed(package)} == managed_versions.keys(),
+            f"直接框架与映射引用不符：{sorted(direct)}")
     xml = ET.parse(root / relative)
     declarations = {id_: {"version": item.get("Version"),
                           **{child.tag: child.text for child in item}}
@@ -169,13 +172,13 @@ def read_project(root, name, path, cache, config, lookup):
             f"直接引用未解析：{sorted(missing)}")
     require(all(graph[keys_by_id[package.casefold()]]["type"] == "package" for package in direct),
             "直接包引用被解析为非 NuGet 项")
-    for package in DIRECT_ABP.get(name, ()):
-        require(declarations[package]["version"] == ABP_VERSION,
-                f"{package} 源码声明并非固定版本 {ABP_VERSION}")
+    for package, version in managed_versions.items():
+        require(declarations[package]["version"] == version,
+                f"{package} 源码声明并非固定版本 {version}")
 
     refs = restore["frameworks"][TFM]["projectReferences"]
     ref_paths = {Path(ref["projectPath"]).resolve().relative_to(root).as_posix() for ref in refs.values()}
-    require(ref_paths == {project_path(ref).as_posix() for ref in PROJECTS[name]},
+    require(ref_paths == {project_path(ref).as_posix() for ref in topology[name]},
             f"直接项目引用不符：{sorted(ref_paths)}")
     root_ids = {name.casefold() for name in direct} | {Path(ref).stem.casefold() for ref in ref_paths}
     require(not (missing := root_ids - keys_by_id.keys()), f"找不到直接引用的目标节点：{sorted(missing)}")
@@ -194,7 +197,7 @@ def read_project(root, name, path, cache, config, lookup):
         id_, version = key.split("/")
         library = data["libraries"][key]
         require(selected["type"] == library["type"], f"{key} 目标与库类型不符")
-        require(not is_maintained(id_), f"原版还原混入维护包：{key}")
+        require(not forbidden(id_), f"还原混入不允许的包：{key}")
         dependencies = selected.get("dependencies", {})
         if library["type"] == "project":
             source = inside(root, relative.parent / library["msbuildProject"])
@@ -208,7 +211,7 @@ def read_project(root, name, path, cache, config, lookup):
         archive_only = [p for p in library["files"] if p.startswith(("analyzers/", "tools/"))]
         packages[key] = {"id": id_, "version": version, "dependencies": dependencies, "assets": assets,
                          "direct": id_ in direct, "archiveAnalyzerAndToolPaths": archive_only, **hashes}
-    require({item["project"] for item in projects.values()} == expected_projects(name),
+    require({item["project"] for item in projects.values()} == expected_projects(name, topology),
             f"传递项目闭包不符：{projects}")
     require(restore["projectName"] == relative.stem, f"还原的入口项目名不符：{restore['projectName']}")
     return {"targetFramework": TFM, "runtimeIdentifier": None, "projectReferences": sorted(ref_paths),

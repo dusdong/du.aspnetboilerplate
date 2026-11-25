@@ -31,7 +31,9 @@ Module Zero 的三个候选包 `10.5.1-r3.3` 已通过 macOS ARM64 上的独立 
 
 R3.4 AutoMapper 的引擎、Collection 和 ABP 适配器候选已通过本机独立 `net9.0` 实包验收，覆盖单一引擎加载、已有用户更新、按键集合和 SQLite 投影。三个子仓的源码均已交付，主仓固定相应 gitlink，OpenSpec 已同步并归档。固定模板 Web.Host 的六个缺口均已取得独立候选。[AutoMapper 本机验收](docs/maintenance/r3-automapper-downstream.md#消费验收记录) · [Git 交付](docs/maintenance/r3-automapper-downstream.md#git-交付) · [稳定消费规范](openspec/specs/automapper-package-consumption/spec.md)
 
-R3 原版模板的 SQL Server 恢复、Angular 租户登录和授权查询已通过两轮本机验收，OpenSpec 已同步并归档。下一步是在同一 `net9.0` 目标下替换维护包，沿用最终返修轮的 Angular 输入、业务预期和登录前备份。[运行对照与恢复点](docs/maintenance/r3-template-runtime-baseline.md#交接数据恢复点) · [稳定规范](openspec/specs/template-runtime-baseline/spec.md)
+R3 原版模板的 SQL Server 恢复、Angular 租户登录和授权查询已通过两轮本机验收，OpenSpec 已同步并归档。[运行对照与恢复点](docs/maintenance/r3-template-runtime-baseline.md#交接数据恢复点) · [稳定规范](openspec/specs/template-runtime-baseline/spec.md)
+
+R3 固定模板 `net9.0` 同目标换包已验收并归档。13 个冻结维护包在 macOS ARM64、.NET 9.0.10、SQL Server 和原版 Angular production 客户端组合下复现租户登录与授权查询。候选库新增一条成功登录记录，独立对照库计数未变。完整模板的 .NET 10 / EF Core 10 升级及升级后回退待验。[验收与复跑](docs/maintenance/r3-template-net9-packages.md) · [稳定规范](openspec/specs/template-maintenance-package-consumption/spec.md) · [归档](openspec/changes/archive/2026-11-25-validate-r3-net9-template-package-migration/)
 
 在主仓根目录运行 `python3 eng/verify.py --profile r0` 可复验固定 R0 源码。统一复验已完成本地与 GitHub Actions 的配对验收并归档。[复验手册](docs/maintenance/baseline-evidence/README.md#统一入口) · [配对验收记录](docs/maintenance/baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
 
