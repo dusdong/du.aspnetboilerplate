@@ -480,7 +480,7 @@ def make_run_directory(parent, prefix):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--profile", required=True, choices=("r0", "r2", "r3-web-host", "r3-signalr-log4net"))
+    parser.add_argument("--profile", required=True, choices=("r0", "r2", "r3-web-host", "r3-signalr-log4net", "r3-module-zero"))
     parser.add_argument("--evidence-root", type=Path)
     parser.add_argument("--work-root", type=Path)
     parser.add_argument("--candidate-feed", type=Path)
@@ -491,18 +491,21 @@ def main():
     parser.add_argument("--r2-feed", type=Path)
     parser.add_argument("--strict-runtime-baseline", action="store_true", help="要求实际共享运行时匹配 R3 候选基线")
     args = parser.parse_args()
-    if args.profile == "r3-signalr-log4net":
+    if args.profile in ("r3-signalr-log4net", "r3-module-zero"):
         if not all((args.candidate_feed, args.candidate_manifest, args.candidate_symbols, args.r2_feed,
                     args.evidence_root, args.dotnet)):
-            parser.error("r3-signalr-log4net 需要 --candidate-feed、--candidate-manifest、--candidate-symbols、"
+            parser.error(f"{args.profile} 需要 --candidate-feed、--candidate-manifest、--candidate-symbols、"
                          "--r2-feed、--evidence-root 和 --dotnet")
         if args.work_root or args.r1_evidence:
-            parser.error("r3-signalr-log4net 在 --evidence-root 下建立隔离工作目录，使用 --r2-feed 指定原实物")
+            parser.error(f"{args.profile} 在 --evidence-root 下建立隔离工作目录，使用 --r2-feed 指定原实物")
         sys.dont_write_bytecode = True
-        from r3_leaf_verify import execute
+        if args.profile == "r3-module-zero":
+            from r3_module_zero_verify import execute
+        else:
+            from r3_leaf_verify import execute
         return execute(args)
     if args.r2_feed or args.strict_runtime_baseline:
-        parser.error("--r2-feed 和 --strict-runtime-baseline 仅适用于 r3-signalr-log4net")
+        parser.error("--r2-feed 和 --strict-runtime-baseline 仅适用于 r3-signalr-log4net 和 r3-module-zero")
     if args.profile == "r2":
         if not all((args.candidate_feed, args.candidate_manifest, args.r1_evidence, args.evidence_root)):
             parser.error("r2 需要 --candidate-feed、--candidate-manifest、--r1-evidence 和 --evidence-root")

@@ -137,53 +137,53 @@ def commit_tree(run, repository, commit, label):
     return run.git(repository, f"{label}-tree.log", "rev-parse", f"{commit}^{{tree}}")
 
 
-def verify_source(run, manifest_path, declared):
+def verify_source(run, manifest_path, declared, *, label="candidate"):
     proof = declared["sourceProof"]
     patch = manifest_path.parent / "source.patch"
     require(sha256(patch) == proof["patchSha256"], f"候选源码补丁摘要不一致：{patch}")
     commit = declared["superproject"]["commit"]
     gitlink = declared["superproject"]["frameworkGitlink"]
-    commit_tree(run, run.repo, commit, "candidate-superproject")
-    mapping = run.git(run.repo, "candidate-gitlink.log", "ls-tree", commit, "--", "aspnetboilerplate")
+    commit_tree(run, run.repo, commit, f"{label}-superproject")
+    mapping = run.git(run.repo, f"{label}-gitlink.log", "ls-tree", commit, "--", "aspnetboilerplate")
     require(mapping == f"160000 commit {gitlink}\taspnetboilerplate",
             f"主仓 {commit} 的框架 gitlink 与候选来源不同")
-    repository_url = run.git(run.repo, "candidate-repository-url.log", "config",
+    repository_url = run.git(run.repo, f"{label}-repository-url.log", "config",
                              "--blob", f"{commit}:.gitmodules", "--get", "submodule.aspnetboilerplate.url")
     require(repository_url == declared["repositoryUrl"], "候选源码与主仓登记的框架仓库 URL 不同")
     source = run.repo / "aspnetboilerplate"
-    gitlink_tree = commit_tree(run, source, gitlink, "candidate-gitlink")
+    gitlink_tree = commit_tree(run, source, gitlink, f"{label}-gitlink")
     base = proof["baseCommit"]
-    base_tree = commit_tree(run, source, base, "candidate-base")
+    base_tree = commit_tree(run, source, base, f"{label}-base")
     committed = "commit" in proof
     if committed:
         source_commit = proof["commit"]
-        committed_tree = commit_tree(run, source, source_commit, "candidate-source-commit")
+        committed_tree = commit_tree(run, source, source_commit, f"{label}-source-commit")
         require(committed_tree == proof["tree"],
                 f"候选来源提交 {source_commit} 的树为 {committed_tree}，与候选树 {proof['tree']} 不同")
     else:
         require(proof["tree"] != base_tree, f"候选源码树与打包基线 {base} 一致，来源证明缺少精确 commit")
     # 以独立对象目录和索引重放补丁，保留真实仓库的索引和对象库。
-    scratch = run.evidence / "source-replay"
+    scratch = run.evidence / ("source-replay" if label == "candidate" else f"{label}-replay")
     scratch.mkdir()
     (scratch / "objects").mkdir()
     _, objects = run.command(["git", "rev-parse", "--path-format=absolute", "--git-path", "objects"],
-                             source, "candidate-objects.log")
+                             source, f"{label}-objects.log")
     env = {
         "GIT_INDEX_FILE": str(scratch / "index"),
         "GIT_OBJECT_DIRECTORY": str(scratch / "objects"),
         "GIT_ALTERNATE_OBJECT_DIRECTORIES": objects.read_text().strip(),
         "GIT_OPTIONAL_LOCKS": "0",
     }
-    run.command(["git", "read-tree", base], source, "candidate-replay-base.log", extra_env=env)
+    run.command(["git", "read-tree", base], source, f"{label}-replay-base.log", extra_env=env)
     patch_size = patch.stat().st_size
     if patch_size:
-        run.command(["git", "apply", "--cached", patch], source, "candidate-replay-patch.log", extra_env=env)
-    _, log = run.command(["git", "write-tree"], source, "candidate-replay-tree.log", extra_env=env)
+        run.command(["git", "apply", "--cached", patch], source, f"{label}-replay-patch.log", extra_env=env)
+    _, log = run.command(["git", "write-tree"], source, f"{label}-replay-tree.log", extra_env=env)
     tree = log.read_text().strip()
     require(tree == proof["tree"], "补丁重放树与候选源码身份不同")
     assets = {}
     for file, relative_source in SOURCE_ASSETS.items():
-        output = f"candidate-source-{file}"
+        output = f"{label}-source-{file}"
         run.command(["git", "show", f"{tree}:{relative_source}"], source,
                     f"{output}.log", output=output, extra_env=env)
         assets[file] = sha256(run.evidence / output)

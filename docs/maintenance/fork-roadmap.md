@@ -7,7 +7,8 @@
 - R1 首项已验收并归档，在同一 .NET 9 环境接入上游 EF Core 查询过滤修复 #7219。首批 .NET 10 / EF Core 10 源码已通过 macOS ARM64、UTM Windows ARM64 和 GitHub Windows x64 验收，已合入框架 `dev` 并由主仓 gitlink 固定。[R1 首项验收记录](r1-efcore-query-filter.md) · [R1 运行时迁移验收](r1-dotnet10-runtime-migration.md) · [迁移归档](../../openspec/changes/archive/2026-11-25-migrate-r1-core-to-dotnet10/)
 - R2 本地候选 `10.5.1-r2.1` 的五个核心包已通过 macOS ARM64 的 `net9.0` 与 `net10.0` 独立后端验收，覆盖两条传递依赖链、实际程序集加载和 SQLite 工作单元提交。OpenSpec 已归档。框架 `dev` 已推送同树实现，主仓 gitlink 记录该提交。完整模板属于 R3，公开包发布属于 R4。[R2 候选包消费验收](r2-core-package-consumption.md) · [R2 归档](../../openspec/changes/archive/2026-11-25-validate-r2-core-package-consumption/)
 - R3 首包已验收并归档。在 macOS ARM64 上构建了固定模板的原版 `net9.0` Web.Host，核对了实际还原图、运行资产与六个维护包缺口。首包记录保持原始验收口径。[R3 首包验收](r3-web-host-baseline.md) · [模板 Web.Host 基线规范](../../openspec/specs/template-host-baseline/spec.md) · [R3 首包归档](../../openspec/changes/archive/2026-11-25-baseline-r3-web-host-dependencies/)
-- R3 第二包已验收并归档。SignalR 与 Log4Net 的同批候选 `10.5.1-r3.1` 已通过 macOS ARM64 独立 `net9.0` 宿主验收，框架 `dev` 已交付同树实现。候选缺口从六个减为四个。完整 Web.Host 迁移与宿主、真实登录、SQL Server、Angular 及回退验收留待后续。[R3 第二包验收](r3-signalr-log4net-candidates.md) · [集成候选包消费规范](../../openspec/specs/web-host-integration-package-consumption/spec.md) · [R3 第二包归档](../../openspec/changes/archive/2026-11-25-add-r3-signalr-log4net-candidates/)
+- R3 第二包已验收并归档。SignalR 与 Log4Net 的同批候选 `10.5.1-r3.1` 已通过 macOS ARM64 独立 `net9.0` 宿主验收，框架 `dev` 已交付同树实现。该批将候选缺口从六个减为四个。[R3 第二包验收](r3-signalr-log4net-candidates.md) · [集成候选包消费规范](../../openspec/specs/web-host-integration-package-consumption/spec.md) · [R3 第二包归档](../../openspec/changes/archive/2026-11-25-add-r3-signalr-log4net-candidates/)
+- R3 Module Zero 的三个候选包 `10.5.1-r3.3` 已通过 macOS ARM64 上的独立 `net9.0` 实包验收，覆盖 SQLite 角色提交与双向租户隔离。框架 `dev` 已交付同树提交 `819c64c`，主仓 gitlink 指向该提交，OpenSpec 已同步并归档。固定模板的候选缺口尚余 `Abp.AutoMapper`，完整 Web.Host 迁移与宿主、真实登录、SQL Server、Angular 及回退验收仍待后续。 [Module Zero 候选验收](r3-module-zero-candidates.md) · [Module Zero 归档](../../openspec/changes/archive/2026-11-25-add-r3-module-zero-candidates/)
 
 **原路线与研究说明**
 
@@ -205,7 +206,7 @@ R4 的发行对象是通过上述验收的具体候选。后续补丁进入 R5�
 
 ### R3：验证升级路径和实际消费者
 
-固定模板原版 Web.Host 的还原与构建作为安装、升级和回退的对照。SignalR 与 Log4Net 候选已用独立宿主验收，下一步还需补齐四个组件并核对完整 Web.Host 的同批闭包。[R3 Web.Host 基线](r3-web-host-baseline.md) · [第二包实际消费](r3-signalr-log4net-candidates.md)
+固定模板原版 Web.Host 的还原与构建作为安装、升级和回退的对照。SignalR、Log4Net 和 Module Zero 候选已通过各自的本地独立消费验收。后续补齐 `Abp.AutoMapper` 候选，再核对完整 Web.Host 使用的依赖闭包。 [R3 Web.Host 基线](r3-web-host-baseline.md) · [第二包实际消费](r3-signalr-log4net-candidates.md) · [Module Zero 候选验收](r3-module-zero-candidates.md)
 
 至少保留一个代表性应用作为迁移样本，分开验证三件事：
 
