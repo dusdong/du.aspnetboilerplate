@@ -16,6 +16,15 @@ if (args.Length >= 2 && args[0] == "--internal-ranges")
     return;
 }
 
+if (args is ["--satisfies-range", var version, var constraint])
+{
+    Console.WriteLine(JsonSerializer.Serialize(
+        NuGetVersion.TryParse(version, out var selected) &&
+        VersionRange.TryParse(constraint, allowFloating: false, out var range) &&
+        range.Satisfies(selected)));
+    return;
+}
+
 foreach (var path in args)
 {
     using var stream = File.OpenRead(path);

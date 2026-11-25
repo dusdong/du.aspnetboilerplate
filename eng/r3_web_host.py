@@ -88,13 +88,13 @@ def artifact(path, root):
     return {"path": path.relative_to(root).as_posix(), "sha256": sha256(path)}
 
 
-def package_hashes(cache, key, relative):
+def package_hashes(cache, key, relative, expected_source=NUGET_SOURCE):
     name, version = key.split("/")
     directory = inside(cache, relative)
     require(directory.is_dir(), f"{key} 缺少缓存目录：{directory}")
     metadata = read_json(directory / ".nupkg.metadata")
-    require(metadata.get("source") == NUGET_SOURCE,
-            f"{key} 缓存来源与 nuget.org 不符：{metadata.get('source')}")
+    require(metadata.get("source") == expected_source,
+            f"{key} 缓存来源与 {expected_source} 不符：{metadata.get('source')}")
     content = metadata.get("contentHash")
     require(bool(content), f"{key} 缺少 NuGet 内容 SHA-512")
     archive = directory / f"{name.lower()}.{version.lower()}.nupkg"

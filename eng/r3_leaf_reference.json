@@ -1,0 +1,8 @@
+{
+  "10.5.1-r3.1": {
+    "manifestSha256": "579443f73fecb9ebce47fb3efe7645cef6970b24ac603b130fb4d64a2e97dea5",
+    "sourceProofSha256": "dd4c147af4919acb20c190e27b148233a56d4608d53b7e5f5b19e3d97dad0c33",
+    "runtimeVersion": "9.0.23",
+    "templateGitlink": "2e9536872673a7ff1986a19e798c51684d16afe5"
+  }
+}

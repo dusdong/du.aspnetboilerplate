@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <R3CandidateVersion Condition="'$(R3CandidateVersion)' == ''">10.5.1-r3.1</R3CandidateVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Du.Abp.AspNetCore" Version="[10.5.1-r2.1]" />
+    <PackageReference Include="Du.Abp.AspNetCore.SignalR" Version="[$(R3CandidateVersion)]" />
+    <PackageReference Include="Du.Abp.Castle.Log4Net" Version="[$(R3CandidateVersion)]" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="[9.0.18]" />
+  </ItemGroup>
+</Project>
