@@ -55,7 +55,7 @@ def planning_artifacts(repo, plan, specification):
             "gitStatus": status.splitlines(), "artifacts": [artifact(path, repo) for path in files]}
 
 
-def planning_inputs(repo, current_commit, current_tree):
+def planning_inputs(repo, current_commit, current_tree, *, public_plan=None):
     def git(*args):
         return subprocess.check_output(["git", "-C", repo, *args], text=True).strip()
 
@@ -64,13 +64,19 @@ def planning_inputs(repo, current_commit, current_tree):
     coordinator_tree = git("rev-parse", f"{coordinator}^{{tree}}")
     require(git("rev-parse", f"{PLAN_BASE}^{{tree}}") == PLAN_TREE
             and git("rev-parse", f"{current_commit}^{{tree}}") == current_tree, "R4 规划或执行 Git 树不符")
+    candidate_plan = planning_artifacts(repo, PLAN, "release-candidate-verification")
+    historical_public = (public_plan is not None and public_plan["changeState"] == "archived"
+                         and candidate_plan["changeState"] == "archived")
     for record in (*manifest["producers"].values(), manifest["template"]):
         path = record["path"]
         commit = record.get("finalCommit", record["baseCommit"])
         expected = ["160000", "commit", commit, path]
-        for revision in dict.fromkeys((coordinator, current_commit)):
+        revisions = (coordinator,)
+        if not historical_public or path == manifest["template"]["path"]:
+            revisions = (coordinator, current_commit)
+        for revision in dict.fromkeys(revisions):
             require(git("ls-tree", revision, "--", path).split() == expected, f"{revision} 的 R4 gitlink {path} 不符")
-    return {**planning_artifacts(repo, PLAN, "release-candidate-verification"),
+    return {**candidate_plan,
             "baseCommit": PLAN_BASE, "baseTree": PLAN_TREE,
             "coordinator": {"commit": coordinator, "tree": coordinator_tree},
             "execution": {"commit": current_commit, "tree": current_tree}}
@@ -94,23 +100,28 @@ class FrozenPackages:
     def local_package_feed(self):
         return None if self.public_inputs else self.feed
 
+    @property
+    def isolated_restore(self):
+        return bool(self.public_inputs)
+
     def materialize(self):
         super().materialize()
-        if self.public_inputs:
+        if self.isolated_restore:
             scratch = self.evidence / "nuget-scratch"
             scratch.mkdir()
             self.env["NUGET_SCRATCH"] = str(scratch)
             self.report["inputs"]["nuget"]["scratch"] = str(scratch)
 
     def restore_options(self):
-        if not self.public_inputs:
+        if not self.isolated_restore:
             return super().restore_options()
-        return ["--source", NUGET_SOURCE, "--packages", self.cache,
+        sources = [argument for source in self.restore_sources for argument in ("--source", source)]
+        return [*sources, "--packages", self.cache,
                 "-p:RestoreFallbackFolders=", "-p:RestoreAdditionalProjectFallbackFolders=",
                 "-p:RestoreAdditionalProjectSources=", "-p:DisableImplicitNuGetFallbackFolder=true"]
 
     def run_dotnet(self, args, log):
-        if not self.public_inputs:
+        if not self.isolated_restore:
             return super().run_dotnet(args, log)
         unset = []
         for name in sorted(os.environ):
@@ -125,11 +136,13 @@ class FrozenPackages:
     def preflight(self):
         super().preflight()
         inputs = self.report["inputs"]
-        candidate = planning_inputs(self.repo, inputs["executionCommit"], inputs["executionTree"])
+        public_plan = None
         if self.public_inputs:
-            inputs["planning"] = planning_artifacts(self.repo, PUBLIC_PLAN, "public-package-release") | {
-                "execution": candidate["execution"],
-            }
+            public_plan = planning_artifacts(self.repo, PUBLIC_PLAN, "public-package-release")
+        candidate = planning_inputs(self.repo, inputs["executionCommit"], inputs["executionTree"],
+                                    public_plan=public_plan)
+        if public_plan is not None:
+            inputs["planning"] = public_plan | {"execution": candidate["execution"]}
             inputs["frozenCandidatePlanning"] = candidate | {"purpose": "frozen_batch_qualification"}
             del inputs["planningCommit"], inputs["planningTree"]
         else:
@@ -270,7 +283,7 @@ class TemplateUpgrade(FrozenPackages, UpgradeRuntime):
 
     def execute_full(self):
         result = super().execute_full()
-        if result == 0 and not self.public_inputs:
+        if result == 0 and self.report["inputs"]["packageSourceMode"] == "frozen":
             sql = self.report["sql"]
             checkpoints = {}
             for role in ROLES:

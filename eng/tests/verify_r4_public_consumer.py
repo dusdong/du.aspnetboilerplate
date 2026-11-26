@@ -2,12 +2,15 @@
 """从本地通过轮派生公开消费的隔离资产样本。"""
 
 import argparse
+from contextlib import nullcontext
 from copy import deepcopy
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 from zipfile import ZipFile
 
 sys.dont_write_bytecode = True
@@ -17,8 +20,11 @@ from r3_web_host import NUGET_SOURCE, artifact, project_path, write_json
 from r4_candidate_batch import load_frozen_batch
 from r4_public_release import MANIFEST_SHA256, SIGNATURE, compare_packages
 from r4_template_assets import public_downloads, verify_build_entry, verify_process
-from r4_template_consumer import Net10Build
+from r4_template_consumer import PLAN, PUBLIC_PLAN, Net10Build, planning_artifacts, planning_inputs
 from verify import ROOT, VerificationError, read_json, sha256
+
+
+R5_EXECUTION = "26737218c6157a348c10ad6492865a4e009ac8d4"
 
 
 class PublicConsumerTests(unittest.TestCase):
@@ -186,12 +192,21 @@ class PublicConsumerTests(unittest.TestCase):
                          self.batch["packages"]["Du.Abp"]["archive"]["sha256"])
 
     def test_reports_mode_specific_planning_and_keeps_frozen_qualification(self):
+        coordinator = self.batch["gitlinkCommit"]
+        git = Net10Build.git
+
+        def git_at_coordinator(app, repo, log, *args):
+            if args in (("rev-parse", "HEAD"), ("rev-parse", "HEAD^{tree}")):
+                args = ("rev-parse", args[1].replace("HEAD", coordinator, 1))
+            return git(app, repo, log, *args)
+
         reports = {}
         for mode, public_inputs in (("frozen", None), ("public", (self.manifest, self.manifest))):
             directory = self.run / mode
             directory.mkdir()
             app = Net10Build(ROOT, directory, ROOT / ".git", self.batch_root, public_inputs=public_inputs)
-            app.step("preflight", app.preflight)
+            with patch.object(Net10Build, "git", git_at_coordinator) if mode == "frozen" else nullcontext():
+                app.step("preflight", app.preflight)
             reports[mode] = read_json(app.report_path)["inputs"]
 
         frozen, public = reports["frozen"], reports["public"]
@@ -200,7 +215,9 @@ class PublicConsumerTests(unittest.TestCase):
         self.assertEqual(candidate["baseCommit"], frozen["planningCommit"])
         self.assertEqual(candidate["baseTree"], frozen["planningTree"])
         self.assertNotIn("frozenCandidatePlanning", frozen)
-        self.assertEqual(public["frozenCandidatePlanning"], candidate | {"purpose": "frozen_batch_qualification"})
+        self.assertEqual(public["frozenCandidatePlanning"], candidate | {
+            "execution": public["planning"]["execution"], "purpose": "frozen_batch_qualification",
+        })
 
         plan = public["planning"]
         self.assertEqual(plan["change"], "publish-r4-first-public-release")
@@ -221,6 +238,53 @@ class PublicConsumerTests(unittest.TestCase):
             path = Path(record["path"])
             self.assertTrue(path.is_relative_to(change_path))
             self.assertEqual(record, artifact(ROOT / path, ROOT))
+
+    def test_archived_public_replay_accepts_r5_and_frozen_preflight_rejects_producer_drift(self):
+        tree = subprocess.check_output(["git", "-C", ROOT, "rev-parse", f"{R5_EXECUTION}^{{tree}}"], text=True).strip()
+        public_plan = planning_artifacts(ROOT, PUBLIC_PLAN, "public-package-release")
+        self.assertEqual(public_plan["changeState"], "archived")
+        result = planning_inputs(ROOT, R5_EXECUTION, tree, public_plan=public_plan)
+        self.assertEqual(result["execution"], {"commit": R5_EXECUTION, "tree": tree})
+        self.assertEqual(result["coordinator"]["commit"], self.batch["gitlinkCommit"])
+        with self.assertRaisesRegex(VerificationError, rf"{R5_EXECUTION} 的 R4 gitlink AutoMapper 不符"):
+            planning_inputs(ROOT, R5_EXECUTION, tree)
+
+    def test_active_r4_candidate_or_public_release_rejects_r5_producer_drift(self):
+        tree = subprocess.check_output(["git", "-C", ROOT, "rev-parse", f"{R5_EXECUTION}^{{tree}}"], text=True).strip()
+        archived_public = planning_artifacts(ROOT, PUBLIC_PLAN, "public-package-release")
+        for change in (PLAN, PUBLIC_PLAN):
+            def active_candidate(repo, path, specification):
+                plan = planning_artifacts(repo, path, specification)
+                return plan | {"changeState": "active"} if path == change else plan
+
+            public = archived_public | {"changeState": "active"} if change == PUBLIC_PLAN else archived_public
+            with self.subTest(change=change.name), patch(
+                "r4_template_consumer.planning_artifacts", side_effect=active_candidate
+            ), self.assertRaisesRegex(VerificationError, rf"{R5_EXECUTION} 的 R4 gitlink AutoMapper 不符"):
+                planning_inputs(ROOT, R5_EXECUTION, tree, public_plan=public)
+
+    def test_archived_public_replay_rejects_wrong_template_and_coordinator_producer(self):
+        git = subprocess.check_output
+        tree = git(["git", "-C", ROOT, "rev-parse", f"{R5_EXECUTION}^{{tree}}"], text=True).strip()
+        public_plan = planning_artifacts(ROOT, PUBLIC_PLAN, "public-package-release")
+        for revision, module in ((R5_EXECUTION, "module-zero-core-template"), (self.batch["gitlinkCommit"], "AutoMapper")):
+            def wrong_gitlink(command, **kwargs):
+                if command[3:] == ["ls-tree", revision, "--", module]:
+                    return f"160000 commit {'0' * 40}\t{module}\n"
+                return git(command, **kwargs)
+
+            with self.subTest(revision=revision, module=module), patch(
+                "r4_template_consumer.subprocess.check_output", side_effect=wrong_gitlink
+            ), self.assertRaisesRegex(VerificationError, rf"{revision} 的 R4 gitlink {module} 不符"):
+                planning_inputs(ROOT, R5_EXECUTION, tree, public_plan=public_plan)
+
+    def test_archived_public_replay_rejects_wrong_release_manifest(self):
+        release = self.run / "wrong-release-manifest.json"
+        write_json(release, read_json(self.manifest) | {"template": {}})
+        app = Net10Build(ROOT, self.run, ROOT / ".git", self.batch_root, public_inputs=(release, release))
+        app.step("preflight", app.preflight)
+        with self.assertRaisesRegex(VerificationError, "公开消费的首发清单 SHA-256 不符"):
+            app.step("packages", app.packages)
 
 
 if __name__ == "__main__":

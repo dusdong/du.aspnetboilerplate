@@ -2,7 +2,7 @@
 
 ## 当前状态（2026-11-26）
 
-公开版 `v10.5.1` 使用 `Du.AutoMapper 14.0.0`、`Du.AutoMapper.Collection 11.0.0` 和 `Du.Abp.AutoMapper 10.5.1`。R5 审查确认引擎源码在内建集合成员的深度判断与上下文检查之间存在差异。1.1–1.3 已完成，公开引擎和本地 `Du.AutoMapper 14.0.1` 候选在已测普通集合用例中均符合预期，未观察到注册或预热顺序影响。候选仅在本地验收，三包冻结条件尚未满足。扩展的按键更新、已有目标对象的身份和关系型查询投影继续作为兼容验收项。[维护决定](../maintenance/r5-first-maintenance-review.md#本轮决定) · [补丁设计](../../openspec/changes/fix-r5-automapper-collection-context/design.md) · [引擎实包验收](../../openspec/changes/fix-r5-automapper-collection-context/engine-package-validation.md)
+公开版 `v10.5.1` 使用 `Du.AutoMapper 14.0.0`、`Du.AutoMapper.Collection 11.0.0` 和 `Du.Abp.AutoMapper 10.5.1`。在共享集合执行计划的用例中，公开旧引擎仅交换预热顺序便得到不同结果，候选在两种顺序下均符合预期。本地补丁组合冻结为 `Du.AutoMapper 14.0.1`、`Du.AutoMapper.Collection 11.0.1` 和 `Du.Abp.AutoMapper 10.5.2`，内核仍为公开 `Du.Abp [10.5.1]`。独立消费者已验证已有对象更新、按键集合和 SQLite 投影。固定模板已通过 SQL Server 新库安装、两代同库接续及固定 `net10.0` 的公开 R4 → 候选 → 公开 R4 同库切换。候选结论适用于已记录的组合，公开发行需独立交接。[固定模板验收](../maintenance/r5-automapper-template.md) · [共享集合计划对照](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/shared-collection-plan-observation.md) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md)
 
 ### R3 兼容基线（2026-11-25）
 

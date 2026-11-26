@@ -293,6 +293,37 @@ class RuntimeSupport:
         return outcome
 
 
+    def api(self, path, payload, headers):
+        req = request.Request(self.runtime["host"] + path, json.dumps(payload).encode(),
+                              {"Content-Type": "application/json", **headers})
+        try:
+            with HTTP.open(req, timeout=20) as response:
+                data = json.load(response)
+                status = response.status
+        except error.HTTPError as failure:
+            raise VerificationError(f"准备会话 {path} HTTP {failure.code}") from failure
+        require(data.get("success") is True, f"准备会话 {path} 未返回成功结果")
+        self.stage.setdefault("requests", []).append({"method": "POST", "path": path,
+                                                      "status": status, "success": True})
+        return data["result"]
+
+    def create_fixture_user(self, seed, keyword):
+        headers = {"Abp-TenantId": str(seed["tenant"]["tenantId"])}
+        login = self.api(AUTH, {"userNameOrEmailAddress": ADMIN, "password": self.admin_password}, headers)
+        self.passwords.extend(item for item in (login.get("accessToken"), login.get("encryptedAccessToken")) if item)
+        require(login.get("userId") == seed["account"]["userId"] and login.get("accessToken"),
+                f"准备会话登录用户与数据库预期不符，预期 {seed['account']['userId']}，实际 {login.get('userId')}")
+        password = "R3a!" + secrets.token_hex(12)
+        self.passwords.append(password)
+        result = self.api("/api/services/app/User/Create",
+                          {"userName": keyword, "name": "Runtime", "surname": "Fixture",
+                           "emailAddress": keyword + "@example.invalid", "isActive": True,
+                           "roleNames": [], "password": password},
+                          headers | {"Authorization": "Bearer " + login["accessToken"]})
+        expected_user = {"id": result["id"], "userName": result["userName"]}
+        require(expected_user["userName"] == keyword, "应用创建的测试用户名与本轮搜索词不符")
+        return expected_user
+
     def frozen_angular(self, manifest_sha256):
         require(len(self.original_angular["files"]) == 1193
                 and not any(path.is_symlink() for path in self.original_frontend.rglob("*"))
@@ -455,39 +486,12 @@ class RuntimeRun(RuntimeSupport, R3Run):
         require(self.expected_migrations, "固定模板迁移源码为空")
         self.report["sql"]["sourceSeed"] = self.db.seed(self.db.source, self.expected_migrations)
 
-    def api(self, path, payload, headers):
-        req = request.Request(self.runtime["host"] + path, json.dumps(payload).encode(),
-                              {"Content-Type": "application/json", **headers})
-        try:
-            with HTTP.open(req, timeout=20) as response:
-                data = json.load(response)
-                status = response.status
-        except error.HTTPError as failure:
-            raise VerificationError(f"准备会话 {path} HTTP {failure.code}") from failure
-        require(data.get("success") is True, f"准备会话 {path} 未返回成功结果")
-        self.stage.setdefault("requests", []).append({"method": "POST", "path": path,
-                                                      "status": status, "success": True})
-        return data["result"]
-
     def prepare(self):
         source = self.db.source
         seed = self.report["sql"]["sourceSeed"]
         self.keyword = "r3user" + self.run_id
         with self.launch_host(source, "host-prepare"):
-            headers = {"Abp-TenantId": str(seed["tenant"]["tenantId"])}
-            login = self.api(AUTH, {"userNameOrEmailAddress": ADMIN, "password": self.admin_password}, headers)
-            self.passwords.extend(item for item in (login.get("accessToken"), login.get("encryptedAccessToken")) if item)
-            require(login.get("userId") == seed["account"]["userId"] and login.get("accessToken"),
-                    f"准备会话登录用户与数据库预期不符，预期 {seed['account']['userId']}，实际 {login.get('userId')}")
-            password = "R3a!" + secrets.token_hex(12)
-            self.passwords.append(password)
-            result = self.api("/api/services/app/User/Create",
-                              {"userName": self.keyword, "name": "Runtime", "surname": "Fixture",
-                               "emailAddress": self.keyword + "@example.invalid", "isActive": True,
-                               "roleNames": [], "password": password},
-                              headers | {"Authorization": "Bearer " + login["accessToken"]})
-            self.expected_user = {"id": result["id"], "userName": result["userName"]}
-            require(self.expected_user["userName"] == self.keyword, "应用创建的测试用户名与本轮搜索词不符")
+            self.expected_user = self.create_fixture_user(seed, self.keyword)
         self.business = self.db.business(source, self.expected_migrations, self.keyword, self.expected_user)
         self.report["sql"].update(expected=self.business,
                                   loginCountAtBackup=self.db.login_count(source, self.business))

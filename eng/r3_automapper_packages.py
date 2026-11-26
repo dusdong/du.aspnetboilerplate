@@ -123,7 +123,7 @@ def check_edges(name, dependencies, edges, *, assets=False):
         require(valid, f"{name} → {dep} 预期 {expected}，实际 {version}")
 
 
-def check_assets(data, project, cache, feed, frozen, direct, edges):
+def check_assets(data, project, cache, feed, frozen, direct, edges, *, public_packages=()):
     restore = data["project"]["restore"]
     require(Path(restore["projectPath"]) == project and Path(restore["packagesPath"]) == cache and
             {Path(folder) for folder in data["packageFolders"]} == {cache}, "还原项目或独立包缓存不符")
@@ -149,7 +149,8 @@ def check_assets(data, project, cache, feed, frozen, direct, edges):
         library = data["libraries"][key]
         require(entry["type"] == library["type"] == "package", f"{key} 不是独立包引用")
         package = frozen.get(name)
-        hashes = package_hashes(cache, key, library["path"], str(feed) if package else NUGET_SOURCE)
+        source = str(feed) if package and name not in public_packages else NUGET_SOURCE
+        hashes = package_hashes(cache, key, library["path"], source)
         require(hashes["contentSha512"] == library["sha512"], f"{key} 缓存内容 SHA-512 与还原图不符")
         packages[name] = entry | {"version": version, **hashes}
         if package:

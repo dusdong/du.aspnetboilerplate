@@ -203,6 +203,8 @@ python3 -B eng/r4_template_consumer.py upgrade \
 
 公开报告使用带 `-public` 的目录和 profile，保留本轮两份输入的副本及摘要。`inputs.planning` 记录 `publish-r4-first-public-release` 实际读取的工作树制品路径和摘要，并登记执行提交和 Git 树。本变更归档后的复跑读取[首发归档](../../openspec/changes/archive/2026-11-26-publish-r4-first-public-release/)，将 `changeState` 记录为 `archived`。`inputs.frozenCandidatePlanning` 标明冻结批次的候选验收来源。
 
+R4 候选制备和公开发行均已归档时，公开源复跑在历史协调提交核对三个生产 gitlink，在当前执行提交核对固定模板 gitlink。活动制备、活动公开发行和冻结源模式仍在当前提交核对三个生产 gitlink。[模板入口](../../eng/r4_template_consumer.py)
+
 每代显式配置 nuget.org，同时隔离全局包、HTTP、插件与临时缓存，清除环境继承的还原源与回退目录。固定模板和项目引用继续通过原有断言。每个维护 ID/版本的缓存主包核对实际来源和已验签公开下载的 SHA-256。编译与输出 DLL 对照冻结包内选中目标的 SHA-256。全部入口的实际加载在各阶段 `*-r4-assets.json` 登记。按需依赖同时记录输出和加载状态。两代报告共用同一快照的下载登记。缺少登记、来源偏离、任一摘要不符或业务断言失败，入口退出 1。
 
 2026-11-26 的公开源复验在 macOS ARM64、SDK `10.0.404`、SQL Server Developer `16.0.4236.2` 和 Chrome `158.0.8127.37` 通过。两代 Host 和 Migrator 分别还原 13 和 10 个维护包，缓存主包与已验签下载件的摘要相同。两代 Host 各实际加载 12 个维护 DLL，Migrator 各加载 7 个，全部通过冻结 DLL 对账。`net9.0` 和 `net10.0` 各使用实测运行时 `9.0.10` 和 `10.0.15`，在同一候选库保留 30 条迁移记录。两轮 `Default` 租户均获 `Pages.Users` 权限，授权查询返回 HTTP 200，唯一用户 ID 为 3。候选库和对照库的成功登录计数依次为 `1/1 → 2/1 → 3/1`。

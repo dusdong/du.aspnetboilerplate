@@ -25,7 +25,9 @@ git submodule update --init --recursive
 
 ## 当前阶段
 
-截至 2026-11-26，公开版为 `v10.5.1`（源码 `5758c81`）。R5 首轮维护审查已在 `4d051e8` 归档，集合映射补丁规划已在 `c14c5b9` 交付，当时进度为 **0/7**。活动变更 `fix-r5-automapper-collection-context` 已完成 1.1–1.3，进度为 **3/7**。公开 `Du.AutoMapper 14.0.0` 和本地候选 `14.0.1` 在已测的普通集合用例中均符合预期，未观察到注册或预热顺序的影响。主仓已固定引擎源码 `d264ff75`。包与符号仍为本地候选，2.1 暂缓三包冻结。[R4 归档后复核](docs/maintenance/r4-release-candidate.md#首发归档后复核) · [R5 审查结论](docs/maintenance/r5-first-maintenance-review.md#本轮决定) · [引擎实包验收](openspec/changes/fix-r5-automapper-collection-context/engine-package-validation.md) · [实施任务清单](openspec/changes/fix-r5-automapper-collection-context/tasks.md)
+截至 2026-11-26，公开版为 `v10.5.1`（源码 `5758c81`），R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 应用迁往 `net10.0` 的指引已交付，迁移与增量审查变更已归档。两代四入口的公开源 Release 构建已复验，固定组合的同库业务沿用 R4 实测。增量审查记录了六条上游分支、依赖公告与两套共享运行时的续查结果。[存量迁移指引](docs/maintenance/r5-r4-net10-migration.md) · [增量审查](docs/maintenance/r5-runtime-migration-review.md) · [迁移与审查归档](openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/) · [R4 公开源同库升级记录](docs/maintenance/r4-release-candidate.md#公开源模板消费)
+
+集合映射补丁的 7 项本地验收已完成，变更已归档。三个冻结候选与十个 R4 公开包通过固定模板的 `net10.0` 新库安装、`net9.0` 至 `net10.0` 同库接续。固定 `net10.0` 的公开 R4、候选、公开 R4 三阶段均读到首阶段通过应用写入的同一租户用户。公开发行设有独立交接条件。[固定模板结果与复跑](docs/maintenance/r5-automapper-template.md) · [三包冻结与独立消费](openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md)
 
 ### 已归档的基线与迁移
 

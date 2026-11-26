@@ -22,7 +22,7 @@ PROJECT = "InvoiceProbe"
 SOURCES = ROOT / "eng/r5-invoice-probe"
 
 
-def build(work, dotnet, feed, version, verify_graph):
+def build(work, dotnet, feed, version, verify_graph, project_name, sources):
     work.mkdir()
     cache, temp, scratch = (work / name for name in ("packages", "temp", "nuget-scratch"))
     for path in (cache, temp, scratch):
@@ -46,10 +46,10 @@ def build(work, dotnet, feed, version, verify_graph):
     def command(label, *argv):
         return run_logged(argv, work, label, work, env)
 
-    for source in sorted(SOURCES.glob("*.cs")):
+    for source in sorted(sources.glob("*.cs")):
         shutil.copyfile(source, work / source.name)
     template = ROOT / "AutoMapper/src/CollectionOrderProbe/CollectionOrderProbe.csproj"
-    project = work / f"{PROJECT}.csproj"
+    project = work / f"{project_name}.csproj"
     project.write_text(template.read_text().replace("[14.0.0]", f"[{version}]"), encoding="utf-8")
     config = work / "NuGet.Config"
     source_config(config, feed, (PACKAGE,))
@@ -63,7 +63,7 @@ def build(work, dotnet, feed, version, verify_graph):
     dll = inside(cache, Path(packages[key]["cachePath"]) / ASSET)
     require(sha256(dll) == asset_hash, f"{version} 缓存 DLL 与归档不符")
     command("build", dotnet, "build", project, "-c", "Release", "--no-restore", "--disable-build-servers")
-    program = work / "bin/Release" / TFM / f"{PROJECT}.dll"
+    program = work / "bin/Release" / TFM / f"{project_name}.dll"
     identity = {
         "graph": artifact(work / "obj/project.assets.json", work),
         "nugetConfig": artifact(config, work),
@@ -78,18 +78,27 @@ def build(work, dotnet, feed, version, verify_graph):
     return command, program, identity
 
 
-def observe(work, command, dotnet, program, identity, checks):
+def read_observations(work, command, dotnet, program, identity):
     measured = json.loads(command("measurements", dotnet, program))
     audited = json.loads(command("plan-observations", dotnet, program, "--inspect-plans"))
     write_json(work / "measurements.json", measured)
     write_json(work / "plan-observations.json", audited)
     dll = program.with_name("AutoMapper.dll")
-    summary = checks["verify_observations"](measured, dll, identity)
-    require(measured["assemblies"][0]["name"] == ASSEMBLY and measured["assemblies"][0]["context"] == "Default",
-            "实际加载的程序集或加载上下文不符")
+    require(len(measured["assemblies"]) == 1, "进程应只加载一份 AutoMapper")
+    loaded = measured["assemblies"][0]
+    require(loaded["name"] == ASSEMBLY and loaded["context"] == "Default"
+            and Path(loaded["path"]).resolve() == dll.resolve()
+            and loaded["sha256"] == sha256(dll) == identity["assetSha256"],
+            "实际加载程序集、路径或摘要不符")
     require(not measured["plans"] and {key: value for key, value in audited.items() if key != "plans"}
             == {key: value for key, value in measured.items() if key != "plans"},
             "独立计划观察的运行条件或业务结果与正式测量不符")
+    return measured, audited
+
+
+def observe(work, command, dotnet, program, identity, checks):
+    measured, audited = read_observations(work, command, dotnet, program, identity)
+    summary = checks["verify_observations"](measured, program.with_name("AutoMapper.dll"), identity)
     rows = measured["observations"]
     require([(plan["Case"], plan["Repeat"]) for plan in audited["plans"]]
             == [(row["Case"], row["Repeat"]) for row in rows], "计划观察覆盖不足")
@@ -112,7 +121,7 @@ def observe(work, command, dotnet, program, identity, checks):
     }
 
 
-def execute(args):
+def compare_packages(args, project_name, sources, observe_package):
     record, archive = verify_input(args.input, args.input_sha256)
     output = args.output
     output.mkdir()
@@ -130,8 +139,9 @@ def execute(args):
                     for key, entry in graph["libraries"].items()}
         return identity["assetSha256"], packages
 
-    command, program, identity = build(public, args.dotnet, None, public_version, public_graph)
-    old, old_summary = observe(public, command, args.dotnet, program, identity, checks)
+    command, program, identity = build(public, args.dotnet, None, public_version, public_graph,
+                                       project_name, sources)
+    old, old_summary = observe_package(public, command, args.dotnet, program, identity, checks)
 
     candidate = output / "candidate"
     dependencies = set(identity["packages"]) - {f"{PACKAGE}/{public_version}"}
@@ -141,8 +151,15 @@ def execute(args):
         _, packages, _ = verify_restored(candidate, cache, TFM, feed, record, dependencies)
         return record["assetSha256"], packages
 
-    command, program, identity = build(candidate, args.dotnet, feed, VERSION, candidate_graph)
-    new, new_summary = observe(candidate, command, args.dotnet, program, identity, checks)
+    command, program, identity = build(candidate, args.dotnet, feed, VERSION, candidate_graph,
+                                       project_name, sources)
+    new, new_summary = observe_package(candidate, command, args.dotnet, program, identity, checks)
+    return record, old, old_summary, new, new_summary
+
+
+def execute(args):
+    record, old, old_summary, new, new_summary = compare_packages(args, PROJECT, SOURCES, observe)
+    output = args.output
 
     fields = ("runtime", "architecture", "runtimePath", "input", "initial", "warmup", "expected")
     require(all(old[key] == new[key] for key in fields), "运行环境或业务输入不同")
@@ -176,8 +193,8 @@ def execute(args):
     return exit_code
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+def main(execute_consumer=execute, description=__doc__, failure_label="默认发票对照"):
+    parser = argparse.ArgumentParser(description=description)
     for name in ("public-manifest", "verified-downloads", "input", "dotnet", "output"):
         parser.add_argument(f"--{name}", type=Path, required=True)
     parser.add_argument("--input-sha256", required=True)
@@ -186,10 +203,10 @@ def main():
         setattr(args, name, getattr(args, name).resolve())
     args.dotnet = args.dotnet.absolute()
     try:
-        return execute(args)
+        return execute_consumer(args)
     except (BadZipFile, KeyError, OSError, TypeError, ValueError, VerificationError,
             subprocess.CalledProcessError) as error:
-        print(f"默认发票对照失败：{error}", file=sys.stderr)
+        print(f"{failure_label}失败：{error}", file=sys.stderr)
         return 1
 
 

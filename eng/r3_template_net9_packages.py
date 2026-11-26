@@ -320,6 +320,10 @@ class CandidateRun(R3Run):
         return self.feed
 
     @property
+    def local_package_ids(self):
+        return self.frozen.keys() if self.local_package_feed else ()
+
+    @property
     def restore_sources(self):
         return (str(self.local_package_feed), NUGET_SOURCE) if self.local_package_feed else (NUGET_SOURCE,)
 
@@ -398,7 +402,7 @@ class CandidateRun(R3Run):
         patch_path.write_text(patch, encoding="utf-8")
         self.command(["git", "apply", "--no-index", "--check", "--reverse", patch_path],
                      self.root.parent, "template-patch-replay-check.log")
-        source_config(self.config, self.local_package_feed, self.frozen)
+        source_config(self.config, self.local_package_feed, self.local_package_ids)
         self.report["inputs"]["nuget"].update(effective=artifact(self.config, self.evidence),
                                              effectiveSources=list(self.restore_sources))
 
@@ -433,8 +437,7 @@ class CandidateRun(R3Run):
 
         def lookup(key, relative):
             if (key, relative) not in cache_records:
-                source = (str(self.local_package_feed) if self.local_package_feed and stack_package(key.split("/")[0])
-                          else NUGET_SOURCE)
+                source = str(self.local_package_feed) if key.split("/")[0] in self.local_package_ids else NUGET_SOURCE
                 cache_records[key, relative] = package_hashes(self.cache, key, relative, source)
             return cache_records[key, relative]
 
@@ -559,7 +562,9 @@ class CandidateRun(R3Run):
             checked_file(self.frozen_root, path, expected)
             unchanged[str(path)] = expected
         if self.local_package_feed is not None:
-            for package in self.frozen.values():
+            for name, package in self.frozen.items():
+                if name not in self.local_package_ids:
+                    continue
                 path = checked_file(self.local_package_feed, package["feedCopy"], package["archiveSha256"])
                 unchanged[str(path)] = package["archiveSha256"]
         write_json(self.evidence_file("inputs-after.json"), unchanged)

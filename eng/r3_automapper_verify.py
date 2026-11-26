@@ -26,6 +26,8 @@ MINIMAL = "AutoMapperMinimal"
 
 
 class CandidateRun(OriginalBusinessRun):
+    public_packages = ()
+
     def __init__(self, evidence, dotnet, frozen, edges, *, minimal=False, omit=()):
         self.app = MINIMAL if minimal else APP
         self.profile = f"{PROFILE}-{self.app}"
@@ -52,7 +54,7 @@ class CandidateRun(OriginalBusinessRun):
     def write_nuget_config(self):
         self.feed.mkdir()
         for name, package in self.frozen.items():
-            if name not in self.omit:
+            if name not in self.omit and name not in self.public_packages:
                 path = Path(package["archive"])
                 copied = Path(shutil.copyfile(path, self.feed / path.name))
                 require(sha256(copied) == package["archiveSha256"], f"{name} 受控源复制摘要不符")
@@ -66,7 +68,8 @@ class CandidateRun(OriginalBusinessRun):
         ET.SubElement(mapping, "clear")
         frozen = ET.SubElement(mapping, "packageSource", key="frozen")
         for name in self.frozen:
-            ET.SubElement(frozen, "package", pattern=name)
+            if name not in self.public_packages:
+                ET.SubElement(frozen, "package", pattern=name)
         public = ET.SubElement(mapping, "packageSource", key="nuget.org")
         ET.SubElement(public, "package", pattern="*")
         ET.indent(config, space="  ")
@@ -74,7 +77,7 @@ class CandidateRun(OriginalBusinessRun):
 
     def packages(self):
         self.graph = check_assets(read_json(self.assets), self.project, self.cache, self.feed, self.frozen,
-                                  self.direct, self.edges)
+                                  self.direct, self.edges, public_packages=self.public_packages)
         write_json(self.evidence_file("package-graph.json"), self.graph)
 
     def acceptance(self):

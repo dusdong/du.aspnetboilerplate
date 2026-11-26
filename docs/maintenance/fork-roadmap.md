@@ -2,7 +2,9 @@
 
 ## 当前阶段（2026-11-26）
 
-R5 首轮维护审查已在 `4d051e8` 归档，内建集合映射补丁规划已在主仓 `c14c5b9` 交付。活动变更已完成 1.1–1.3，进度为 3/7。主仓固定的引擎源码为 `d264ff75`。候选 `Du.AutoMapper 14.0.1` 已在本地完成实包验收。订单和发票对照均未观测到旧包顺序差异，三包冻结暂缓。公开版仍为 `v10.5.1`，支持范围沿用 R4 实测组合。[首发归档后复核](r4-release-candidate.md#首发归档后复核) · [首轮维护审查](r5-first-maintenance-review.md#本轮决定) · [规划提交](https://github.com/dusdong/du.aspnetboilerplate/commit/c14c5b9d83a33fbbcc9ff5b1714dfa0098c09df6) · [活动任务清单](../../openspec/changes/fix-r5-automapper-collection-context/tasks.md)
+R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
+
+集合映射补丁的 7 项本地验收已完成，变更已归档。三包通过独立 ABP 消费及固定模板的 `net10.0` 新库安装、两代同库接续和固定运行时三阶段包切换。公开版为 `v10.5.1`，候选的实测范围和公开发行交接条件另行记录。[固定模板验收与交接](r5-automapper-template.md) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [归档任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)
 
 - R0 已验收并归档。上游 `v10.5.1` 的首批五包源码基线记录了公共 API、还原图和三套回归，实测环境为 macOS ARM64、.NET 9，EF Core 关系型用例使用 SQLite。[R0 基线](release-baseline.json) · [R0 归档](../../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)
 - R0 统一复验已完成本地与 GitHub Actions 的独立配对验收并归档。两次执行均用 `python3 eng/verify.py --profile r0` 复验固定的原版 R0 源码。[复验手册](baseline-evidence/README.md#统一入口) · [配对验收记录](baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](../../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
@@ -257,11 +259,16 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 待补的 R4 组合包括 Windows、Linux 原生应用、其他数据库 Provider 和不同 Angular 组合。后续支持范围按实际证据更新。[公开发行规范](../../openspec/specs/public-package-release/spec.md) · [首发归档](../../openspec/changes/archive/2026-11-26-publish-r4-first-public-release/)
 
-首轮按一条主发行线完成。三仓上游修复、四个入口的实际包图及两套共享运行时已有可复查记录。引擎补丁已完成局部实包验收，整个消费闭包和组合回归仍待活动变更验证。出现真实消费者需求并具备相应验证能力时，再考虑并行维护分支。[维护决定](r5-first-maintenance-review.md#本轮决定) · [补丁验收](r5-first-maintenance-review.md#后续补丁的范围与验收) · [下轮检查点](r5-first-maintenance-review.md#下轮检查点)
+首轮按一条主发行线完成。三仓上游修复、四个入口的实际包图及两套共享运行时已有可复查记录。出现真实消费者需求并具备相应验证能力时，再考虑并行维护分支。[维护决定](r5-first-maintenance-review.md#本轮决定) · [下轮检查点](r5-first-maintenance-review.md#下轮检查点)
 
-1.1–1.3 分别完成订单实包对照、引擎修正及本地引擎实包验收。2.1 冻结前的补测沿用原配置，用独立消费者对照公开 `Du.AutoMapper 14.0.0` 和本地 `14.0.1` 的默认发票正式调用。订单与发票的已测结果均符合预期，现有证据未建立顺序影响。正式冻结须有至少一对运行仅交换注册顺序或仅交换预热顺序，旧包结果或异常稳定不同且至少一侧偏离预期，实际候选在同组两侧均符合预期。维护评估保留本地引擎候选，2.1 继续开放，暂缓三包制备和冻结。[旧包观测](../../openspec/changes/fix-r5-automapper-collection-context/old-package-observation.md) · [引擎实包验收](../../openspec/changes/fix-r5-automapper-collection-context/engine-package-validation.md) · [发票实包对照](../../openspec/changes/fix-r5-automapper-collection-context/invoice-package-observation.md)
+旧包共享集合计划的正式调用随预热顺序稳定变化，冷启动两种注册顺序出现同一异常。候选的正式调用和预热均符合预期。引擎、Collection 和适配器的三对归档已冻结，独立 ABP 消费者验证对象更新、按键集合与关系型投影。实际依赖固定到对应候选版本，适配器仍精确引用 `Du.Abp [10.5.1]`。[共享集合计划对照](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/shared-collection-plan-observation.md) · [三包冻结与独立消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md)
 
-已核对的 13 份公开主包中，Collection 精确引用引擎，适配器精确引用两者及 `Du.Abp [10.5.1]`。因此只为三个映射包准备新版本，其余十个维护包复用 R4 公开件。除独立消费者、固定模板新库安装和同库接续外，还须固定 `net10.0` 和同一 SQL Server 测试库，验证从 R4 换为候选、再切回 R4 后均能查到同一租户的同一条业务记录。三包候选验收通过后同步稳定规范并归档，公开发行另行决定。运行时公告的待补查项继续由维护记录跟踪。[三包设计](../../openspec/changes/fix-r5-automapper-collection-context/design.md) · [验收条件](../../openspec/changes/fix-r5-automapper-collection-context/specs/automapper-package-consumption/spec.md)
+固定模板已用候选加十个公开 R4 包实测 `net10.0` 新库、两代同库接续。在固定 `net10.0` 与同一 SQL Server 库切换包并回退，候选及回退阶段均通过 Angular 授权查询读回首阶段经应用创建的租户用户，三阶段各自核对实际包图、编译输出和加载资产。[模板结果及发行交接条件](r5-automapper-template.md)
+
+**R5 的迁移交接与后续工作**
+
+1. 公开 R4 包的存量应用迁移已有从消费者源码构建到同库回读的指引。目标共享运行时仍为两套 `10.0.15`，和固定模板 R4 历史实测相符。本轮新增四个 Release 构建及四图对账。消费者部署输入变化时，在隔离库补验后再声明对应范围。继续从增量记录的六条 SHA 和各公告水位查起。[迁移指引](r5-r4-net10-migration.md) · [续查水位](r5-runtime-migration-review.md#共享运行时与下轮检查点)
+2. 集合映射补丁已完成本机候选验收。后续按独立发行交接条件对账生产源码、归档和公开消费证据。运行时公告的待补查项继续沿各自的续查水位处理。[候选范围与交接](r5-automapper-template.md#支持范围与公开发行交接)
 
 建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。
 

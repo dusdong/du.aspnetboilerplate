@@ -50,18 +50,23 @@ def public_downloads(manifest_file, downloads_file, batch_root, batch):
     return rows
 
 
-def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, graph, launch, *, downloads=None):
+def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, graph, launch, *, downloads=None,
+                       local_ids=None):
     tfm = inputs["targetFramework"]
     label = f"{tfm} {entry}"
     feed = directory / "frozen-feed"
     cache = directory / "packages"
-    is_public = downloads is not None
-    sources = {NUGET_SOURCE} if is_public else {str(feed), NUGET_SOURCE}
-    mode = "public" if is_public else "frozen"
+    registered = batch["packages"]
+    if local_ids is None:
+        local_ids = registered.keys() if downloads is None else ()
+    require(set(local_ids) <= registered.keys(), f"{label} 的本地包 ID 超出维护包集合")
+    sources = {str(feed), NUGET_SOURCE} if local_ids else {NUGET_SOURCE}
+    mode = "frozen" if set(local_ids) == registered.keys() else "mixed" if local_ids else "public"
     require(inputs.get("packageSourceMode", "frozen") == mode and inputs["nuget"]["cachesInitiallyEmpty"]
-            and set(inputs["nuget"]["effectiveSources"]) == sources and (not is_public or not feed.exists()),
+            and set(inputs["nuget"]["effectiveSources"]) == sources and (local_ids or not feed.exists()),
             f"{label} 的空缓存或维护包源不符")
-    require(inputs["r4Batch"]["sha256"] == sha256(batch_root / "batch.json"), f"{label} 的冻结批次不符")
+    batch_record = "r5Batch" if mode == "mixed" else "r4Batch"
+    require(inputs[batch_record]["sha256"] == sha256(batch_root / "batch.json"), f"{label} 的冻结批次不符")
     output = directory / "source/aspnet-core" / project_path(entry).parent / "bin/Release" / tfm
     manifest_file = directory / f"{entry}-output.json"
     manifest = read_json(manifest_file)
@@ -71,7 +76,6 @@ def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, 
     require(Path(launch["argv"][1]) == output / entry_asset["path"]
             and sha256(output / entry_asset["path"]) == entry_asset["sha256"], f"{label} 的 Release 入口不符")
 
-    registered = batch["packages"]
     expected = set(registered) if entry == "Web.Host" else set(registered) - WEB_ONLY
     candidates = [(key, row) for key, row in graph["packages"].items() if stack_package(row["id"])]
     packages = {row["id"]: (key, row) for key, row in candidates}
@@ -87,8 +91,8 @@ def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, 
         filename = Path(asset).name
         digest = target["assetSha256"]
         archive = package["archive"]
-        source = NUGET_SOURCE if is_public else str(feed)
-        restored = downloads[name]["downloadSha256"] if is_public else archive["sha256"]
+        source = str(feed) if name in local_ids else NUGET_SOURCE
+        restored = archive["sha256"] if name in local_ids else downloads[name]["downloadSha256"]
         version = package["version"]
         cached_package = cache / name.lower() / version.lower()
         cached_archive = cached_package / f"{name.lower()}.{version.lower()}.nupkg"
@@ -126,11 +130,11 @@ def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, 
             "releaseOutput": artifact(manifest_file, directory)}
 
 
-def verify_build_directory(directory, inputs, batch_root, batch, inspection, *, downloads=None):
+def verify_build_directory(directory, inputs, batch_root, batch, inspection, *, downloads=None, local_ids=None):
     graph = read_json(directory / "assets-inventory.json")
     launch = read_json(directory / "launch-manifest.json")
     return {entry: verify_build_entry(directory, inputs, entry, batch_root, batch, inspection,
-                                      graph[entry], launch[entry], downloads=downloads)
+                                      graph[entry], launch[entry], downloads=downloads, local_ids=local_ids)
             for entry in ENTRY_LABELS}
 
 

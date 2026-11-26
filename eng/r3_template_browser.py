@@ -183,7 +183,8 @@ def browser_round(config, browser_output, baseline, password, report, *, before_
                         require(tagged == [response.request], "浏览器搜索响应与本轮标记请求不一致")
                         step["requestId"] = search_request_id
                     payload = response_json(response, frontend)
-                    items = [{"id": item.get("id"), "userName": item.get("userName")}
+                    fields = ("id", "userName", *baseline.get("searchFields", ()))
+                    items = [{field: item.get(field) for field in fields}
                              for item in payload.get("items", [])]
                     step.update(totalCount=payload.get("totalCount"), items=items)
                     check_query(step["keyword"], step["totalCount"], items, baseline)
