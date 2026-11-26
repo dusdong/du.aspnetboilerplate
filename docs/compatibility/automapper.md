@@ -1,6 +1,10 @@
 # AutoMapper：兼容维护 Fork 评估与实施路线
 
-## 当前状态（2026-11-25）
+## 当前状态（2026-11-26）
+
+公开版 `v10.5.1` 使用 `Du.AutoMapper 14.0.0`、`Du.AutoMapper.Collection 11.0.0` 和 `Du.Abp.AutoMapper 10.5.1`。R5 审查确认引擎源码在内建集合成员的深度判断与上下文检查之间存在差异。首个补丁将用公开包验证注册与预热顺序对普通映射的影响，再以相同输入核对候选。扩展的按键更新、已有目标对象的身份和关系型查询投影继续作为兼容验收项。[维护决定](../maintenance/r5-first-maintenance-review.md#本轮决定) · [补丁设计](../../openspec/changes/fix-r5-automapper-collection-context/design.md)
+
+### R3 兼容基线（2026-11-25）
 
 R3.4 规划基点 `d54f782` 固定了下表的两个 fork。当时经典框架声明 AutoMapper `14.0.0` 和 Collection `11.0.0`，固定模板原版 Web.Host 的还原图也实际选中了这两个版本。[子模块地址](../../.gitmodules) · [参考提交登记](../maintenance/release-baseline.json) · [原版 Host 依赖对照](../maintenance/r3-web-host-baseline.md)
 
@@ -13,7 +17,7 @@ R3.4 规划基点 `d54f782` 固定了下表的两个 fork。当时经典框架�
 
 `Du.Abp.AutoMapper 10.5.1-r3.4`、`Du.AutoMapper 14.0.0-r3.4` 和 `Du.AutoMapper.Collection 11.0.0-r3.4` 已在本机冻结并通过独立验收，补齐固定 Web.Host 的最后一个候选包缺口，剩余缺口为 **0**。冻结引擎对三则公告的处置和 ApiCompat 均有证据。CLR 低栈分支按获准的实包 IL、.NET 9 异常契约及受控异常传播和同一 Mapper 恢复实测验收。实际 CLR 低栈触发未观测。[引擎验收](../maintenance/r3-automapper-engine.md) · [维护路线](../maintenance/fork-roadmap.md#r3验证升级路径和实际消费者)
 
-在两个独立空目录还原和运行 `net9.0` 消费者，四条精确依赖均命中，Castle、静态入口和按键集合映射完成后各加载一个引擎实例。固定模板的重复 `CreateMap`、已有用户更新、角色对象和创建时间保留、集合增删改及 SQLite `ProjectTo` 与原版结果一致。三个组件已在各自维护分支交付，主仓固定相应 gitlink。完整模板的 SQL Server 和 Angular 验收、升级与回退及公开发行仍按后续阶段推进。[消费验收与复跑](../maintenance/r3-automapper-downstream.md#主仓实包消费与复验) · [Git 交付](../maintenance/r3-automapper-downstream.md#git-交付)
+在两个独立空目录还原和运行 `net9.0` 消费者，四条精确依赖均命中，Castle、静态入口和按键集合映射完成后各加载一个引擎实例。固定模板的重复 `CreateMap`、已有用户更新、角色对象和创建时间保留、集合增删改及 SQLite `ProjectTo` 与原版结果一致。三个组件已在各自维护分支交付，主仓固定相应 gitlink。后续完整模板的 SQL Server、Angular 和升级验收见 R4 公开源记录，原版回退另有同批冻结包的本机记录。[消费验收与复跑](../maintenance/r3-automapper-downstream.md#主仓实包消费与复验) · [Git 交付](../maintenance/r3-automapper-downstream.md#git-交付) · [R4 公开源模板消费](../maintenance/r4-release-candidate.md#公开源模板消费)
 
 **下文保留原调研方案和当时的实施状态。**
 

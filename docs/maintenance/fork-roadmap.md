@@ -2,7 +2,7 @@
 
 ## 当前阶段（2026-11-26）
 
-R4 已收尾。R5 已完成对公开版本 `v10.5.1` 的首轮维护审查，决定为需补丁。先处理 `Du.AutoMapper` 的内建集合映射上下文。当前支持范围沿用 R4 实测组合。[首发归档后复核](r4-release-candidate.md#首发归档后复核) · [首轮维护审查](r5-first-maintenance-review.md#本轮决定)
+R4 已收尾。R5 首轮维护审查已在 `4d051e8` 归档，下一轮准备 `Du.AutoMapper` 内建集合映射补丁候选。公开版仍为 `v10.5.1`，支持范围沿用 R4 实测组合。[首发归档后复核](r4-release-candidate.md#首发归档后复核) · [首轮维护审查](r5-first-maintenance-review.md#本轮决定) · [补丁候选提案](../../openspec/changes/fix-r5-automapper-collection-context/proposal.md)
 
 - R0 已验收并归档。上游 `v10.5.1` 的首批五包源码基线记录了公共 API、还原图和三套回归，实测环境为 macOS ARM64、.NET 9，EF Core 关系型用例使用 SQLite。[R0 基线](release-baseline.json) · [R0 归档](../../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)
 - R0 统一复验已完成本地与 GitHub Actions 的独立配对验收并归档。两次执行均用 `python3 eng/verify.py --profile r0` 复验固定的原版 R0 源码。[复验手册](baseline-evidence/README.md#统一入口) · [配对验收记录](baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](../../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
@@ -258,6 +258,8 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 待补的 R4 组合包括 Windows、Linux 原生应用、其他数据库 Provider 和不同 Angular 组合。后续支持范围按实际证据更新。[公开发行规范](../../openspec/specs/public-package-release/spec.md) · [首发归档](../../openspec/changes/archive/2026-11-26-publish-r4-first-public-release/)
 
 首轮按一条主发行线完成。三仓上游修复、四个入口的实际包图及两套共享运行时已有可复查记录。后续按引擎的最小修复范围准备候选，再核对整个消费闭包和实包回归。出现真实消费者需求并具备相应验证能力时，再考虑并行维护分支。[维护决定](r5-first-maintenance-review.md#本轮决定) · [补丁验收](r5-first-maintenance-review.md#后续补丁的范围与验收) · [下轮检查点](r5-first-maintenance-review.md#下轮检查点)
+
+本轮先在公开引擎上记录注册与预热顺序的实际结果，再对照候选。已核对的 13 份公开主包中，Collection 精确引用引擎，适配器精确引用两者及 `Du.Abp [10.5.1]`。因此只为三个映射包准备新版本，其余十个维护包复用 R4 公开件。候选需通过独立映射消费者、固定模板新库安装、同库接续和应用回退后交接。运行时公告的待补查项继续由维护记录跟踪。[三包设计](../../openspec/changes/fix-r5-automapper-collection-context/design.md) · [验收条件](../../openspec/changes/fix-r5-automapper-collection-context/specs/automapper-package-consumption/spec.md)
 
 建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。
 

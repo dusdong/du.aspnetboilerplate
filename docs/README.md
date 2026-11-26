@@ -9,6 +9,7 @@
 | 安装 R4 稳定维护包，在新 SQL Server 测试库运行 `net10.0` 模板 | [发行说明与包链接](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [已实跑安装指南](maintenance/r4-public-install.md) · [公开包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json) |
 | 查看各阶段目标、当前进度与发行条件 | [维护型 fork 路线](maintenance/fork-roadmap.md) |
 | 核对首发证据、R5 的补丁决定和消费者行动 | [R4 归档后复核](maintenance/r4-release-candidate.md#首发归档后复核) · [R5 首轮维护审查](maintenance/r5-first-maintenance-review.md#本轮决定) · [下轮检查点](maintenance/r5-first-maintenance-review.md#下轮检查点) |
+| 准备 R5 内建集合映射补丁，核对三包精确依赖与模板验收条件 | [补丁提案](../openspec/changes/fix-r5-automapper-collection-context/proposal.md) · [候选设计](../openspec/changes/fix-r5-automapper-collection-context/design.md) · [任务清单](../openspec/changes/fix-r5-automapper-collection-context/tasks.md) |
 | 用 `python3 eng/verify.py --profile r0` 复验 R0 的还原、Release 构建、公共 API 与回归 | [统一复验入口](maintenance/baseline-evidence/README.md#统一入口) · [本地与 GitHub Actions 配对验收](maintenance/baseline-evidence/README.md#统一入口验收记录) |
 | 核对 EF Core 查询过滤补丁的提交、兼容行为与回归结果 | [R1 首项补丁验收记录](maintenance/r1-efcore-query-filter.md) |
 | 核对 R1 运行时迁移的 Git 交付、.NET 9 源码兼容和 Windows 验收 | [R1 运行时迁移验收](maintenance/r1-dotnet10-runtime-migration.md) |

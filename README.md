@@ -25,7 +25,7 @@ git submodule update --init --recursive
 
 ## 当前阶段
 
-2026-11-26，R4 首次公开发行已收尾。发行 tag `v10.5.1` 指向已验源码 `5758c81`，主仓在 `ed0e156` 交付公开源验收工具、安装说明和归档。R5 首轮维护审查已完成，结论为需补丁，第一优先项是 `Du.AutoMapper` 的内建集合映射上下文。[R4 归档后复核](docs/maintenance/r4-release-candidate.md#首发归档后复核) · [R5 审查结论](docs/maintenance/r5-first-maintenance-review.md#本轮决定)
+2026-11-26，R4 公开版本 `v10.5.1` 仍对应已验源码 `5758c81`。R5 首轮维护审查已在主仓 `4d051e8` 归档。下一轮先用已发行的 `Du.AutoMapper 14.0.0` 核对普通集合映射的顺序差异，再验证引擎、Collection 与 ABP 适配器组成的补丁候选。当前结论来自源码比对，实包行为对照待执行。[R4 归档后复核](docs/maintenance/r4-release-candidate.md#首发归档后复核) · [R5 审查结论](docs/maintenance/r5-first-maintenance-review.md#本轮决定) · [补丁提案](openspec/changes/fix-r5-automapper-collection-context/proposal.md)
 
 ### 已归档的基线与迁移
 
