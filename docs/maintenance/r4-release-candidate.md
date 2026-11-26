@@ -216,3 +216,28 @@ python3 -B eng/tests/verify_r4_public_consumer.py \
   --batch-root "$R4_HANDOFF/frozen" --upgrade-run "$UPGRADE_RUN" \
   --manifest "$R4_RELEASE_EVIDENCE/release-manifest.json" -v
 ```
+
+### 首发归档后复核
+
+2026-11-26，主仓在 `ed0e156150403874e776ca2a4a19128e9c72a0f3` 交付公开源复验及归档。公开 tag `v10.5.1` 仍指向发行源码 `5758c8186b68dcc42ecc90164cf9d3f53cf3345e`。归档与稳定规范的 4 条需求、12 个场景一致。收尾提交触发的 GitHub Actions 完成 Python 定向验证和 R0 完整复验。[收尾提交](https://github.com/dusdong/du.aspnetboilerplate/commit/ed0e156150403874e776ca2a4a19128e9c72a0f3) · [CI](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45756865304) · [公开发行](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1)
+
+归档后的本机空缓存 `net10.0` Release 构建核对了 Web.Host 的 13 个维护包和 Migrator 的 10 个维护包。Web.Host 有 307 条警告、0 个错误，最终汇总中 CS1591 为 301 条、CS1570 为 4 条、CS8632 和 CS0162 各 1 条。公开消费定向测试复跑 8/8 通过。本次审查另从 nuget.org 和公共符号服务匿名下载，13 份主包及 18 个目标 PDB 的 SHA-256 均与公开清单一致。两代 SQL Server 和浏览器业务结论取自上节的首发正式运行。[公开校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json)
+
+## GitHub Actions 受信任发布接入建议
+
+截至 2026-11-26，主仓的 GitHub Actions 用于 R0 复验。以下方案供后续补丁采用 NuGet Trusted Publishing（OIDC）时实施，当前状态为待演练。现行发行条件见[公开发行稳定规范](../../openspec/specs/public-package-release/spec.md)。
+
+**发布身份。** 建议在主仓设置显式启动入口（如 `workflow_dispatch`），由发布者指定已授权的主仓 tag、目标提交和冻结清单摘要。NuGet 信任策略绑定 `dusdong/du.aspnetboilerplate`、实际工作流文件名，以及选用的 GitHub Environment。按本批清单限定包范围。以首发为例，范围包括根包 `Du.Abp`、10 个 `Du.Abp.*` 子包、`Du.AutoMapper` 和 `Du.AutoMapper.Collection`。发布这些已有 ID 的补丁时，选择发布已有包新版本的权限。[首发包清单](../../eng/r4_release_candidate.json) · [NuGet 信任策略](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing)
+
+只有实际上传的 job 申请 `id-token: write`。它在核对产物后、首次上传前以发布者的 NuGet 用户名调用 `NuGet/login`，兑换有效期一小时的临时 API Key。构建、演练和匿名回读可使用只读权限。创建 tag、发布 GitHub Release 所需的 GitHub 写权限按对应操作授予。[NuGet/login](https://github.com/NuGet/login) · [临时凭据有效期](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing#how-it-works)
+
+**产物与发布顺序。**
+
+1. 核对主仓 tag 解引用后的提交及三个生产 gitlink，从已验清单读取每个包的版本。首发同一 tag 对应框架 `10.5.1`、引擎 `14.0.0`、Collection `11.0.0`。两个映射子仓的版本 tag 会匹配已有上传工作流，整套发行由主仓协调。[首发设计](../../openspec/changes/archive/2026-11-26-publish-r4-first-public-release/design.md)
+2. 将冻结清单和逐项列出的 `.nupkg`、`.snupkg` 原件交给上传 job。上传前，对照验收时登记的清单摘要，再逐件核对 ID、版本和 SHA-256。SQL 备份及原始运行日志保存在验证环境。[发布者交接](#发布者交接)
+3. 按 `publishOrder` 逐包执行 `gate`。每个直接内部依赖的主包均已匿名下载、验签且内容与冻结件一致后，才上传依赖它的主包。匹配的主包可用后再上传其符号包，分别登记回执。部分完成、超时或重复版本时，从同批 `progress.json` 和远端实际状态续作，核对归属、内容及待传项。[公开主包、符号与进度核验](#公开主包符号与进度核验)
+4. 从公共符号服务读回本批 PDB，使用独立空缓存完成约定的公开源消费和新库安装验收。通过后发布 GitHub Release，附包链接、校验清单和实测范围。[公开源模板消费](#公开源模板消费) · [新库安装指南](r4-public-install.md)
+
+**接入演练。** 首次演练使用只读 job，以 R4 已发布批次为样本，核对清单、依赖顺序与公开回读结果；再用独立副本替换一个包，确认摘要不符时能指出该包并在上传前停止。演练记录保存工作流运行链接、输入提交、清单摘要和结果。OIDC 凭据兑换及真实上传的验收，留到下一次获授权的发行单独记录。[清单预检与反例](#首次公开发行清单预检)
+
+现有核验入口固定了 R4 首发清单的 SHA-256。用于补丁前，应让入口核对该补丁验收时独立登记的清单摘要，并保留 R4 的历史复验能力。[首发核验入口](../../eng/r4_public_release.py)

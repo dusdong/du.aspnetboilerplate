@@ -8,6 +8,7 @@
 | --- | --- |
 | 安装 R4 稳定维护包，在新 SQL Server 测试库运行 `net10.0` 模板 | [发行说明与包链接](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [已实跑安装指南](maintenance/r4-public-install.md) · [公开包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json) |
 | 查看各阶段目标、当前进度与发行条件 | [维护型 fork 路线](maintenance/fork-roadmap.md) |
+| 核对首发证据、R5 的补丁决定和消费者行动 | [R4 归档后复核](maintenance/r4-release-candidate.md#首发归档后复核) · [R5 首轮维护审查](maintenance/r5-first-maintenance-review.md#本轮决定) · [下轮检查点](maintenance/r5-first-maintenance-review.md#下轮检查点) |
 | 用 `python3 eng/verify.py --profile r0` 复验 R0 的还原、Release 构建、公共 API 与回归 | [统一复验入口](maintenance/baseline-evidence/README.md#统一入口) · [本地与 GitHub Actions 配对验收](maintenance/baseline-evidence/README.md#统一入口验收记录) |
 | 核对 EF Core 查询过滤补丁的提交、兼容行为与回归结果 | [R1 首项补丁验收记录](maintenance/r1-efcore-query-filter.md) |
 | 核对 R1 运行时迁移的 Git 交付、.NET 9 源码兼容和 Windows 验收 | [R1 运行时迁移验收](maintenance/r1-dotnet10-runtime-migration.md) |
@@ -20,6 +21,7 @@
 | 生成或复验 SignalR 与 Log4Net 本地候选，核对独立宿主的通知和日志 | [R3 SignalR 与 Log4Net 候选验收](maintenance/r3-signalr-log4net-candidates.md) · [Git 交付](maintenance/r3-signalr-log4net-candidates.md#git-交付) |
 | 生成或复验 Module Zero 本地候选，核对 SQLite 角色提交及双向租户隔离 | [R3 Module Zero 候选验收](maintenance/r3-module-zero-candidates.md) |
 | 核对 R4 首发冻结归档、公开源模板与历史回退 | [R4 组合与复验](maintenance/r4-release-candidate.md) · [公开源模板消费](maintenance/r4-release-candidate.md#公开源模板消费) · [发布者交接](maintenance/r4-release-candidate.md#发布者交接) |
+| 规划主仓用 GitHub Actions 向 NuGet 发布补丁 | [OIDC 接入与只读演练（待验收）](maintenance/r4-release-candidate.md#github-actions-受信任发布接入建议) |
 | 比较第三方 fork 的迁移、补丁与独立发包实践 | [ASP.NET Boilerplate fork 调研](maintenance/fork-references.md) |
 | 复验 R3 映射候选、Collection 依赖与模板业务投影 | [AutoMapper 兼容维护](compatibility/automapper.md) · [原版基线](maintenance/r3-automapper-baseline.md) · [引擎验收](maintenance/r3-automapper-engine.md) · [独立消费者验收与复跑](maintenance/r3-automapper-downstream.md#主仓实包消费与复验) · [Git 交付](maintenance/r3-automapper-downstream.md#git-交付) |
 | 核对 Angular 适配器、Web Resources 与模板的版本组合 | [Angular 生态维护](compatibility/angular-ecosystem.md) |
@@ -39,6 +41,7 @@
 | 当时的组织和实施建议 | [文档组织与治理建议稿](maintenance/du-abp-documentation-governance.md) · [主仓改进建议与实施路线](maintenance/du-abp-maintenance-plan.md)，两稿均基于 R0 快照 `92a31c2` |
 | 某一版本实际交付的源码、包与支持范围 | 对应版本的发行清单和验收证据，由该次发行记录 |
 | R4 公开发行的交付条件和复验范围 | [公开发行稳定规范](../openspec/specs/public-package-release/spec.md) · [首发归档](../openspec/changes/archive/2026-11-26-publish-r4-first-public-release/) · [公开发布说明](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) |
+| 发行后的维护审查规则、历史工作制品及本次处置 | [维护审查稳定规范](../openspec/specs/maintenance-release-review/spec.md) · [R5 首轮归档](../openspec/changes/archive/2026-11-26-review-r5-first-maintenance-cycle/) · [首轮审查记录](maintenance/r5-first-maintenance-review.md) |
 
 ## 子模块分工
 

@@ -25,6 +25,10 @@ git submodule update --init --recursive
 
 ## 当前阶段
 
+2026-11-26，R4 首次公开发行已收尾。发行 tag `v10.5.1` 指向已验源码 `5758c81`，主仓在 `ed0e156` 交付公开源验收工具、安装说明和归档。R5 首轮维护审查已完成，结论为需补丁，第一优先项是 `Du.AutoMapper` 的内建集合映射上下文。[R4 归档后复核](docs/maintenance/r4-release-candidate.md#首发归档后复核) · [R5 审查结论](docs/maintenance/r5-first-maintenance-review.md#本轮决定)
+
+### 已归档的基线与迁移
+
 截至 2026-11-25，上游 `v10.5.1` 的 R0 基线、R1 首项 .NET 9 查询过滤补丁和 R1 首批 .NET 10 / EF Core 10 源码迁移均已验收并归档。R1 源码兼容证据覆盖 macOS ARM64 回归、.NET 9 调用方、UTM Windows ARM64 和 GitHub 托管 Windows x64。[维护路线](docs/maintenance/fork-roadmap.md) · [R1 首项验收记录](docs/maintenance/r1-efcore-query-filter.md) · [R1 运行时迁移验收](docs/maintenance/r1-dotnet10-runtime-migration.md)
 
 R2 已归档。首批五个核心候选包 `10.5.1-r2.1` 已通过本机 macOS ARM64 上的 `net9.0`、`net10.0` 独立后端与 SQLite 验收。框架 `dev` 已交付同树的打包实现，主仓 gitlink 记录该框架提交。[R2 验收与复跑](docs/maintenance/r2-core-package-consumption.md) · [核心候选包消费规范](openspec/specs/core-package-consumption/spec.md)

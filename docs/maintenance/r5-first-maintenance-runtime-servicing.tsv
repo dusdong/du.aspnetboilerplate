@@ -1,0 +1,131 @@
+MicrosoftRelease	ReleaseDate	DotnetRuntime	AspNetCoreRuntime	CVE	Announcement	PublishedAt	UpdatedAt	OsxArm64Range	EvidenceScope
+9.0.10	2025-10-14	9.0.10	9.0.10	CVE-2025-55247	https://github.com/dotnet/announcements/issues/370	2025-10-14T17:47:56Z	2025-10-27T20:07:55Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.10	2025-10-14	9.0.10	9.0.10	CVE-2025-55248	https://github.com/dotnet/announcements/issues/372	2025-10-14T17:48:38Z	2025-10-14T22:10:50Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.10	2025-10-14	9.0.10	9.0.10	CVE-2025-55315	https://github.com/dotnet/announcements/issues/371	2025-10-14T17:48:30Z	2025-10-14T22:00:52Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.9 → 9.0.10	历史 9.0.10 不落入所列受影响区间。
+9.0.11	2025-11-19	9.0.11	9.0.11	-	-	-	-	-	正式发行元数据与 CVE 清单均无新条目。
+9.0.12	2026-01-20	9.0.12	9.0.12	-	-	-	-	-	正式发行元数据与 CVE 清单均无新条目。
+9.0.13	2026-02-10	9.0.13	9.0.13	CVE-2026-21218	https://github.com/dotnet/announcements/issues/380	2026-02-10T18:07:53Z	2026-02-10T18:11:28Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.14	2026-03-10	9.0.14	9.0.14	CVE-2026-26127	https://github.com/dotnet/announcements/issues/384	2026-03-10T17:32:46Z	2026-03-16T15:44:47Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.14	2026-03-10	9.0.14	9.0.14	CVE-2026-26130	https://github.com/dotnet/announcements/issues/385	2026-03-10T17:33:14Z	2026-03-10T18:34:36Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, < 9.0.13 → 9.0.14	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.15	2026-04-14	9.0.15	9.0.15	CVE-2026-26171	https://github.com/dotnet/announcements/issues/389	2026-04-14T17:54:00Z	2026-04-14T17:54:47Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.15	2026-04-14	9.0.15	9.0.15	CVE-2026-32178	https://github.com/dotnet/announcements/issues/390	2026-04-14T17:55:09Z	2026-04-14T17:55:43Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.15	2026-04-14	9.0.15	9.0.15	CVE-2026-32203	https://github.com/dotnet/announcements/issues/391	2026-04-14T17:55:55Z	2026-04-14T17:57:25Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.15	2026-04-14	9.0.15	9.0.15	CVE-2026-33116	https://github.com/dotnet/announcements/issues/392	2026-04-14T17:56:45Z	2026-04-14T17:57:15Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.16	2026-05-12	9.0.16	9.0.16	CVE-2026-32175	https://github.com/dotnet/announcements/issues/396	2026-05-12T17:56:36Z	2026-05-12T17:57:00Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.16	2026-05-12	9.0.16	9.0.16	CVE-2026-32177	https://github.com/dotnet/announcements/issues/399	2026-05-12T17:59:23Z	2026-05-12T17:59:30Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.16	2026-05-12	9.0.16	9.0.16	CVE-2026-35433	https://github.com/dotnet/announcements/issues/398	2026-05-12T17:58:28Z	2026-05-12T17:58:28Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.16	2026-05-12	9.0.16	9.0.16	CVE-2026-42899	https://github.com/dotnet/announcements/issues/397	2026-05-12T17:57:38Z	2026-05-12T17:58:03Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.15 → 9.0.16	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.17	2026-06-09	9.0.17	9.0.17	CVE-2026-45490	https://github.com/dotnet/announcements/issues/403	2026-06-09T17:57:20Z	2026-06-09T17:57:28Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.17	2026-06-09	9.0.17	9.0.17	CVE-2026-45491	https://github.com/dotnet/announcements/issues/404	2026-06-09T17:58:59Z	2026-06-09T17:59:06Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.17	2026-06-09	9.0.17	9.0.17	CVE-2026-45591	https://github.com/dotnet/announcements/issues/405	2026-06-09T18:00:15Z	2026-06-09T18:00:23Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.16 → 9.0.17	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-47300	https://github.com/dotnet/announcements/issues/409	2026-07-14T18:19:53Z	2026-07-14T18:19:53Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-47302	https://github.com/dotnet/announcements/issues/410	2026-07-14T18:20:43Z	2026-07-15T15:55:36Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-47303	https://github.com/dotnet/announcements/issues/411	2026-07-14T18:20:46Z	2026-07-14T18:20:46Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-47304	https://github.com/dotnet/announcements/issues/412	2026-07-14T18:20:48Z	2026-07-15T15:55:33Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50524	https://github.com/dotnet/announcements/issues/413	2026-07-14T18:20:50Z	2026-07-14T18:20:50Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50525	https://github.com/dotnet/announcements/issues/414	2026-07-14T18:20:53Z	2026-07-15T15:55:31Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50526	https://github.com/dotnet/announcements/issues/415	2026-07-14T18:20:55Z	2026-07-14T18:20:55Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50527	https://github.com/dotnet/announcements/issues/416	2026-07-14T18:20:57Z	2026-07-15T15:55:29Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50528	https://github.com/dotnet/announcements/issues/417	2026-07-14T18:20:59Z	2026-07-14T18:20:59Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50646	https://github.com/dotnet/announcements/issues/418	2026-07-14T18:21:01Z	2026-07-14T18:21:01Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50648	https://github.com/dotnet/announcements/issues/419	2026-07-14T18:21:04Z	2026-07-15T15:55:34Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50649	https://github.com/dotnet/announcements/issues/420	2026-07-14T18:21:06Z	2026-07-14T18:21:06Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50650	https://github.com/dotnet/announcements/issues/421	2026-07-14T18:21:08Z	2026-07-14T18:21:08Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50651	https://github.com/dotnet/announcements/issues/422	2026-07-14T18:21:10Z	2026-07-14T18:21:10Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-50659	https://github.com/dotnet/announcements/issues/423	2026-07-14T18:21:12Z	2026-07-14T18:21:12Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-56158	https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-56158	-	-	-	已登记于正式版本元数据。MSRC 单条组件范围及修订时点待回读。
+9.0.18	2026-07-14	9.0.18	9.0.18	CVE-2026-57108	https://github.com/dotnet/announcements/issues/408	2026-07-14T18:19:50Z	2026-07-14T18:19:50Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-62871	https://github.com/dotnet/announcements/issues/431	2026-08-11T18:13:39Z	2026-08-11T18:13:41Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-62886	https://github.com/dotnet/announcements/issues/430	2026-08-11T18:13:34Z	2026-08-11T18:13:36Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-62897	https://github.com/dotnet/announcements/issues/434	2026-08-11T18:13:53Z	2026-08-11T18:13:55Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-62898	https://github.com/dotnet/announcements/issues/426	2026-08-11T18:13:16Z	2026-08-11T18:13:18Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-62899	https://github.com/dotnet/announcements/issues/427	2026-08-11T18:13:21Z	2026-08-11T18:13:23Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.18 → 9.0.19	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-62900	https://github.com/dotnet/announcements/issues/435	2026-08-11T18:13:57Z	2026-08-11T18:13:58Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-62901	https://github.com/dotnet/announcements/issues/428	2026-08-11T18:13:25Z	2026-08-11T18:13:27Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.18 → 9.0.19	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-62902	https://github.com/dotnet/announcements/issues/433	2026-08-11T18:13:49Z	2026-08-11T18:13:51Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-62909	https://github.com/dotnet/announcements/issues/429	2026-08-11T18:13:30Z	2026-08-11T18:13:32Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.18 → 9.0.19	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.19	2026-08-11	9.0.19	9.0.19	CVE-2026-70354	https://github.com/dotnet/announcements/issues/432	2026-08-11T18:13:44Z	2026-08-11T18:13:46Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.20	2026-09-08	9.0.20	9.0.20	CVE-2026-58649	https://github.com/dotnet/announcements/issues/441	2026-09-08T19:27:12Z	2026-09-08T19:33:00Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.20	2026-09-08	9.0.20	9.0.20	CVE-2026-69304	https://github.com/dotnet/announcements/issues/443	2026-09-08T19:27:13Z	2026-09-10T14:46:57Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.20	2026-09-08	9.0.20	9.0.20	CVE-2026-69439	https://github.com/dotnet/announcements/issues/438	2026-09-08T19:27:10Z	2026-09-08T19:35:31Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.20	2026-09-08	9.0.20	9.0.20	CVE-2026-69522	https://github.com/dotnet/announcements/issues/439	2026-09-08T19:27:10Z	2026-09-08T19:35:34Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.20	2026-09-08	9.0.20	9.0.20	CVE-2026-69806	https://github.com/dotnet/announcements/issues/442	2026-09-08T19:27:12Z	2026-09-08T19:35:41Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.20	2026-09-08	9.0.20	9.0.20	CVE-2026-71328	https://github.com/dotnet/announcements/issues/440	2026-09-08T19:27:11Z	2026-09-08T19:35:38Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-105016	https://github.com/dotnet/announcements/issues/446	2026-10-13T18:26:09Z	2026-10-13T18:26:09Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-58280	https://github.com/dotnet/announcements/issues/447	2026-10-13T18:26:14Z	2026-10-13T18:26:14Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-66822	https://github.com/dotnet/announcements/issues/448	2026-10-13T18:26:19Z	2026-10-13T18:26:19Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-69651	https://github.com/dotnet/announcements/issues/449	2026-10-13T18:26:25Z	2026-10-13T18:26:25Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70007	https://github.com/dotnet/announcements/issues/450	2026-10-13T18:26:30Z	2026-10-13T18:26:30Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70035	https://github.com/dotnet/announcements/issues/451	2026-10-13T18:26:35Z	2026-10-13T18:26:35Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70159	https://github.com/dotnet/announcements/issues/452	2026-10-13T18:26:41Z	2026-10-15T21:44:01Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70161	https://github.com/dotnet/announcements/issues/453	2026-10-13T18:26:46Z	2026-10-13T18:26:46Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70162	https://github.com/dotnet/announcements/issues/454	2026-10-13T18:26:51Z	2026-10-13T18:26:51Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70165	https://github.com/dotnet/announcements/issues/455	2026-10-13T18:26:56Z	2026-10-13T18:26:56Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70174	https://github.com/dotnet/announcements/issues/456	2026-10-13T18:27:01Z	2026-10-13T18:27:01Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70175	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-x3vp-85cm-q97r	2026-10-13T18:22:58Z	2026-11-10T22:44:51Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70179	https://github.com/dotnet/announcements/issues/458	2026-10-13T18:27:13Z	2026-10-13T18:27:13Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70181	https://github.com/dotnet/announcements/issues/459	2026-10-13T18:27:19Z	2026-10-13T18:27:19Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70183	https://github.com/dotnet/announcements/issues/460	2026-10-13T18:27:26Z	2026-10-13T18:27:26Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70186	https://github.com/dotnet/announcements/issues/461	2026-10-13T18:27:32Z	2026-10-13T18:27:32Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70188	https://github.com/dotnet/announcements/issues/462	2026-10-13T18:27:39Z	2026-10-13T18:27:39Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70190	https://github.com/dotnet/announcements/issues/463	2026-10-13T18:27:45Z	2026-10-13T18:27:45Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70196	https://github.com/dotnet/announcements/issues/465	2026-10-13T18:27:57Z	2026-10-13T18:27:57Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-70197	https://github.com/dotnet/announcements/issues/466	2026-10-13T18:28:17Z	2026-10-25T19:17:28Z	-	首次公告，10 月 OOB 修订另见 9.0.22。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-83520	https://github.com/dotnet/announcements/issues/467	2026-10-13T18:28:22Z	2026-10-13T18:28:22Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-84008	https://github.com/dotnet/announcements/issues/468	2026-10-13T18:28:27Z	2026-10-13T18:28:27Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-85363	https://github.com/dotnet/announcements/issues/469	2026-10-13T18:28:31Z	2026-10-13T18:28:31Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-85790	https://github.com/dotnet/announcements/issues/470	2026-10-13T18:28:36Z	2026-10-14T15:39:05Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-87697	https://github.com/dotnet/announcements/issues/471	2026-10-13T18:28:41Z	2026-10-13T18:28:41Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-88092	https://github.com/dotnet/announcements/issues/472	2026-10-13T18:28:47Z	2026-10-13T18:28:47Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-92707	https://github.com/dotnet/announcements/issues/473	2026-10-13T18:28:53Z	2026-10-13T18:28:53Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96224	https://github.com/dotnet/announcements/issues/475	2026-10-13T18:29:02Z	2026-10-13T18:29:02Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96225	https://github.com/dotnet/announcements/issues/476	2026-10-13T18:29:07Z	2026-10-13T18:29:07Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96229	https://github.com/dotnet/announcements/issues/477	2026-10-13T18:29:11Z	2026-10-13T18:29:11Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96230	https://github.com/dotnet/announcements/issues/478	2026-10-13T18:29:17Z	2026-10-13T18:29:17Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96231	https://github.com/dotnet/announcements/issues/479	2026-10-13T18:29:22Z	2026-10-13T18:29:22Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96232	https://github.com/dotnet/announcements/issues/480	2026-10-13T18:29:27Z	2026-10-13T18:29:27Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96233	https://github.com/dotnet/announcements/issues/481	2026-10-13T18:29:32Z	2026-10-25T03:07:27Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96234	https://github.com/dotnet/announcements/issues/482	2026-10-13T18:29:37Z	2026-10-13T18:29:37Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96235	https://github.com/dotnet/announcements/issues/483	2026-10-13T18:29:42Z	2026-10-13T18:29:42Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96236	https://github.com/dotnet/announcements/issues/484	2026-10-13T18:29:47Z	2026-10-13T18:29:47Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96237	https://github.com/dotnet/announcements/issues/485	2026-10-13T18:29:52Z	2026-10-13T18:29:52Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96238	https://github.com/dotnet/announcements/issues/486	2026-10-13T18:29:57Z	2026-10-13T18:29:57Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96958	https://github.com/dotnet/announcements/issues/488	2026-10-13T18:30:06Z	2026-10-13T18:30:06Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96959	https://github.com/dotnet/announcements/issues/489	2026-10-13T18:30:12Z	2026-10-13T18:30:12Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.21	2026-10-13	9.0.21	9.0.21	CVE-2026-96960	https://github.com/dotnet/announcements/issues/490	2026-10-13T18:30:18Z	2026-10-13T18:30:18Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.22	2026-10-25	9.0.22	9.0.22	CVE-2026-111497	https://github.com/dotnet/announcements/issues/494	2026-10-25T19:06:12Z	2026-10-25T19:23:38Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0, < 9.0.22 → 9.0.22	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.22	2026-10-25	9.0.22	9.0.22	CVE-2026-114148	https://github.com/dotnet/announcements/issues/495	2026-10-25T19:06:13Z	2026-10-25T19:23:39Z	-	公告列 Linux 归档及源构建分发。macOS ARM64 历史进程不在该平台范围。
+9.0.22	2026-10-25	9.0.22	9.0.22	CVE-2026-70197	https://github.com/dotnet/announcements/issues/493	2026-10-25T18:50:05Z	2026-10-25T19:23:37Z	-	10 月 OOB 公告列 Windows 运行时。适用性另见 10 月早期公告。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-105544	https://github.com/dotnet/announcements/issues/517	2026-11-10T21:31:51Z	2026-11-10T21:31:52Z	-	VSTest 工具。SDK 10.0.404 已在修复范围。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-109475	https://github.com/dotnet/runtime/security/advisories/GHSA-3g4v-f5gv-c7xf	2026-11-10T21:14:39Z	2026-11-10T21:14:39Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 9.0.0-0, <= 9.0.22 → 9.0.23	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-109476	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-xhj5-c3g8-pfj8	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0-preview.1.24081.5, <= 9.0.22 → 9.0.23	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-114146	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-67wp-ghc2-fw2g	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0-preview.1.24081.5, <= 9.0.22 → 9.0.23	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-114147	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-wr8v-9x5q-ggcm	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0-preview.1.24081.5, <= 9.0.22 → 9.0.23	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-114149	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-x33c-w48q-qrgc	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0-preview.1.24081.5, <= 9.0.22 → 9.0.23	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-114151	https://github.com/dotnet/runtime/security/advisories/GHSA-fpxj-5c99-g7vj	2026-11-10T22:53:56Z	2026-11-10T22:55:18Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-114152	https://github.com/dotnet/runtime/security/advisories/GHSA-xf35-v9jh-g65w	2026-11-10T22:58:30Z	2026-11-10T22:58:30Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-114154	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-3893-7fxc-qvff	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-114157	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-7phj-vgxq-r67h	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	-	公告未列出本入口同 RID 的明确范围。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-114158	https://github.com/dotnet/runtime/security/advisories/GHSA-r8h3-p8p6-ggp7	2026-11-10T22:30:01Z	2026-11-10T22:30:01Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-114159	https://github.com/dotnet/runtime/security/advisories/GHSA-3cgx-w6gm-fqrx	2026-11-10T22:30:01Z	2026-11-10T22:30:01Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-118741	https://github.com/dotnet/announcements/issues/525	2026-11-11T01:13:49Z	2026-11-11T01:13:51Z	-	Identity 脚手架及生成代码。独立核对固定模板和消费者生成的项目。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-118745	https://github.com/dotnet/runtime/security/advisories/GHSA-x8x8-p968-x646	2026-11-10T22:58:30Z	2026-11-10T22:58:30Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+9.0.23	2026-11-10	9.0.23	9.0.23	CVE-2026-70175	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-x3vp-85cm-q97r	2026-10-13T18:22:58Z	2026-11-10T22:44:51Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 9.0.0, <= 9.0.20 → 9.0.21	历史 9.0.10 落入所列受影响区间。另核对功能及配置。
+9.0.24（独立包）	2026-11-10	-	-	CVE-2026-118747	https://github.com/dotnet/runtime/security/advisories/GHSA-vmv3-wvjp-wqpj	2026-11-10T21:14:39Z	2026-11-10T21:14:39Z	-	独立 System.Formats.Cbor 包。四图均无此包。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-105544	https://github.com/dotnet/announcements/issues/517	2026-11-10T21:31:51Z	2026-11-10T21:31:52Z	-	VSTest 工具。SDK 10.0.404 已在修复范围。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-109475	https://github.com/dotnet/runtime/security/advisories/GHSA-3g4v-f5gv-c7xf	2026-11-10T21:14:39Z	2026-11-10T21:14:39Z	Microsoft.NETCore.App.Runtime.osx-arm64 >= 10.0.0-0, <= 10.0.14 → 10.0.15	历史 10.0.15 不落入所列受影响区间。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-109476	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-xhj5-c3g8-pfj8	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 10.0.0-preview.1.25120.3, <= 10.0.14 → 10.0.15	历史 10.0.15 不落入所列受影响区间。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114146	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-67wp-ghc2-fw2g	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 10.0.0-preview.1.25120.3, <= 10.0.14 → 10.0.15	历史 10.0.15 不落入所列受影响区间。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114147	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-wr8v-9x5q-ggcm	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 10.0.0-preview.1.25120.3, <= 10.0.14 → 10.0.15	历史 10.0.15 不落入所列受影响区间。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114149	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-x33c-w48q-qrgc	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 10.0.0-preview.1.25120.3, <= 10.0.14 → 10.0.15	历史 10.0.15 不落入所列受影响区间。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114151	https://github.com/dotnet/runtime/security/advisories/GHSA-fpxj-5c99-g7vj	2026-11-10T22:53:56Z	2026-11-10T22:55:18Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114152	https://github.com/dotnet/runtime/security/advisories/GHSA-xf35-v9jh-g65w	2026-11-10T22:58:30Z	2026-11-10T22:58:30Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114154	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-3893-7fxc-qvff	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	-	公告未列出本入口同 RID 的明确范围。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114155	https://github.com/dotnet/announcements/issues/502	2026-11-10T21:09:51Z	2026-11-10T21:09:52Z	-	公告未列出本入口同 RID 的明确范围。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114157	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-7phj-vgxq-r67h	2026-11-10T21:31:48Z	2026-11-10T21:31:48Z	-	公告未列出本入口同 RID 的明确范围。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114158	https://github.com/dotnet/runtime/security/advisories/GHSA-r8h3-p8p6-ggp7	2026-11-10T22:30:01Z	2026-11-10T22:30:01Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-114159	https://github.com/dotnet/runtime/security/advisories/GHSA-3cgx-w6gm-fqrx	2026-11-10T22:30:01Z	2026-11-10T22:30:01Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-118741	https://github.com/dotnet/announcements/issues/525	2026-11-11T01:13:49Z	2026-11-11T01:13:51Z	-	Identity 脚手架及生成代码。独立核对固定模板和消费者生成的项目。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-118745	https://github.com/dotnet/runtime/security/advisories/GHSA-x8x8-p968-x646	2026-11-10T22:58:30Z	2026-11-10T22:58:30Z	-	Visual Studio 工具。历史入口是 dotnet 执行的 Release 应用。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-118747	https://github.com/dotnet/runtime/security/advisories/GHSA-vmv3-wvjp-wqpj	2026-11-10T21:14:39Z	2026-11-10T21:14:39Z	-	独立 System.Formats.Cbor 包。四图均无此包。
+10.0.15	2026-11-10	10.0.15	10.0.15	CVE-2026-70175	https://github.com/dotnet/aspnetcore/security/advisories/GHSA-x3vp-85cm-q97r	2026-10-13T18:22:58Z	2026-11-10T22:44:51Z	Microsoft.AspNetCore.App.Runtime.osx-arm64 >= 10.0.0, <= 10.0.12 → 10.0.13	历史 10.0.15 不落入所列受影响区间。
