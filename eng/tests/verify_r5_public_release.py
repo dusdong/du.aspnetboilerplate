@@ -4,17 +4,21 @@ import argparse
 from contextlib import redirect_stdout
 from io import BytesIO, StringIO
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
 import sys
+import time
 import unittest
+from unittest.mock import patch
 from xml.etree import ElementTree as ET
 from zipfile import ZipFile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from r3_automapper_packages import ADAPTER, COLLECTION, CORE, ENGINE
+import r5_oidc
 from r4_public_release import GALLERY, SIGNATURE, SYMBOLS
 from r5_public_release import ReleaseProgress, load_release, verified_downloads
 from verify import ROOT, VerificationError, read_json, require, sha256
@@ -62,6 +66,7 @@ class ReleaseTests(unittest.TestCase):
         self.work = self.case / "progress"
         self.work.mkdir()
         self.protocol = IsolatedProtocol()
+        self.proof_count = 0
 
     def open_progress(self):
         manifest, _, handoff = load_release(self.root, self.batch_sha, self.manifest, self.manifest_sha,
@@ -111,6 +116,473 @@ class ReleaseTests(unittest.TestCase):
     def accept_main(self, progress, name):
         _, digest = self.archive(progress, name)
         progress.record("main", name, "accepted", "隔离样本主包受理", ["sample-owner"], digest)
+
+    def prepare_upload_cli(self):
+        self.protocol_root = self.case / "protocol"
+        self.protocol_root.mkdir()
+        doc = (ROOT / "docs/maintenance/r5-automapper-template.md").read_text(encoding="utf-8")
+        section = doc.split("#### 执行待发交接手册", 1)[1]
+        self.publisher = section.split("```sh\n", 1)[1].split("```", 1)[0]
+        (self.protocol_root / "sitecustomize.py").write_text(
+            """import json
+import os
+from pathlib import Path
+import subprocess
+from verify_r5_public_release import IsolatedProtocol
+import r4_public_release
+
+case = Path(os.environ["R5_TEST_CASE"])
+protocol = IsolatedProtocol()
+for url, file in json.loads((case / "responses.json").read_text()).items():
+    protocol.responses[url] = Path(file).read_bytes()
+r4_public_release.NuGet = lambda timeout: protocol
+r4_public_release.Dotnet = lambda work: protocol
+action = os.getenv("R5_TEST_ACTION")
+if action == "wrong-owner":
+    protocol.owners = lambda name: {"owners": ["other-owner"]}
+if action == "not-started":
+    def cannot_start(*args, **kwargs):
+        raise FileNotFoundError("隔离样本无法启动 dotnet")
+
+    subprocess.Popen = cannot_start
+if action in ("fail-intent", "fail-run-binding", "fail-result"):
+    real_replace = os.replace
+
+    def replace(source, destination):
+        if Path(destination).name == "progress.json":
+            intents = json.loads(Path(source).read_text()).get("uploadIntents", {})
+            if action == "fail-intent" and intents:
+                raise OSError("隔离样本意向持久化失败")
+            if action == "fail-run-binding" and any("runId" in rows[-1].get("workflow", {})
+                                                     for rows in intents.values()):
+                raise OSError("隔离样本托管运行 ID 持久化失败")
+            if action == "fail-result" and any("result" in rows[-1] for rows in intents.values()):
+                raise OSError("隔离样本结果持久化失败")
+        real_replace(source, destination)
+
+    os.replace = replace
+""", encoding="utf-8")
+        dotnet = self.protocol_root / "dotnet"
+        dotnet.write_text(
+            """#!/bin/sh
+printf '%s\\n' "$*" >> "$R5_TEST_CASE/uploads.log"
+case "$R5_TEST_ACTION" in
+  interrupt) kill -KILL "$PPID" ;;
+  hold)
+    kill -KILL "$PPID"
+    while [ ! -f "$R5_TEST_CASE/release-child" ]; do sleep 0.05; done
+    ;;
+  nonzero) exit 17 ;;
+esac
+exit 0
+""", encoding="utf-8")
+        dotnet.chmod(0o755)
+
+    def upload_cli(self, verb, *arguments, action="success", concurrent=False):
+        responses = {}
+        for index, (url, data) in enumerate(self.protocol.responses.items()):
+            path = self.protocol_root / f"response-{index}"
+            path.write_bytes(data)
+            responses[url] = str(path)
+        (self.case / "responses.json").write_text(json.dumps(responses), encoding="utf-8")
+        env = os.environ | {
+            "PATH": f"{self.protocol_root}:{os.environ['PATH']}",
+            "PYTHONPATH": os.pathsep.join(map(str, (self.protocol_root, ROOT / "eng", ROOT / "eng/tests"))),
+            "PYTHONDONTWRITEBYTECODE": "1", "R5_TEST_CASE": str(self.case), "R5_TEST_ACTION": action,
+            "R5_BATCH": str(self.root), "R5_MANIFEST": str(self.manifest), "R5_RELEASE_WORK": str(self.work),
+        }
+        for secret in ("NUGET_API_KEY", "NUGET_SYMBOL_API_KEY"):
+            env.pop(secret, None)
+        command = ["/bin/sh", "-c", self.publisher + f'\n{verb} "$@"\n', "r5-test", *arguments]
+        if concurrent:
+            return subprocess.Popen(command, cwd=ROOT, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    text=True)
+        result = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True, timeout=30)
+        with (self.case / "cli.log").open("a", encoding="utf-8") as log:
+            log.write(f"{verb} {arguments} 模式={action} exit={result.returncode}\n{result.stdout}{result.stderr}")
+        return result
+
+    def assert_cli(self, code, verb, *args, **options):
+        result = self.upload_cli(verb, *args, **options)
+        self.assertEqual(code, result.returncode, result.stdout + result.stderr)
+        return result
+
+    def upload_count(self):
+        log = self.case / "uploads.log"
+        return len(log.read_text(encoding="utf-8").splitlines()) if log.exists() else 0
+
+    def intent(self, kind):
+        intent = read_json(self.work / "progress.json")["uploadIntents"][f"{kind}/{ENGINE}"][-1]
+        progress = self.open_progress()
+        row = progress.manifest["packages"][ENGINE]
+        self.assertEqual((self.batch_sha, ENGINE, row["version"], kind,
+                          row["archive" if kind == "main" else "symbols"]["sha256"]),
+                         tuple(intent[key] for key in ("batchSha256", "package", "version", "kind", "uploadSha256")))
+        self.assertTrue(intent["receipt"].startswith("push-"))
+        return intent
+
+    def prepare_oidc_cli(self):
+        self.prepare_upload_cli()
+        with (self.protocol_root / "sitecustomize.py").open("a", encoding="utf-8") as stream:
+            stream.write('''
+import r5_oidc
+
+protocol.owners = lambda name: {"owners": ["dusdong"]}
+workflow = case / "workflow"
+workflow.mkdir(exist_ok=True)
+head = "a" * 40
+archive = "Du.AutoMapper.14.0.1.nupkg"
+
+def github(endpoint, *, data=None, method="GET", download=None):
+    with (workflow / "calls.log").open("a") as out:
+        out.write(f"{method} {endpoint}\\n")
+    if endpoint == "git/ref/heads/main":
+        return {"object": {"sha": head}}
+    if endpoint == "git/ref/tags/v10.5.2":
+        return {"object": {"type": "tag", "sha": "b" * 40}}
+    if endpoint == "git/tags/" + "b" * 40:
+        return {"tag": r5_oidc.TAG, "object": {"type": "commit", "sha": r5_oidc.TAG_COMMIT}}
+    if endpoint == "releases/700":
+        return {"id": 700, "tag_name": r5_oidc.TAG, "draft": action != "published-draft",
+                "assets": [{"name": name, "id": 800 + index, "state": "uploaded", "digest": f"sha256:{digest}"}
+                           for index, (name, digest) in enumerate(r5_oidc.ARCHIVES.items())]}
+    if endpoint.endswith("/dispatches"):
+        (workflow / "dispatch.json").write_text(json.dumps(data))
+        intent = json.loads((case / "progress/progress.json").read_text())["uploadIntents"]["main/Du.AutoMapper"][-1]
+        assert intent["receipt"] == "push-" + data["inputs"]["intent"] + ".json"
+        assert "runId" not in intent["workflow"]
+        return {} if action == "unbound" else {"workflow_run_id": 901}
+    if endpoint == "releases/assets/800":
+        assert method == "PATCH"
+        intent = json.loads((case / "progress/progress.json").read_text())["uploadIntents"]["main/Du.AutoMapper"][-1]
+        assert intent["workflow"]["runId"] == "901"
+        (workflow / "label").write_text(data["label"])
+        return {"id": 800} | data
+    if endpoint.endswith("/attempts/1"):
+        login = endpoint.split("/")[2] == "900"
+        inputs = {} if login else json.loads((workflow / "dispatch.json").read_text())["inputs"]
+        return {"id": 900 if login else 901, "run_attempt": 1, "event": "workflow_dispatch",
+                "head_branch": "main", "path": r5_oidc.WORKFLOW_PATH, "display_title":
+                r5_oidc.run_title("login-only") if login else r5_oidc.run_title("publish", inputs["intent"]),
+                "head_sha": "c" * 40 if login and action == "wrong-login-head" else head,
+                "repository": {"full_name": r5_oidc.REPO}, "head_repository": {"full_name": r5_oidc.REPO},
+                "status": "in_progress" if not login and action == "running" else "completed",
+                "conclusion": "success"}
+    if endpoint.endswith("/attempts/1/jobs"):
+        login = endpoint.split("/")[2] == "900"
+        conclusion = "skipped" if login or action == "skipped" else ("failure" if action == "ambiguous" else "success")
+        return {"jobs": [{"name": r5_oidc.JOB, "status": "completed", "steps": [
+            {"name": r5_oidc.CHECK_STEP, "conclusion": "success"},
+            {"name": r5_oidc.PUSH_STEP, "conclusion": conclusion}]}]}
+    raise AssertionError(endpoint)
+
+r5_oidc.github = github
+''')
+
+    def test_oidc_cli_binds_only_one_run_to_persisted_intent_and_reads_success(self):
+        self.prepare_oidc_cli()
+        arguments = (ENGINE, "--owner", "dusdong", "--oidc", "700", "900")
+        for action in ("wrong-login-head", "published-draft", "fail-intent"):
+            self.assert_cli(1, "r5_publish_main", *arguments, action=action)
+            self.assertFalse((self.case / "workflow/dispatch.json").exists())
+        self.assert_cli(0, "r5_publish_main", *arguments)
+        first = self.intent("main")
+        self.assertEqual(r5_oidc.permit_label(901, Path(first["receipt"]).stem.removeprefix("push-"), 900),
+                         (self.case / "workflow/label").read_text())
+        self.assert_cli(2, "r5_publish_main", *arguments)
+        for action in ("running", "ambiguous"):
+            self.assert_cli(1, "r5_readback", "workflow-receipt", "--kind", "main", "--package", ENGINE, action=action)
+            self.assertFalse((self.work / first["receipt"]).exists())
+        self.assert_cli(1, "r5_readback", "workflow-receipt", "--kind", "main", "--package", ENGINE, action="fail-result")
+        receipt = read_json(self.work / first["receipt"])
+        self.assertEqual(("push-succeeded", 0), (receipt["phase"], receipt["exitCode"]))
+        self.assert_cli(0, "r5_readback", "workflow-receipt", "--kind", "main", "--package", ENGINE)
+        self.assertEqual("accepted", self.intent("main")["result"]["outcome"])
+        self.assert_cli(2, "r5_publish_main", *arguments)
+        self.assertEqual(1, (self.case / "workflow/calls.log").read_text().count("/dispatches\n"))
+        self.assertEqual(0, self.upload_count())
+
+    def test_oidc_cli_can_resolve_only_proven_unstarted_push(self):
+        self.prepare_oidc_cli()
+        arguments = (ENGINE, "--owner", "dusdong", "--oidc", "700", "900")
+        self.assert_cli(1, "r5_publish_main", *arguments, action="unbound")
+        for action in ("unbound", "fail-run-binding", "skipped"):
+            if action != "unbound":
+                self.assert_cli(0 if action == "skipped" else 1, "r5_publish_main", *arguments, action=action)
+            phase = "push-skipped" if action == "skipped" else "dispatch-unbound"
+            self.assertEqual(action == "skipped", (self.case / "workflow/label").exists())
+            first = self.intent("main")
+            self.assert_cli(2, "r5_publish_main", *arguments)
+            self.assert_cli(2, "r5_readback", "workflow-receipt", "--kind", "main", "--package", ENGINE, action="skipped")
+            proof = self.work / first["receipt"]
+            self.assertEqual(phase, read_json(proof)["phase"])
+            self.resolve_upload(0, "main", first["receipt"], "not-accepted", proof)
+        self.assertEqual("retry", self.intent("main")["result"]["outcome"])
+        self.assertEqual(0, self.upload_count())
+
+    def test_oidc_runner_requires_exact_binding_and_bytes_and_pushes_one_archive(self):
+        self.prepare_upload_cli()
+        manifest = self.open_progress().manifest
+        self.assertEqual(r5_oidc.ARCHIVES, {Path(row[kind]["path"]).name: row[kind]["sha256"]
+                                           for row in manifest["packages"].values()
+                                           for kind in ("archive", "symbols")})
+        env = {"GITHUB_REPOSITORY": r5_oidc.REPO, "GITHUB_REF": "refs/heads/main",
+               "GITHUB_EVENT_NAME": "workflow_dispatch", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_RUN_ID": "901",
+               "GITHUB_SHA": "a" * 40, "RUNNER_TEMP": str(self.case), "R5_LOGIN_RUN": "900", "R5_ASSET_ID": "800",
+               "R5_DRAFT_ID": "700", "R5_INTENT": "b" * 32, "NUGET_API_KEY": "test-value",
+               "NUGET_SYMBOL_API_KEY": "test-value", "PATH": f"{self.protocol_root}:{os.environ['PATH']}",
+               "R5_TEST_CASE": str(self.case)}
+        for kind in ("archive", "symbols"):
+            original = self.root / manifest["packages"][ENGINE][kind]["path"]
+            env["R5_ARCHIVE"] = original.name
+            label = r5_oidc.permit_label(901, env["R5_INTENT"], 900)
+            assets = {original.name: {"id": 800, "label": label}}
+
+            def download(endpoint, *, download):
+                self.assertEqual("releases/assets/800", endpoint)
+                shutil.copyfile(original, download)
+
+            with patch.dict(os.environ, env, clear=True), patch.object(r5_oidc, "require_login"), \
+                    patch.object(r5_oidc, "check_tag"), patch.object(r5_oidc, "draft_assets", return_value=assets), \
+                    patch.object(r5_oidc, "github", side_effect=download) as released, patch.object(r5_oidc.time, "sleep"):
+                with patch.dict(os.environ, {"GITHUB_RUN_ATTEMPT": "2"}):
+                    with self.assertRaisesRegex(VerificationError, "首次手动运行"):
+                        r5_oidc.prepare_runner()
+                with patch.dict(os.environ, {"GITHUB_RUN_ID": "902"}):
+                    with self.assertRaisesRegex(VerificationError, "未获当前 GitHub 运行"):
+                        r5_oidc.prepare_runner()
+                released.assert_not_called()
+                r5_oidc.prepare_runner()
+                path = r5_oidc.runner_archive()
+                path.write_bytes(b"wrong")
+                with self.assertRaisesRegex(VerificationError, "上传前归档 SHA-256 不匹配"):
+                    r5_oidc.push_runner()
+                shutil.copyfile(original, path)
+                self.assertEqual(0, r5_oidc.push_runner())
+                shutil.rmtree(path.parent)
+        main, symbols = (self.case / "uploads.log").read_text().splitlines()
+        self.assertIn("--source https://api.nuget.org/v3/index.json", main)
+        self.assertIn("--source https://api.nuget.org/v3/index.json", symbols)
+        self.assertIn("--no-symbols", main)
+        self.assertNotIn("--no-symbols", symbols)
+        self.assertNotIn("test-value", main + symbols)
+
+    def proof(self, receipt, outcome, source, original=None, digest=None):
+        if original is None:
+            original = self.case / f"{receipt}.source.txt"
+            original.write_text(f"隔离 NuGet {source}：{receipt} {outcome}\n", encoding="utf-8")
+        self.proof_count += 1
+        path = self.case / f"proof-{self.proof_count}.json"
+        path.write_text(json.dumps({"receipt": receipt, "outcome": outcome, "source": source,
+                                    "reference": original.name, "referenceSha256": digest or sha256(original)}),
+                        encoding="utf-8")
+        return path
+
+    def check_non_acceptance_evidence(self, kind, receipt):
+        original = self.case / "support-response.txt"
+        response = f"隔离支持响应：{kind} {receipt} 未受理\n"
+        original.write_text(response, encoding="utf-8")
+        proof = self.proof(receipt, "not-accepted", "nuget.org-support", original)
+        digest = sha256(original)
+        statement = read_json(proof)
+        proof.write_text(json.dumps(statement | {"referenceSha256": None}), encoding="utf-8")
+        rejected = self.resolve_upload(1, kind, receipt, "not-accepted", proof)
+        self.assertIn("需要脱敏原始证据的文件路径与独立 SHA-256", rejected.stderr)
+        proof.write_text(json.dumps(statement), encoding="utf-8")
+        original.unlink()
+        rejected = self.resolve_upload(1, kind, receipt, "not-accepted", proof)
+        self.assertIn("缺少独立的脱敏原始证据文件", rejected.stderr)
+        original.write_text(" \n", encoding="utf-8")
+        empty = self.proof(receipt, "not-accepted", "nuget.org-support", original)
+        rejected = self.resolve_upload(1, kind, receipt, "not-accepted", empty)
+        self.assertIn("为空或 SHA-256 不符", rejected.stderr)
+        original.write_text(response + "原件变化\n", encoding="utf-8")
+        mismatched = self.proof(receipt, "not-accepted", "nuget.org-support", original, digest)
+        rejected = self.resolve_upload(1, kind, receipt, "not-accepted", mismatched)
+        self.assertIn("为空或 SHA-256 不符", rejected.stderr)
+        self.assertNotIn("result", self.intent(kind))
+        original.write_text(response, encoding="utf-8")
+        proof = self.proof(receipt, "not-accepted", "nuget.org-support", original, digest)
+        self.resolve_upload(0, kind, receipt, "not-accepted", proof)
+        result = self.intent(kind)["result"]
+        self.assertEqual(("retry", str(original), digest, sha256(proof)), (
+            result["outcome"], result["reference"], result["referenceSha256"], result["evidenceSha256"]))
+        return proof, original
+
+    def assert_original_reuse_rejected(self, kind, receipt, original):
+        copied = self.case / "renamed-support-response.txt"
+        shutil.copyfile(original, copied)
+        rewritten = self.proof(receipt, "not-accepted", "nuget.org-support", copied)
+        rejected = self.resolve_upload(1, kind, receipt, "not-accepted", rewritten)
+        self.assertIn("该脱敏原始证据已用于较早的上传", rejected.stderr)
+        self.assertNotIn("result", self.intent(kind))
+
+    def resolve_upload(self, code, kind, receipt, outcome, proof, **options):
+        return self.assert_cli(code, "r5_readback", "resolve", "--package", ENGINE, "--kind", kind,
+                               "--receipt", receipt, "--outcome", outcome, "--evidence", str(proof), **options)
+
+    def setup_symbol_upload(self):
+        progress = self.open_progress()
+        self.sample_main(progress, ENGINE)
+        self.accept_main(progress, ENGINE)
+        return progress
+
+    def test_main_upload_survives_interruption_before_receipt_and_verifies_public_ownership(self):
+        self.prepare_upload_cli()
+        self.assert_cli(137, "r5_publish_main", ENGINE, "--owner", "sample-owner", action="interrupt")
+        intent = self.intent("main")
+        receipt = intent["receipt"]
+        self.assertNotIn("result", intent)
+        self.assertFalse((self.work / receipt).exists())
+        self.assertIn("--no-symbols", (self.case / "uploads.log").read_text())
+        self.assert_cli(2, "r5_publish_main", ENGINE, "--owner", "sample-owner")
+        self.assert_cli(2, "r5_readback", "gate", "--package", ENGINE)
+        self.assert_cli(1, "r5_readback", "record", "--package", ENGINE, "--kind", "main",
+                        "--outcome", "retry", "--evidence", "隔离样本")
+        self.assertEqual(1, self.upload_count())
+        proof = self.proof(receipt, "confirmed", "nuget.org-publisher")
+        self.resolve_upload(1, "main", receipt, "confirmed", proof)
+        progress = self.open_progress()
+        self.sample_main(progress, ENGINE, extra=True)
+        self.resolve_upload(1, "main", receipt, "confirmed", proof)
+        self.sample_main(progress, ENGINE)
+        self.resolve_upload(1, "main", receipt, "confirmed", proof, action="wrong-owner")
+        self.resolve_upload(0, "main", receipt, "confirmed", proof)
+        self.assertEqual("confirmed", self.intent("main")["result"]["outcome"])
+        self.assert_cli(0, "r5_readback", "verify", "--package", ENGINE, "--main-only")
+        self.assert_cli(0, "r5_readback", "gate", "--package", COLLECTION)
+        self.assertEqual(1, self.upload_count())
+
+    def test_symbol_upload_survives_interruption_before_receipt_and_requires_matching_pdb(self):
+        self.prepare_upload_cli()
+        progress = self.setup_symbol_upload()
+        self.assert_cli(137, "r5_publish_symbols", ENGINE, action="interrupt")
+        intent = self.intent("symbols")
+        receipt = intent["receipt"]
+        self.assertNotIn("result", intent)
+        self.assertFalse((self.work / receipt).exists())
+        self.assertIn(".snupkg --source", (self.case / "uploads.log").read_text())
+        self.assert_cli(2, "r5_publish_symbols", ENGINE)
+        self.assert_cli(2, "r5_readback", "gate", "--package", ENGINE, "--symbols")
+        self.assert_cli(1, "r5_readback", "record", "--package", ENGINE, "--kind", "symbols",
+                        "--outcome", "retry", "--evidence", "隔离样本")
+        self.assertEqual(1, self.upload_count())
+        proof = self.proof(receipt, "confirmed", "nuget.org-publisher")
+        self.resolve_upload(1, "symbols", receipt, "confirmed", proof)
+        symbol = f"{SYMBOLS}/AutoMapper.pdb/{DEBUG_GUID}FFFFFFFF/AutoMapper.pdb"
+        self.protocol.responses[symbol] = b"wrong pdb"
+        self.resolve_upload(1, "symbols", receipt, "confirmed", proof)
+        with ZipFile(self.archive(progress, ENGINE, "symbols")[0]) as frozen:
+            self.protocol.responses[symbol] = frozen.read("lib/net8.0/AutoMapper.pdb")
+        self.resolve_upload(0, "symbols", receipt, "confirmed", proof)
+        self.assertEqual("confirmed", self.intent("symbols")["result"]["outcome"])
+        self.assert_cli(0, "r5_readback", "verify", "--package", ENGINE)
+        self.assertEqual(1, self.upload_count())
+
+    def test_intent_write_failure_never_invokes_main_or_symbol_upload(self):
+        self.prepare_upload_cli()
+        failed_main = self.assert_cli(1, "r5_publish_main", ENGINE, "--owner", "sample-owner", action="fail-intent")
+        self.assertIn("隔离样本意向持久化失败", failed_main.stderr)
+        self.setup_symbol_upload()
+        failed_symbols = self.assert_cli(1, "r5_publish_symbols", ENGINE, action="fail-intent")
+        self.assertIn("隔离样本意向持久化失败", failed_symbols.stderr)
+        self.assertEqual(0, self.upload_count())
+        self.assertNotIn("uploadIntents", read_json(self.work / "progress.json"))
+
+    def test_retry_requires_current_explicit_non_acceptance_and_consumes_the_permission(self):
+        self.prepare_upload_cli()
+        publish = ("r5_publish_main", ENGINE, "--owner", "sample-owner")
+        self.assert_cli(17, *publish, action="nonzero")
+        original = self.intent("main")["receipt"]
+        self.resolve_upload(1, "main", original, "not-accepted", self.work / original)
+        proof = self.proof(original, "not-accepted", "anonymous-404")
+        self.resolve_upload(1, "main", original, "not-accepted", proof)
+        self.assert_cli(2, *publish)
+        proof, reference = self.check_non_acceptance_evidence("main", original)
+        self.assert_cli(17, *publish, action="nonzero")
+        current = self.intent("main")["receipt"]
+        self.assertNotEqual(original, current)
+        self.resolve_upload(1, "main", original, "not-accepted", proof)
+        self.resolve_upload(1, "main", current, "not-accepted", proof)
+        self.assert_original_reuse_rejected("main", current, reference)
+        self.assert_cli(2, *publish)
+        self.assertEqual(2, self.upload_count())
+
+    def test_symbol_retry_requires_explicit_non_acceptance_and_still_checks_the_index(self):
+        self.prepare_upload_cli()
+        progress = self.setup_symbol_upload()
+        self.assert_cli(17, "r5_publish_symbols", ENGINE, action="nonzero")
+        original = self.intent("symbols")["receipt"]
+        self.resolve_upload(1, "symbols", original, "not-accepted", self.work / original)
+        _, reference = self.check_non_acceptance_evidence("symbols", original)
+        symbol = f"{SYMBOLS}/AutoMapper.pdb/{DEBUG_GUID}FFFFFFFF/AutoMapper.pdb"
+        self.protocol.responses[symbol] = b"visible PDB blocks another upload"
+        self.assert_cli(2, "r5_publish_symbols", ENGINE)
+        self.assertEqual(1, self.upload_count())
+        del self.protocol.responses[symbol]
+        self.assert_cli(17, "r5_publish_symbols", ENGINE, action="nonzero")
+        latest = self.intent("symbols")
+        self.assertNotEqual(original, latest["receipt"])
+        self.assert_original_reuse_rejected("symbols", latest["receipt"], reference)
+        self.assert_cli(2, "r5_publish_symbols", ENGINE)
+        self.assertEqual(2, self.upload_count())
+
+    def test_local_receipt_allows_retry_when_dotnet_could_not_start(self):
+        self.prepare_upload_cli()
+        publish = ("r5_publish_main", ENGINE, "--owner", "sample-owner")
+        rejected = self.assert_cli(1, *publish, action="not-started")
+        self.assertIn("隔离样本无法启动 dotnet", rejected.stderr)
+        self.assertEqual(0, self.upload_count())
+        prior = self.intent("main")["receipt"]
+        local = self.work / prior
+        self.assertIs(read_json(local)["started"], False)
+        self.assert_cli(2, *publish)
+        self.resolve_upload(0, "main", prior, "not-accepted", local)
+        self.assert_cli(0, *publish)
+        self.assertNotEqual(prior, self.intent("main")["receipt"])
+        self.assertEqual("accepted", self.intent("main")["result"]["outcome"])
+        self.assertEqual(1, self.upload_count())
+
+    def test_success_receipt_recovers_if_result_write_fails_and_blocks_retry(self):
+        self.prepare_upload_cli()
+        publish = ("r5_publish_main", ENGINE, "--owner", "sample-owner")
+        self.assert_cli(1, *publish, action="fail-result")
+        intent = self.intent("main")
+        receipt = intent["receipt"]
+        self.assertNotIn("result", intent)
+        local = self.work / receipt
+        self.assertEqual(0, read_json(local)["exitCode"])
+        proof = self.proof(receipt, "not-accepted", "nuget.org-support")
+        self.resolve_upload(1, "main", receipt, "not-accepted", proof)
+        self.assert_cli(2, *publish)
+        self.sample_main(self.open_progress(), ENGINE)
+        self.resolve_upload(0, "main", receipt, "confirmed", local)
+        self.assertEqual(1, self.upload_count())
+
+    def test_in_flight_child_keeps_the_progress_lock_after_publisher_interruption(self):
+        self.prepare_upload_cli()
+        process = self.upload_cli("r5_publish_main", ENGINE, "--owner", "sample-owner", action="hold", concurrent=True)
+        try:
+            deadline = time.monotonic() + 10
+            while self.upload_count() == 0 and process.poll() is None and time.monotonic() < deadline:
+                time.sleep(0.02)
+            self.assertEqual(1, self.upload_count())
+            blocked = self.assert_cli(1, "r5_readback", "gate", "--package", ENGINE)
+            self.assertIn("temporarily unavailable", blocked.stderr.lower())
+        finally:
+            (self.case / "release-child").touch()
+            stdout, stderr = process.communicate(timeout=15)
+            (self.case / "interrupted.log").write_text(f"exit={process.returncode}\n{stdout}{stderr}", encoding="utf-8")
+        self.assertEqual(137, process.returncode)
+        # A new invocation continues to honor the intent after the inherited lock is released.
+        deadline = time.monotonic() + 10
+        while True:
+            result = self.upload_cli("r5_publish_main", ENGINE, "--owner", "sample-owner")
+            if result.returncode != 1 or time.monotonic() >= deadline:
+                break
+            time.sleep(0.02)
+        self.assertEqual(2, result.returncode, result.stdout + result.stderr)
+        self.assertEqual(1, self.upload_count())
 
     def test_adapter_waits_only_for_missing_or_changed_core_evidence_and_resumes(self):
         progress = self.open_progress()

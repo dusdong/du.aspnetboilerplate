@@ -25,11 +25,11 @@ git submodule update --init --recursive
 
 ## 当前阶段
 
-截至 2026-11-26，公开版为 `v10.5.1`（源码 `5758c81`），R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 应用迁往 `net10.0` 的指引已交付，迁移与增量审查变更已归档。两代四入口的公开源 Release 构建已复验，固定组合的同库业务沿用 R4 实测。增量审查记录了六条上游分支、依赖公告与两套共享运行时的续查结果。[存量迁移指引](docs/maintenance/r5-r4-net10-migration.md) · [增量审查](docs/maintenance/r5-runtime-migration-review.md) · [迁移与审查归档](openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/) · [R4 公开源同库升级记录](docs/maintenance/r4-release-candidate.md#公开源模板消费)
+截至 2026-11-27，公开版为 `v10.5.1`（源码 `5758c81`），R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 应用迁往 `net10.0` 的指引已交付，迁移与增量审查变更已归档。两代四入口的公开源 Release 构建已复验，固定组合的同库业务沿用 R4 实测。增量审查记录了六条上游分支、依赖公告与两套共享运行时的续查结果。[存量迁移指引](docs/maintenance/r5-r4-net10-migration.md) · [增量审查](docs/maintenance/r5-runtime-migration-review.md) · [迁移与审查归档](openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/) · [R4 公开源同库升级记录](docs/maintenance/r4-release-candidate.md#公开源模板消费)
 
 集合映射补丁的 7 项本地验收已完成，变更已归档。三个冻结候选与十个 R4 公开包通过固定模板的 `net10.0` 新库安装、`net9.0` 至 `net10.0` 同库接续。固定 `net10.0` 的公开 R4、候选、公开 R4 三阶段均读到首阶段通过应用写入的同一租户用户。公开发行设有独立交接条件。[固定模板结果与复跑](docs/maintenance/r5-automapper-template.md) · [三包冻结与独立消费](openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md)
 
-主仓 `99f44b7` 交付了前两项 R5 归档和原冻结批次的生产源码。三包发行准备也已同步规范并归档，新批次完成实物验收及发行前演练，状态为本地待发。新引擎源码已交付。拟用 `v10.5.2`，发行前从本次归档的协调提交核定目标。公开发行基线为 `v10.5.1`。[收尾复核](docs/maintenance/fork-roadmap.md#2026-11-26-收尾复核) · [下一轮工作计划](docs/maintenance/fork-roadmap.md#下一轮工作计划) · [三包待发交接](openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md)
+主仓 `cebc3e38` 已交付映射补丁的发行准备归档，固定引擎 `54f6277a`。远端 R0 基线复验通过，三包处于本地待发。下一轮计划在获得发行授权后，将 `v10.5.2` 绑定到该协调提交，完成三个新包的公开验签、符号和模板回装。验证机的 52 项可重建缓存另行处置。[交付与缓存复核](docs/maintenance/fork-roadmap.md#2026-11-27-发行准备复核) · [下一轮任务](openspec/changes/publish-r5-mapping-patch/tasks.md) · [R0 工作流](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
 
 ### 已归档的基线与迁移
 

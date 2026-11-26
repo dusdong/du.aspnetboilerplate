@@ -1,0 +1,91 @@
+name: R5 映射补丁 NuGet 发行
+run-name: ${{ format('R5 NuGet {0}{1}', inputs.mode, inputs.intent && format(' {0}', inputs.intent) || '') }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 登录验证或单件发行
+        type: choice
+        options: [login-only, publish]
+        default: login-only
+      archive:
+        description: 冻结归档文件名
+        type: string
+      draft_id:
+        description: v10.5.2 草稿 ID
+        type: string
+      asset_id:
+        description: 草稿附件 ID
+        type: string
+      intent:
+        description: 已持久化的上传意向 ID
+        type: string
+      login_run:
+        description: 相同 main 提交的成功登录验证运行 ID
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: nuget-r5
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.repository == 'dusdong/du.aspnetboilerplate' &&
+      github.ref == 'refs/heads/main' && github.run_attempt == '1' &&
+      ((inputs.mode == 'login-only' && !inputs.archive && !inputs.draft_id &&
+        !inputs.asset_id && !inputs.intent && !inputs.login_run) || inputs.mode == 'publish')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    environment: nuget-r5
+    permissions:
+      actions: read
+      # GitHub 将非公开 Release 草稿限制给有推送权限的身份。
+      contents: write
+      id-token: write
+    env:
+      R5_ARCHIVE: ${{ inputs.archive }}
+      R5_DRAFT_ID: ${{ inputs.draft_id }}
+      R5_ASSET_ID: ${{ inputs.asset_id }}
+      R5_INTENT: ${{ inputs.intent }}
+      R5_LOGIN_RUN: ${{ inputs.login_run }}
+    steps:
+      - name: 检出本次运行的主仓提交
+        if: inputs.mode == 'publish'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: 准备 NuGet CLI
+        if: inputs.mode == 'publish'
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: '11.0.100'
+          skip-lts-prepass: true
+
+      - name: 核对单件放行和冻结实物
+        if: inputs.mode == 'publish'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B eng/r5_oidc.py prepare
+
+      - name: 交换 NuGet OIDC 凭据
+        id: nuget
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1
+        with:
+          user: dusdong
+
+      - name: 核对 OIDC 登录
+        env:
+          NUGET_API_KEY: ${{ steps.nuget.outputs.NUGET_API_KEY }}
+        run: test -n "$NUGET_API_KEY"
+
+      - name: 上传单个冻结归档
+        if: inputs.mode == 'publish'
+        env:
+          NUGET_API_KEY: ${{ steps.nuget.outputs.NUGET_API_KEY }}
+          NUGET_SYMBOL_API_KEY: ${{ steps.nuget.outputs.NUGET_API_KEY }}
+        run: python3 -B eng/r5_oidc.py push

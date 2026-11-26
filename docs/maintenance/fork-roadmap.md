@@ -1,6 +1,6 @@
 # 参考 Silo：一条适合维护型 fork 的路线
 
-## 当前阶段（2026-11-26）
+## 当前阶段（2026-11-27）
 
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
@@ -278,9 +278,23 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 后续三包待发批次完成复验和发行前演练，已同步候选验收规范并归档。新制包引擎 `54f6277a` 已交付到登记子仓的 `maintenance/v14`。本次归档的协调提交固定该引擎、两项沿用生产提交及同一模板。待发批次与 `99f44b7` 对应的原冻结批次分别登记。[新引擎交付](https://github.com/dusdong/AutoMapper/commit/54f6277af80783e5d07e896f75df0dcc0c4b4502) · [新批次与目标核对](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md)
 
+#### 2026-11-27 发行准备复核
+
+主仓协调提交为 `cebc3e38a511783092963893bf5ad3161d0f0a19`。GitHub 的 `main`、引擎 `maintenance/v14` 和协调提交中的四个 gitlink 已回读。引擎为 `54f6277a`，Collection 为 `d22aaf58`，经典框架为 `7933e71f`，固定模板为 `2e953687`。GitHub Actions 运行 `45846709281` 对该主仓提交执行了 R0 基线复验，`verify-r0` 于北京时间 11 月 26 日 23:14:42 成功结束。[主仓提交](https://github.com/dusdong/du.aspnetboilerplate/commit/cebc3e38a511783092963893bf5ad3161d0f0a19) · [CI 运行](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
+
+该提交交付时活动变更为零。本次规划前重新执行校验，稳定规范 15/15、归档任务检查 19/19。归档后 `net9.0`、`net10.0` 两份原始构建报告各有 9 个通过阶段、退出码 0，读取的九份归档制品均与交付提交逐字节对账。两轮输入是 **R4 已公开签名包**。其中 `net10.0` 外层记账脚本因 zsh 只读变量退出 1，构建子进程及报告已单独核对。R5 的六份归档通过本轮离线复核，真实 R5 公开回装仍待发行。[归档与发行前演练](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-rehearsal.md) · [批次与发行清单摘要](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#实物清单)
+
+截至此次复核，GitHub 最新 Release 为 `v10.5.1`，目标仓库没有 `v10.5.2` tag，NuGet 三个版本索引仅列出 `14.0.0`、`11.0.0` 和 `10.5.1`。[当前公开发行](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [引擎索引](https://api.nuget.org/v3-flatcontainer/du.automapper/index.json) · [Collection 索引](https://api.nuget.org/v3-flatcontainer/du.automapper.collection/index.json) · [适配器索引](https://api.nuget.org/v3-flatcontainer/du.abp.automapper/index.json)
+
+#### 本轮缓存处置
+
+建议在维护者确认后**全量清理清单中的 52 项**。26 个 `packages` 与 26 个 `http-cache` 在本次 `du -sk` 逐项目录复量中合计 13,842,736 KiB（13.20 GiB），52 项分配空间逐项与原清单一致。目录身份和两份清单摘要均已核对，52 项均在原处，与 66,068 条保留记录零交叉。冻结包、十个沿用包的签名回读、SQL 备份、原始报告、生产 ApiCompat 缓存均在清单外。旧运行目录在清理后如需复跑，应在新目录先还原再构建。
+
+验证机清单位于主仓 Git 目录的 `prepare-r5-mapping-patch-release/closeout/cache-inventory/cleanup-preview.tsv`，SHA-256 为 `994b59a1cd2b58d4c345c954d732a6dff870784cf4ca1e87666d05c13e6a2479`。本次审查未执行清理。执行时按选定清单重核路径、身份和占用，完成后回读保留证据、离线核验待发批次，并分别登记删除项和卷可用空间实测变化。上一轮已删除的 58 项见上节。
+
 #### 下一轮工作计划
 
-1. **决定三包公开发行。** 新批次已冻结并通过独立消费者、固定模板和发行前演练。维护者决定发行后，从本次归档的协调提交核定拟用 `v10.5.2` 的目标并复核版本可用性。按三个待发和十个沿用的清单实施，完成实际公开主包、符号与业务验收再发布发行说明。[待发交接](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md) · [发行前演练](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-rehearsal.md)
+1. **按发行决定接续。** 决定暂缓时保留待发批次。决定发行并获相应授权后，在固定协调提交上核定附注 tag，按引擎、Collection、适配器的依赖顺序上传并验签。完成三个公开 PDB 回读、仅用 nuget.org 的新装及同库回归后，再发布并回读 GitHub Release 与校验附件。缓存处置独立进行。[发行任务](../../openspec/changes/publish-r5-mapping-patch/tasks.md) · [执行手册的 shell 入口](r5-automapper-template.md#执行待发交接手册) · [待发交接](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md)
 2. **持续维护已公开的 R4。** 存量应用按迁移指引核对两代四入口和同库业务。上游六条分支、包公告或 .NET 服务基线有更新时从上次完整检查点续查；CVE-2026-56158 待原始组件范围可读后补核。消费者的平台、Provider 或客户端发生变化时，以隔离环境的实测结果更新支持范围。[存量迁移指引](r5-r4-net10-migration.md) · [公告与下轮检查点](r5-runtime-migration-review.md#共享运行时与下轮检查点)
 
 建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。
