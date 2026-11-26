@@ -30,16 +30,28 @@ ARCHIVES = {
 JOB = "publish"
 CHECK_STEP = "核对 OIDC 登录"
 PUSH_STEP = "上传单个冻结归档"
+NUGET_REQUESTS = {
+    NUGET_SOURCE: ("GET", "service-index"),
+    "https://www.nuget.org/api/v2/package": ("PUT", "package-push"),
+    "https://www.nuget.org/api/v2/symbolpackage": ("PUT", "symbol-push"),
+}
+NUGET_HTTP_STATUS = {
+    "OK": 200, "Created": 201, "Accepted": 202, "NoContent": 204,
+    "BadRequest": 400, "Unauthorized": 401, "Forbidden": 403, "NotFound": 404,
+    "RequestTimeout": 408, "Conflict": 409, "Gone": 410, "RequestEntityTooLarge": 413,
+    "UnprocessableEntity": 422, "TooManyRequests": 429, "InternalServerError": 500,
+    "BadGateway": 502, "ServiceUnavailable": 503, "GatewayTimeout": 504,
+}
 
 
-def github(endpoint, *, data=None, method="GET", download=None):
+def github(endpoint, *, data=None, method="GET", download=None, timeout=45):
     command = ["gh", "api", "--hostname", "github.com", "--method", method,
                "-H", "X-GitHub-Api-Version: 2026-03-10", f"repos/{REPO}/{endpoint}"]
     if data is not None:
         command += ["--input", "-"]
     if download is None:
         result = subprocess.run(command, input=None if data is None else json.dumps(data).encode(),
-                                stdout=subprocess.PIPE, timeout=45)
+                                stdout=subprocess.PIPE, timeout=timeout)
         require(result.returncode == 0, f"GitHub API 操作失败 {method} {endpoint}")
         return json.loads(result.stdout)
     command += ["-H", "Accept: application/octet-stream"]
@@ -82,17 +94,33 @@ def run_title(mode, intent=""):
     return f"R5 NuGet {mode} {intent}".rstrip()
 
 
-def run_attempt(run_id, title, head):
+def run_attempt(run_id, title, head, *, await_identity=False):
     run_id = github_id(run_id)
-    run = github(f"actions/runs/{run_id}/attempts/1")
-    require(str(run.get("id")) == run_id and run.get("run_attempt") == 1
-            and run.get("event") == "workflow_dispatch" and run.get("head_branch") == "main"
-            and run.get("path") == WORKFLOW_PATH and run.get("head_sha") == head
-            and run.get("display_title") == title
-            and run.get("repository", {}).get("full_name") == REPO
-            and run.get("head_repository", {}).get("full_name") == REPO,
-            "GitHub 运行与固定工作流、主仓提交或上传意向不匹配")
-    return run
+    expected = {
+        "id": run_id, "run_attempt": 1, "event": "workflow_dispatch", "head_branch": "main",
+        "path": WORKFLOW_PATH, "head_sha": head, "display_title": title,
+        "repository.full_name": REPO, "head_repository.full_name": REPO,
+    }
+    endpoint = f"actions/runs/{run_id}/attempts/1"
+    attempts = 5 if await_identity else 1
+    for attempt in range(1, attempts + 1):
+        run = github(endpoint, timeout=4 if await_identity else 45)
+        actual = run.copy()
+        if actual.get("id") is not None:
+            actual["id"] = str(actual["id"])
+        for key in ("repository", "head_repository"):
+            repo = actual.get(key)
+            actual[f"{key}.full_name"] = repo.get("full_name") if isinstance(repo, dict) else None
+        differences = [f"{field}={'missing' if actual.get(field) in (None, '') else 'mismatch'}"
+                       for field, value in expected.items() if actual.get(field) != value]
+        if not differences:
+            return run
+        detail = ", ".join(differences)
+        if attempt < attempts:
+            print(f"GitHub 运行 {run_id} 身份尚未匹配（读取 {attempt}/{attempts}）：{detail}",
+                  file=sys.stderr, flush=True)
+            time.sleep(2)
+    raise VerificationError(f"GitHub 运行 {run_id} 与固定工作流、主仓提交或上传意向不匹配：{detail}")
 
 
 def job_steps(run_id):
@@ -165,17 +193,45 @@ def prepare_runner():
     print(f"{path.name} SHA-256 {ARCHIVES[path.name]}，与本轮冻结归档一致")
 
 
+def report_nuget_requests(output):
+    requested = set()
+    for line in output.splitlines():
+        parts = line.split(maxsplit=2)
+        if len(parts) < 2:
+            continue
+        action = parts[0]
+        # NuGet 在发送发布请求时可能为服务索引给出的 URL 追加斜杠。
+        endpoint = parts[1].removesuffix("/")
+        if endpoint not in NUGET_REQUESTS:
+            continue
+        method, phase = NUGET_REQUESTS[endpoint]
+        if len(parts) == 2 and action == method:
+            requested.add(endpoint)
+            print(f"NuGet 请求阶段 {phase}")
+        elif endpoint in requested and len(parts) == 3 and re.fullmatch(
+            r"[0-9]+ms(?: \(retry after: [0-9]+(?:\.[0-9]+)?s\))?", parts[2]
+        ):
+            status = NUGET_HTTP_STATUS.get(action)
+            if status is None and re.fullmatch(r"[1-5][0-9]{2}", action):
+                status = int(action)
+            if status is not None:
+                print(f"NuGet HTTP {status} 阶段 {phase}")
+
+
 def push_runner():
     path = runner_archive()
     require(os.getenv("NUGET_API_KEY") and os.getenv("NUGET_SYMBOL_API_KEY"), "缺少临时 NuGet 凭据")
     require(sha256(path) == ARCHIVES[path.name], "上传前归档 SHA-256 不匹配")
     config = path.parent / "NuGet.Config"
     config.write_text('<configuration><packageSources><clear /></packageSources></configuration>\n', encoding="utf-8")
-    command = ["dotnet", "nuget", "push", str(path), "--source", NUGET_SOURCE, "--configfile", str(config)]
+    command = ["dotnet", "nuget", "push", str(path), "--source", NUGET_SOURCE, "--configfile", str(config),
+               "--force-english-output"]
     if path.suffix == ".nupkg":
         command.append("--no-symbols")
     print(f"开始 NuGet 提交 {path.name} SHA-256 {ARCHIVES[path.name]}", flush=True)
-    result = subprocess.run(command, cwd=path.parent, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    result = subprocess.run(command, cwd=path.parent, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                            encoding="utf-8", errors="replace")
+    report_nuget_requests(result.stdout)
     print(f"NuGet CLI 退出 {result.returncode}", flush=True)
     return result.returncode
 

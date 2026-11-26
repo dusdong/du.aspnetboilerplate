@@ -173,6 +173,20 @@ case "$R5_TEST_ACTION" in
     while [ ! -f "$R5_TEST_CASE/release-child" ]; do sleep 0.05; done
     ;;
   nonzero) exit 17 ;;
+  oidc-main-forbidden)
+    printf '  GET https://api.nuget.org/v3/index.json\n  OK https://api.nuget.org/v3/index.json 5ms\n'
+    printf '  PUT https://www.nuget.org/api/v2/package/\n  Forbidden https://www.nuget.org/api/v2/package/ 8ms\n'
+    printf '上游原始失败详情 %s\n' "$NUGET_API_KEY"
+    printf '  InternalServerError https://www.nuget.org/api/v2/package 8ms\n%s\n' "$NUGET_API_KEY" >&2
+    exit 17
+    ;;
+  oidc-symbol-failure)
+    printf '  PUT https://untrusted.example/v2/symbolpackage\n'
+    printf '  PUT https://www.nuget.org/api/v2/symbolpackage\n'
+    printf '  471 https://www.nuget.org/api/v2/symbolpackage 7ms (retry after: 1.5s)\n'
+    printf '  Forbidden https://www.nuget.org/api/v2/symbolpackage 8ms %s\n' "$NUGET_SYMBOL_API_KEY"
+    exit 19
+    ;;
 esac
 exit 0
 """, encoding="utf-8")
@@ -233,7 +247,7 @@ workflow.mkdir(exist_ok=True)
 head = "a" * 40
 archive = "Du.AutoMapper.14.0.1.nupkg"
 
-def github(endpoint, *, data=None, method="GET", download=None):
+def github(endpoint, *, data=None, method="GET", download=None, timeout=45):
     with (workflow / "calls.log").open("a") as out:
         out.write(f"{method} {endpoint}\\n")
     if endpoint == "git/ref/heads/main":
@@ -261,13 +275,23 @@ def github(endpoint, *, data=None, method="GET", download=None):
     if endpoint.endswith("/attempts/1"):
         login = endpoint.split("/")[2] == "900"
         inputs = {} if login else json.loads((workflow / "dispatch.json").read_text())["inputs"]
-        return {"id": 900 if login else 901, "run_attempt": 1, "event": "workflow_dispatch",
+        run = {"id": 900 if login else 901, "run_attempt": 1, "event": "workflow_dispatch",
                 "head_branch": "main", "path": r5_oidc.WORKFLOW_PATH, "display_title":
                 r5_oidc.run_title("login-only") if login else r5_oidc.run_title("publish", inputs["intent"]),
                 "head_sha": "c" * 40 if login and action == "wrong-login-head" else head,
                 "repository": {"full_name": r5_oidc.REPO}, "head_repository": {"full_name": r5_oidc.REPO},
                 "status": "in_progress" if not login and action == "running" else "completed",
                 "conclusion": "success"}
+        if not login and action in ("settling-run", "wrong-publish-run"):
+            assert timeout == 4
+            gets = (workflow / "calls.log").read_text().count("GET actions/runs/901/attempts/1\\n")
+            intent = json.loads((case / "progress/progress.json").read_text())["uploadIntents"]["main/Du.AutoMapper"][-1]
+            assert intent["workflow"]["runId"] == "901"
+            if gets == 1 and action == "settling-run":
+                run.update(head_repository=None, display_title="")
+            elif action == "wrong-publish-run":
+                run.update(head_sha="wrong-head-fixture", display_title="private-title-fixture")
+        return run
     if endpoint.endswith("/attempts/1/jobs"):
         login = endpoint.split("/")[2] == "900"
         conclusion = "skipped" if login or action == "skipped" else ("failure" if action == "ambiguous" else "success")
@@ -277,6 +301,7 @@ def github(endpoint, *, data=None, method="GET", download=None):
     raise AssertionError(endpoint)
 
 r5_oidc.github = github
+r5_oidc.time.sleep = lambda seconds: None
 ''')
 
     def test_oidc_cli_binds_only_one_run_to_persisted_intent_and_reads_success(self):
@@ -285,10 +310,15 @@ r5_oidc.github = github
         for action in ("wrong-login-head", "published-draft", "fail-intent"):
             self.assert_cli(1, "r5_publish_main", *arguments, action=action)
             self.assertFalse((self.case / "workflow/dispatch.json").exists())
-        self.assert_cli(0, "r5_publish_main", *arguments)
+        result = self.assert_cli(0, "r5_publish_main", *arguments, action="settling-run")
+        self.assertIn("读取 1/5", result.stderr)
+        self.assertIn("display_title=missing, head_repository.full_name=missing", result.stderr)
         first = self.intent("main")
         self.assertEqual(r5_oidc.permit_label(901, Path(first["receipt"]).stem.removeprefix("push-"), 900),
                          (self.case / "workflow/label").read_text())
+        calls = (self.case / "workflow/calls.log").read_text()
+        self.assertEqual(2, calls.count("GET actions/runs/901/attempts/1\n"))
+        self.assertTrue(calls.endswith("GET actions/runs/901/attempts/1\nPATCH releases/assets/800\n"), calls)
         self.assert_cli(2, "r5_publish_main", *arguments)
         for action in ("running", "ambiguous"):
             self.assert_cli(1, "r5_readback", "workflow-receipt", "--kind", "main", "--package", ENGINE, action=action)
@@ -300,6 +330,24 @@ r5_oidc.github = github
         self.assertEqual("accepted", self.intent("main")["result"]["outcome"])
         self.assert_cli(2, "r5_publish_main", *arguments)
         self.assertEqual(1, (self.case / "workflow/calls.log").read_text().count("/dispatches\n"))
+        self.assertEqual(0, self.upload_count())
+
+    def test_oidc_cli_keeps_pending_intent_after_persistently_wrong_run_identity(self):
+        self.prepare_oidc_cli()
+        arguments = (ENGINE, "--owner", "dusdong", "--oidc", "700", "900")
+        result = self.assert_cli(1, "r5_publish_main", *arguments, action="wrong-publish-run")
+        self.assertIn("读取 4/5", result.stderr)
+        self.assertIn("head_sha=mismatch, display_title=mismatch", result.stderr)
+        self.assertNotIn("fixture", result.stderr)
+        first = self.intent("main")
+        self.assertEqual("901", first["workflow"]["runId"])
+        self.assertNotIn("result", first)
+        self.assertFalse((self.case / "workflow/label").exists())
+        self.assert_cli(2, "r5_publish_main", *arguments)
+        calls = (self.case / "workflow/calls.log").read_text()
+        self.assertEqual(5, calls.count("GET actions/runs/901/attempts/1\n"))
+        self.assertEqual(1, calls.count("/dispatches\n"))
+        self.assertNotIn("PATCH", calls)
         self.assertEqual(0, self.upload_count())
 
     def test_oidc_cli_can_resolve_only_proven_unstarted_push(self):
@@ -366,6 +414,36 @@ r5_oidc.github = github
         self.assertIn("--no-symbols", main)
         self.assertNotIn("--no-symbols", symbols)
         self.assertNotIn("test-value", main + symbols)
+
+    def test_oidc_runner_keeps_only_known_request_stages_and_http_codes(self):
+        self.prepare_upload_cli()
+        manifest = self.open_progress().manifest["packages"][ENGINE]
+        env = {"GITHUB_REPOSITORY": r5_oidc.REPO, "GITHUB_REF": "refs/heads/main",
+               "GITHUB_EVENT_NAME": "workflow_dispatch", "GITHUB_RUN_ATTEMPT": "1",
+               "RUNNER_TEMP": str(self.case), "NUGET_API_KEY": "main-SECRET-fixture",
+               "NUGET_SYMBOL_API_KEY": "symbols-SECRET-fixture",
+               "PATH": f"{self.protocol_root}:{os.environ['PATH']}", "R5_TEST_CASE": str(self.case)}
+        control = self.case / "r5-publish"
+        control.mkdir()
+        cases = (
+            ("archive", "oidc-main-forbidden", 17,
+             ["NuGet 请求阶段 service-index", "NuGet HTTP 200 阶段 service-index",
+              "NuGet 请求阶段 package-push", "NuGet HTTP 403 阶段 package-push"]),
+            ("symbols", "oidc-symbol-failure", 19,
+             ["NuGet 请求阶段 symbol-push", "NuGet HTTP 471 阶段 symbol-push"]),
+        )
+        for kind, action, code, diagnostics in cases:
+            original = self.root / manifest[kind]["path"]
+            shutil.copyfile(original, control / original.name)
+            with patch.dict(os.environ, env | {"R5_ARCHIVE": original.name, "R5_TEST_ACTION": action}, clear=True), \
+                    redirect_stdout(output := StringIO()):
+                self.assertEqual(code, r5_oidc.push_runner())
+            lines = output.getvalue().splitlines()
+            self.assertEqual([f"开始 NuGet 提交 {original.name} SHA-256 {manifest[kind]['sha256']}",
+                              *diagnostics, f"NuGet CLI 退出 {code}"], lines)
+        commands = (self.case / "uploads.log").read_text()
+        self.assertEqual(2, commands.count("--force-english-output"))
+        self.assertNotIn("SECRET", commands)
 
     def proof(self, receipt, outcome, source, original=None, digest=None):
         if original is None:

@@ -243,7 +243,7 @@ class ReleaseProgress(Progress):
             write_durable_json(self.path, self.state)
             run_id = remote["runId"]
             print(f"https://github.com/{r5_oidc.REPO}/actions/runs/{run_id}", flush=True)
-            r5_oidc.run_attempt(run_id, r5_oidc.run_title("publish", ticket), remote["head"])
+            r5_oidc.run_attempt(run_id, r5_oidc.run_title("publish", ticket), remote["head"], await_identity=True)
             r5_oidc.authorize(remote, ticket)
             return 0
         command = ["dotnet", "nuget", "push", str(source), "--source", NUGET_SOURCE]

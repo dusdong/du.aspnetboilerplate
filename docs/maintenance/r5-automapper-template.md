@@ -156,7 +156,9 @@ r5_readback workflow-receipt --kind "$KIND" --package "$ID"
 r5_readback verify --package "$ID"
 ```
 
-本地上传入口持有进度锁时检查依赖、目标及实物，持久化意向后才触发工作流。收到 GitHub 返回的运行 ID 并落盘后，将该 ID、意向和同提交登录验证 ID 写到目标附件的 label 作为单次放行。托管 runner 只能处理对应 ID 的首次尝试。它下载一份指定归档，复核摘要，仅向官方 NuGet 源提交。主包使用 `--no-symbols`。工作流触发退出 0 表示已登记放行，随后用 `workflow-receipt` 读取该次首次尝试的实际上传结果。该命令退出 0 表示已登记上传成功，仍须继续公开回读。退出 2 表示收据证实未启动，须先按下述方法登记未受理。其他退出保留意向查证。可用 `gh run view "$RUN_ID" --repo "$R5_REPO" --attempt 1 --json headSha,event,url,conclusion,jobs` 取回阶段和退出状态。
+本地上传入口持有进度锁时检查依赖、目标及实物，持久化意向后才触发工作流。收到 GitHub 返回的运行 ID 并落盘后，最多读取该次首次尝试的身份五次，读取间隔两秒。日志只列出缺失或不匹配的字段名。身份完全匹配后，将运行 ID、意向和同提交登录验证 ID 写到目标附件的 label 作为单次放行。若最后一次仍不匹配，留存原意向与运行 ID，按下文回读。
+
+托管 runner 只能处理对应 ID 的首次尝试。它下载一份指定归档，复核摘要，仅向官方 NuGet 源提交。主包使用 `--no-symbols`。上传步骤日志记录归档摘要、可识别的官方请求阶段、可识别的 HTTP 数值状态和 CLI 退出码。HTTP 状态用于定位失败，是否可继续仍以收据与服务查证为准。工作流触发退出 0 表示已登记放行，随后用 `workflow-receipt` 读取该次首次尝试的实际上传结果。该命令退出 0 表示已登记上传成功，仍须继续公开回读。退出 2 表示收据证实未启动，须先按下述方法登记未受理。其他退出保留意向查证。可用 `gh run view "$RUN_ID" --repo "$R5_REPO" --attempt 1 --json headSha,event,url,conclusion,jobs` 取回作业阶段和结论。
 
 发布进程中断、运行异常或索引延迟时，保留并复用原 `R5_RELEASE_WORK`。同一项的收据文件名和已落盘的 GitHub 运行 ID 可从 `progress.json` 的 `uploadIntents` 取回。先重新执行 `workflow-receipt` 查询现有意向。匿名 404、暂无 PDB 和缺失收据均继续等待查证。GitHub 中重新触发同样的参数会取得不同运行 ID，Actions 的重新运行也无法通过首次尝试检查。
 
