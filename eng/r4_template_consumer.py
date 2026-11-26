@@ -1,4 +1,4 @@
-"""用已登记的 R4 冻结包验收固定模板及原版回退。"""
+"""从 R4 冻结源或已验签的公开源验收固定模板，并支持原版回退。"""
 
 import argparse
 import json
@@ -12,10 +12,10 @@ from r3_template_net9_packages import CandidateRun, selected_archive
 from r3_template_net10_runtime import UpgradeRuntime
 from r3_template_net10_upgrade import RUNTIME_PATCH_PREIMAGES, UpgradeBuildRun
 from r3_template_original_rollback import ROLES, RollbackRun, verify_query_target
-from r3_web_host import artifact, write_json
+from r3_web_host import NUGET_SOURCE, artifact, write_json
 from r4_candidate_batch import BATCH_REFERENCE, load_frozen_batch
 from r4_release_candidate import MANIFEST
-from r4_template_assets import ENTRY_LABELS, verify_build_directory, verify_process
+from r4_template_assets import ENTRY_LABELS, public_downloads, verify_build_directory, verify_process
 from verify import ROOT, make_run_directory, read_json, require, sha256
 
 
@@ -26,13 +26,33 @@ CHECKPOINTS = "rollback-inputs.json"
 PLAN = Path("openspec/changes/prepare-r4-first-release-candidate")
 PLAN_BASE = "bd5f29f8a02ffcc8868deb2c8e60f49306d6668a"
 PLAN_TREE = "c26dcfb0afcca4626c4ded3ca2a512b1809bfe1a"
+PUBLIC_PLAN = Path("openspec/changes/publish-r4-first-public-release")
 BUILD_BINDINGS = "r4-build-assets.json"
+PUBLIC_INPUT_NAMES = ("release-manifest.json", "verified-downloads.json")
 R4_RUNTIME_PATCH_PREIMAGES = RUNTIME_PATCH_PREIMAGES | {
     "Web.Host": "4beac5678eff346851a5977e76ba5bb7599e8d93",
     "Web.Core": "0087c2900fe67e72f01a7a43db2e796541779695",
     "Core": "752826bdcccb6b6c9251e7ca7fb94707f34a4cbd",
     "Migrator": "7a8fec9aadeb6cacbeb2d800c071d2ae9b6e3b3f",
 }
+
+
+def planning_artifacts(repo, plan, specification):
+    change = plan.name
+    state = "active"
+    if not (repo / plan).is_dir():
+        archives = sorted((repo / plan.parent / "archive").glob(f"*-{change}"))
+        require(len(archives) == 1, f"找不到唯一的 {change} OpenSpec 制品目录")
+        plan = archives[0].relative_to(repo)
+        state = "archived"
+    files = sorted(path for path in (repo / plan).rglob("*") if path.is_file())
+    require(all((repo / plan / name) in files for name in (
+        "proposal.md", "design.md", "tasks.md", f"specs/{specification}/spec.md")),
+        f"{change} OpenSpec 规划制品不完整")
+    status = subprocess.check_output(
+        ["git", "-C", repo, "status", "--porcelain=v1", "--untracked-files=all", "--", plan], text=True)
+    return {"change": change, "changePath": plan.as_posix(), "changeState": state, "artifactSource": "working_tree",
+            "gitStatus": status.splitlines(), "artifacts": [artifact(path, repo) for path in files]}
 
 
 def planning_inputs(repo, current_commit, current_tree):
@@ -50,37 +70,70 @@ def planning_inputs(repo, current_commit, current_tree):
         expected = ["160000", "commit", commit, path]
         for revision in dict.fromkeys((coordinator, current_commit)):
             require(git("ls-tree", revision, "--", path).split() == expected, f"{revision} 的 R4 gitlink {path} 不符")
-    plan = PLAN
-    state = "active"
-    if not (repo / plan).is_dir():
-        archives = sorted((repo / PLAN.parent / "archive").glob(f"*-{PLAN.name}"))
-        require(len(archives) == 1, "找不到唯一的 R4 OpenSpec 制品目录")
-        plan = archives[0].relative_to(repo)
-        state = "archived"
-    files = sorted(path for path in (repo / plan).rglob("*") if path.is_file())
-    require(all((repo / plan / name) in files for name in (
-        "proposal.md", "design.md", "tasks.md", "specs/release-candidate-verification/spec.md")),
-        "R4 OpenSpec 规划制品不完整")
-    return {"change": PLAN.name, "baseCommit": PLAN_BASE, "baseTree": PLAN_TREE, "changePath": plan.as_posix(),
-            "changeState": state, "artifactSource": "working_tree",
+    return {**planning_artifacts(repo, PLAN, "release-candidate-verification"),
+            "baseCommit": PLAN_BASE, "baseTree": PLAN_TREE,
             "coordinator": {"commit": coordinator, "tree": coordinator_tree},
-            "execution": {"commit": current_commit, "tree": current_tree},
-            "gitStatus": git("status", "--porcelain=v1", "--untracked-files=all", "--", plan).splitlines(),
-            "artifacts": [artifact(path, repo) for path in files]}
+            "execution": {"commit": current_commit, "tree": current_tree}}
 
 
 class FrozenPackages:
     planning_commit = PLAN_BASE
     planning_tree = PLAN_TREE
 
-    def __init__(self, repo, evidence, frozen_root, batch_root, *args):
+    def __init__(self, repo, evidence, frozen_root, batch_root, *args, public_inputs=None):
         self.batch_root = batch_root
+        self.public_inputs = public_inputs
+        self.downloads = None
+        if public_inputs:
+            self.profile += "-public"
         super().__init__(repo, evidence, frozen_root, *args)
+        self.report["inputs"]["packageSourceMode"] = "public" if public_inputs else "frozen"
+        self.save()
+
+    @property
+    def local_package_feed(self):
+        return None if self.public_inputs else self.feed
+
+    def materialize(self):
+        super().materialize()
+        if self.public_inputs:
+            scratch = self.evidence / "nuget-scratch"
+            scratch.mkdir()
+            self.env["NUGET_SCRATCH"] = str(scratch)
+            self.report["inputs"]["nuget"]["scratch"] = str(scratch)
+
+    def restore_options(self):
+        if not self.public_inputs:
+            return super().restore_options()
+        return ["--source", NUGET_SOURCE, "--packages", self.cache,
+                "-p:RestoreFallbackFolders=", "-p:RestoreAdditionalProjectFallbackFolders=",
+                "-p:RestoreAdditionalProjectSources=", "-p:DisableImplicitNuGetFallbackFolder=true"]
+
+    def run_dotnet(self, args, log):
+        if not self.public_inputs:
+            return super().run_dotnet(args, log)
+        unset = []
+        for name in sorted(os.environ):
+            key = name.casefold()
+            is_restore_variable = (key.startswith(("nuget_", "nugetpackagesourcecredentials_", "restore"))
+                                   or key in {"disableimplicitnugetfallbackfolder", "forceevaluate"})
+            if is_restore_variable and name not in self.env:
+                unset.extend(("-u", name))
+        command = ["env", *unset, self.dotnet, *args] if unset else [self.dotnet, *args]
+        return self.command(command, self.root, log, extra_env=self.env)[1]
 
     def preflight(self):
         super().preflight()
         inputs = self.report["inputs"]
-        inputs["planning"] = planning_inputs(self.repo, inputs["executionCommit"], inputs["executionTree"])
+        candidate = planning_inputs(self.repo, inputs["executionCommit"], inputs["executionTree"])
+        if self.public_inputs:
+            inputs["planning"] = planning_artifacts(self.repo, PUBLIC_PLAN, "public-package-release") | {
+                "execution": candidate["execution"],
+            }
+            inputs["frozenCandidatePlanning"] = candidate | {"purpose": "frozen_batch_qualification"}
+            del inputs["planningCommit"], inputs["planningTree"]
+        else:
+            inputs["planning"] = candidate
 
     def packages(self):
         batch = self.batch = load_frozen_batch(self.batch_root)
@@ -89,7 +142,15 @@ class FrozenPackages:
         self.report["inputs"]["r4Consumer"] = artifact(Path(__file__), self.repo)
         self.original_assets = read_json(self.repo / "eng/r3_template_net9_reference.json")["originalAssets"]
         inspection = self.inspection = read_json(self.batch_root / batch["inspection"]["path"])
-        self.feed.mkdir()
+        if self.public_inputs:
+            self.public_evidence = tuple(self.evidence_file(name) for name in PUBLIC_INPUT_NAMES)
+            for source, copy in zip(self.public_inputs, self.public_evidence, strict=True):
+                shutil.copyfile(source, copy)
+            self.report["inputs"]["publicDownloads"] = {
+                name: artifact(path, self.evidence) for name, path in zip(PUBLIC_INPUT_NAMES, self.public_evidence, strict=True)}
+            self.downloads = public_downloads(*self.public_evidence, self.batch_root, batch)
+        else:
+            self.feed.mkdir()
         for name, item in batch["packages"].items():
             record = item["archive"]
             targets = inspection[name]["targets"]
@@ -99,16 +160,20 @@ class FrozenPackages:
                    "asset": target["asset"], "assetSha256": target["assetSha256"]}
             source, row, dependencies = selected_archive(row, self.batch_root)
             require(dependencies == target["dependencies"], f"{name} 的实际依赖与 R4 冻结复核不符")
-            copy = self.feed / source.name
-            shutil.copyfile(source, copy)
-            self.frozen[name] = {**row, "original": str(source), "feedCopy": str(copy),
+            self.frozen[name] = {**row, "original": str(source),
                                  "dependencies": dependencies, "assembly": Path(row["asset"]).stem}
+            if self.downloads is not None:
+                self.frozen[name]["publicDownloadSha256"] = self.downloads[name]["downloadSha256"]
+            else:
+                copy = self.feed / source.name
+                shutil.copyfile(source, copy)
+                self.frozen[name]["feedCopy"] = str(copy)
         write_json(self.evidence_file("frozen-packages.json"), self.frozen)
 
     def inspect_output(self):
         super().inspect_output()
         result = verify_build_directory(self.evidence, self.report["inputs"], self.batch_root,
-                                        self.batch, self.inspection)
+                                        self.batch, self.inspection, downloads=self.downloads)
         path = self.evidence_file(BUILD_BINDINGS)
         write_json(path, result)
         self.report["inputs"]["r4BuildAssets"] = artifact(path, self.evidence)
@@ -116,6 +181,13 @@ class FrozenPackages:
     def inputs_after(self):
         if "r4Batch" in self.report["inputs"]:
             load_frozen_batch(self.batch_root)
+        if self.public_inputs:
+            inputs = self.report["inputs"]
+            if nuget := inputs.get("nuget"):
+                require(artifact(self.config, self.evidence) == nuget["effective"], "公开包源配置已改变")
+            if downloads := inputs.get("publicDownloads"):
+                require(all(artifact(path, self.evidence) == downloads[path.name] for path in self.public_evidence),
+                        "固定下载登记已改变")
         super().inputs_after()
 
 
@@ -132,18 +204,22 @@ class TemplateUpgrade(FrozenPackages, UpgradeRuntime):
     profile = UPGRADE
     runtime_patch_preimages = R4_RUNTIME_PATCH_PREIMAGES
 
-    def __init__(self, *args):
-        super().__init__(*args)
-        self.report["profile"] = UPGRADE
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.report["profile"] = self.profile
         self.save()
 
     def build_net9(self):
         directory = self.builds["net9"]
         directory.mkdir()
-        build = Net9Build(self.repo, directory, self.frozen_root, self.batch_root, self.dotnet)
+        build = Net9Build(self.repo, directory, self.frozen_root, self.batch_root, self.dotnet,
+                          public_inputs=self.public_evidence if self.public_inputs else None)
         result = build.execute_build()
         self.report["inputs"]["net9Build"] = artifact(build.report_path, self.evidence) | {"exitCode": result}
         require(result == 0, f".NET 9 R4 干净构建退出 {result}，详见 {build.report_path}")
+        if self.public_inputs:
+            require(build.report["inputs"]["publicDownloads"] == self.report["inputs"]["publicDownloads"],
+                    "两代公开消费使用的首发清单或下载登记不一致")
 
     def verify_process_assets(self, phase, entry, launch):
         build = self.builds[phase]
@@ -194,7 +270,7 @@ class TemplateUpgrade(FrozenPackages, UpgradeRuntime):
 
     def execute_full(self):
         result = super().execute_full()
-        if result == 0:
+        if result == 0 and not self.public_inputs:
             sql = self.report["sql"]
             checkpoints = {}
             for role in ROLES:
@@ -262,6 +338,8 @@ def main():
     parser.add_argument("--runtime-config", type=Path)
     parser.add_argument("--upgrade-run", type=Path)
     parser.add_argument("--rollback-inputs-sha256")
+    parser.add_argument("--release-manifest", type=Path, help="公开源模式的固定首发清单")
+    parser.add_argument("--verified-downloads", type=Path, help="公开源模式的已验签主包下载登记")
     args = parser.parse_args()
     if args.action == "build" and args.tfm is None:
         parser.error("build 需要 --tfm")
@@ -269,16 +347,24 @@ def main():
         parser.error("upgrade 和 rollback 需要 --runtime-config")
     if args.action == "rollback" and (args.upgrade_run is None or args.rollback_inputs_sha256 is None):
         parser.error("rollback 需要 --upgrade-run 与 --rollback-inputs-sha256")
+    if bool(args.release_manifest) != bool(args.verified_downloads):
+        parser.error("公开源模式需要同时指定 --release-manifest 和 --verified-downloads")
+    if args.action == "rollback" and args.release_manifest:
+        parser.error("公开源模式支持 build 和 upgrade")
     for name in ("DEBUG", "PWDEBUG"):
         os.environ.pop(name, None)
     profile = {"build": BUILD, "upgrade": UPGRADE, "rollback": ROLLBACK}[args.action]
+    public_inputs = None
+    if args.release_manifest:
+        public_inputs = (args.release_manifest.resolve(), args.verified_downloads.resolve())
+        profile += "-public"
     directory = make_run_directory(args.evidence_root.resolve(), profile + "-")
     inputs = ROOT, directory, args.frozen_root.resolve(), args.batch_root.resolve()
     if args.action == "build":
         runner = Net9Build if args.tfm == "net9.0" else Net10Build
-        run = runner(*inputs, args.dotnet)
+        run = runner(*inputs, args.dotnet, public_inputs=public_inputs)
     elif args.action == "upgrade":
-        run = TemplateUpgrade(*inputs, args.runtime_config.resolve(), args.dotnet)
+        run = TemplateUpgrade(*inputs, args.runtime_config.resolve(), args.dotnet, public_inputs=public_inputs)
     else:
         run = TemplateRollback(*inputs, args.upgrade_run.resolve(), args.rollback_inputs_sha256,
                                args.runtime_config.resolve(), args.dotnet)

@@ -2,6 +2,10 @@
 
 本仓是经典 ASP.NET Boilerplate 的独立维护与发行协调仓。六个 Git 子模块分别承载框架、Angular 适配器、免费启动模板、示例、AutoMapper 和 AutoMapper.Collection。主仓固定源码组合，维护 OpenSpec、兼容指南和跨仓验收证据。各组件的开发与测试入口由子仓维护。
 
+## 公开发行
+
+首个稳定版 `v10.5.1` 已发布。nuget.org 提供 11 个 `Du.Abp*` 框架包 `10.5.1`、`Du.AutoMapper 14.0.0` 和 `Du.AutoMapper.Collection 11.0.0`。`net10.0` 新库示例使用实测运行时 `10.0.15`。存量 `net9.0` 迁移已在 `9.0.10` 实测，微软于 2026-11-10 结束 .NET 9 支持。[发行说明与包链接](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [新库安装指南](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-INSTALL-net10.md) · [包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json)
+
 ## 获取源码
 
 首次克隆时，在准备存放仓库的目录执行：

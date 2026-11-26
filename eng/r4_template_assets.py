@@ -18,13 +18,48 @@ OPTIONAL = {
 }
 
 
-def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, graph, launch):
+def public_downloads(manifest_file, downloads_file, batch_root, batch):
+    # 发布核验入口的清单读取链也会导入历史资产复核。
+    from r4_public_release import HEX_SHA256, MANIFEST_SHA256
+
+    require(sha256(manifest_file) == MANIFEST_SHA256, "公开消费的首发清单 SHA-256 不符")
+    manifest = read_json(manifest_file)
+    packages = manifest["packages"]
+    require(manifest["handoff"]["batchSha256"] == sha256(batch_root / "batch.json")
+            and manifest["template"] == batch["template"]
+            and packages.keys() == batch["packages"].keys(), "首发清单的冻结批次、模板或包集合不符")
+    downloads = read_json(downloads_file)
+    require(isinstance(downloads, dict) and downloads.get("schemaVersion") == 1
+            and downloads.get("nugetSource") == NUGET_SOURCE
+            and downloads.get("manifestSha256") == MANIFEST_SHA256, "公开下载登记的 schema、包源或首发清单摘要不符")
+    rows = downloads["packages"]
+    require(isinstance(rows, dict), "公开下载登记的 packages 须为按包 ID 索引的对象")
+    missing, extra = sorted(packages.keys() - rows.keys()), sorted(rows.keys() - packages.keys())
+    require(not missing and not extra, f"公开下载登记的包集合不符，缺少 {missing}，多出 {extra}")
+    for name, registered in packages.items():
+        row = rows[name]
+        version = registered["version"]
+        frozen = batch["packages"][name]
+        upload = registered["archive"]["sha256"]
+        require(isinstance(row, dict) and row.get("version") == version == frozen["version"]
+                and row.get("uploadSha256") == upload == frozen["archive"]["sha256"],
+                f"{name}/{version} 公开下载登记的版本或上传摘要不符")
+        digest = row.get("downloadSha256")
+        require(isinstance(digest, str) and HEX_SHA256.fullmatch(digest) and digest != upload,
+                f"{name}/{version} 缺少仓库签名后的公开下载摘要")
+    return rows
+
+
+def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, graph, launch, *, downloads=None):
     tfm = inputs["targetFramework"]
     label = f"{tfm} {entry}"
     feed = directory / "frozen-feed"
     cache = directory / "packages"
-    require(inputs["nuget"]["cachesInitiallyEmpty"]
-            and set(inputs["nuget"]["effectiveSources"]) == {str(feed), NUGET_SOURCE},
+    is_public = downloads is not None
+    sources = {NUGET_SOURCE} if is_public else {str(feed), NUGET_SOURCE}
+    mode = "public" if is_public else "frozen"
+    require(inputs.get("packageSourceMode", "frozen") == mode and inputs["nuget"]["cachesInitiallyEmpty"]
+            and set(inputs["nuget"]["effectiveSources"]) == sources and (not is_public or not feed.exists()),
             f"{label} 的空缓存或维护包源不符")
     require(inputs["r4Batch"]["sha256"] == sha256(batch_root / "batch.json"), f"{label} 的冻结批次不符")
     output = directory / "source/aspnet-core" / project_path(entry).parent / "bin/Release" / tfm
@@ -52,10 +87,19 @@ def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, 
         filename = Path(asset).name
         digest = target["assetSha256"]
         archive = package["archive"]
-        cached_archive = cache / item["archive"]["path"]
-        require(key == f"{name}/{package['version']}" and item["source"] == str(feed)
-                and archive["sha256"] == item["archive"]["sha256"] == sha256(cached_archive),
-                f"{label} 的 {key} 还原来源、版本或归档摘要不符")
+        source = NUGET_SOURCE if is_public else str(feed)
+        restored = downloads[name]["downloadSha256"] if is_public else archive["sha256"]
+        version = package["version"]
+        cached_package = cache / name.lower() / version.lower()
+        cached_archive = cached_package / f"{name.lower()}.{version.lower()}.nupkg"
+        require(key == f"{name}/{version}" and item["source"] == source
+                and cache / item["cachePath"] == cached_package
+                and cache / item["archive"]["path"] == cached_archive
+                and cached_archive.resolve() == cached_archive
+                and read_json(cached_package / ".nupkg.metadata")["source"] == source,
+                f"{label} 的 {key} 还原来源或版本不符")
+        require(restored == item["archive"]["sha256"] == sha256(cached_archive),
+                f"{label} 的 {key} 缓存归档 SHA-256 不符，预期 {restored}")
         with ZipFile(batch_root / archive["path"]) as file:
             require(file.namelist().count(asset) == 1 and bytes_sha256(file.read(asset)) == digest,
                     f"{label} 的 {key} 冻结包内 DLL 缺失、重名或摘要不符")
@@ -63,7 +107,7 @@ def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, 
         require(len(references) == 1, f"{label} 的 {key} 缺少唯一的编译 DLL")
         reference, = references
         copied = manifest["packageCopies"].get(filename, {})
-        expected_reference = cache / item["cachePath"] / asset
+        expected_reference = cached_package / asset
         require(reference["package"] == copied.get("package") == key
                 and reference["packageAsset"] == copied.get("packageAsset") == asset
                 and Path(reference["path"]) == expected_reference == Path(copied.get("cachePath", ".")),
@@ -73,18 +117,20 @@ def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, 
                 == manifest["files"]["files"][filename] == digest, f"{label} 的 {key} 编译或输出 DLL 摘要不符")
         origins[name] = {"archive": archive, "asset": asset, "assetSha256": digest,
                          "assembly": target["assembly"]["name"], "outputName": filename,
-                         "loadRequired": name not in OPTIONAL[entry]}
+                         "loadRequired": name not in OPTIONAL[entry],
+                         "restoredArchive": {"source": source, **item["archive"]}}
     return {"tfm": tfm, "entry": entry, "output": str(output), "entryAsset": entry_asset,
             "packageCount": len(origins), "packages": origins,
+            "packageSourceMode": mode,
             "prunedMaintenanceDependencies": graph.get("prunedMaintenanceDependencies", {}),
             "releaseOutput": artifact(manifest_file, directory)}
 
 
-def verify_build_directory(directory, inputs, batch_root, batch, inspection):
+def verify_build_directory(directory, inputs, batch_root, batch, inspection, *, downloads=None):
     graph = read_json(directory / "assets-inventory.json")
     launch = read_json(directory / "launch-manifest.json")
     return {entry: verify_build_entry(directory, inputs, entry, batch_root, batch, inspection,
-                                      graph[entry], launch[entry])
+                                      graph[entry], launch[entry], downloads=downloads)
             for entry in ENTRY_LABELS}
 
 

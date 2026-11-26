@@ -102,14 +102,16 @@ def source_config(path, feed, packages):
     document = ET.Element("configuration")
     sources = ET.SubElement(document, "packageSources")
     ET.SubElement(sources, "clear")
-    ET.SubElement(sources, "add", key="frozen", value=str(feed))
+    if feed is not None:
+        ET.SubElement(sources, "add", key="frozen", value=str(feed))
     ET.SubElement(sources, "add", key="nuget.org", value=NUGET_SOURCE)
     mapping = ET.SubElement(document, "packageSourceMapping")
     ET.SubElement(mapping, "clear")
-    local = ET.SubElement(mapping, "packageSource", key="frozen")
+    if feed is not None:
+        local = ET.SubElement(mapping, "packageSource", key="frozen")
+        for name in sorted(packages):
+            ET.SubElement(local, "package", pattern=name)
     public = ET.SubElement(mapping, "packageSource", key="nuget.org")
-    for name in sorted(packages):
-        ET.SubElement(local, "package", pattern=name)
     ET.SubElement(public, "package", pattern="*")
     ET.SubElement(ET.SubElement(document, "fallbackPackageFolders"), "clear")
     ET.indent(document, space="  ")
@@ -131,9 +133,10 @@ def verify_project_packages(name, target, frozen, *, pruned_edges=None):
             f"维护包闭包不符，缺少 {sorted(expected - actual.keys())}，多出 {sorted(actual.keys() - expected)}")
     for package, key in actual.items():
         registered, selected = frozen[package], target["packages"][key]
-        require(key == f"{package}/{registered['version']}" and
-                selected["archive"]["sha256"] == registered["archiveSha256"],
-                f"{key} 缓存版本或归档 SHA-256 与冻结实物不符")
+        expected_digest = registered.get("publicDownloadSha256", registered["archiveSha256"])
+        source = "已验签的公开下载件" if "publicDownloadSha256" in registered else "冻结实物"
+        require(key == f"{package}/{registered['version']}" and selected["archive"]["sha256"] == expected_digest,
+                f"{key} 缓存版本或归档 SHA-256 与{source}不符")
         declared = {dep: normalized_range(version) for dep, version in registered["dependencies"].items()}
         for dependency in (pruned_edges or {}).get(package, ()):
             del declared[dependency]
@@ -312,6 +315,17 @@ class CandidateRun(R3Run):
     planning_commit = PLANNING_COMMIT
     planning_tree = PLANNING_TREE
 
+    @property
+    def local_package_feed(self):
+        return self.feed
+
+    @property
+    def restore_sources(self):
+        return (str(self.local_package_feed), NUGET_SOURCE) if self.local_package_feed else (NUGET_SOURCE,)
+
+    def restore_options(self):
+        return []
+
     def __init__(self, repo, evidence, frozen_root, dotnet=None):
         super().__init__(repo, evidence)
         self.frozen_root = frozen_root
@@ -384,16 +398,17 @@ class CandidateRun(R3Run):
         patch_path.write_text(patch, encoding="utf-8")
         self.command(["git", "apply", "--no-index", "--check", "--reverse", patch_path],
                      self.root.parent, "template-patch-replay-check.log")
-        source_config(self.config, self.feed, self.frozen)
+        source_config(self.config, self.local_package_feed, self.frozen)
         self.report["inputs"]["nuget"].update(effective=artifact(self.config, self.evidence),
-                                             effectiveSources=[str(self.feed), NUGET_SOURCE])
+                                             effectiveSources=list(self.restore_sources))
 
     def restore(self):
         for name in ENTRIES:
             self.entry = project_path(name)
             try:
                 self.run_dotnet(["restore", self.entry, "--configfile", self.config, "--no-http-cache",
-                                 "--force", "-p:Configuration=Release", "--verbosity", "normal"], f"{name}-restore.log")
+                                 "--force", "-p:Configuration=Release", "--verbosity", "normal",
+                                 *self.restore_options()], f"{name}-restore.log")
             finally:
                 log = self.evidence / f"{name}-restore.log"
                 if log.is_file():
@@ -403,7 +418,7 @@ class CandidateRun(R3Run):
     def read_target(self, name, saved, lookup, *, pruned_edges=None):
         managed = {f"Du.{package}" for package in REPLACEMENTS.get(name, ())}
         target = read_project(self.root, name, saved, self.cache, self.config, lookup, topology=TOPOLOGY,
-                              sources=(str(self.feed), NUGET_SOURCE), managed=stack_package,
+                              sources=self.restore_sources, managed=stack_package,
                               managed_versions={package: f"[{self.frozen[package]['version']}]"
                                                 for package in managed}, forbidden=original_package,
                               tfm=self.tfm, deps_target=self.deps_target)
@@ -418,7 +433,8 @@ class CandidateRun(R3Run):
 
         def lookup(key, relative):
             if (key, relative) not in cache_records:
-                source = str(self.feed) if stack_package(key.split("/")[0]) else NUGET_SOURCE
+                source = (str(self.local_package_feed) if self.local_package_feed and stack_package(key.split("/")[0])
+                          else NUGET_SOURCE)
                 cache_records[key, relative] = package_hashes(self.cache, key, relative, source)
             return cache_records[key, relative]
 
@@ -542,9 +558,10 @@ class CandidateRun(R3Run):
         for path, expected in self.original_hashes.items():
             checked_file(self.frozen_root, path, expected)
             unchanged[str(path)] = expected
-        for package in self.frozen.values():
-            path = checked_file(self.feed, package["feedCopy"], package["archiveSha256"])
-            unchanged[str(path)] = package["archiveSha256"]
+        if self.local_package_feed is not None:
+            for package in self.frozen.values():
+                path = checked_file(self.local_package_feed, package["feedCopy"], package["archiveSha256"])
+                unchanged[str(path)] = package["archiveSha256"]
         write_json(self.evidence_file("inputs-after.json"), unchanged)
 
 

@@ -15,7 +15,7 @@
 - R3 固定维护版模板的 .NET 10 / EF Core 10 升级已通过本机完整运行验收，OpenSpec 已同步并归档。两代应用在同一 SQL Server 候选库接续，原 30 条迁移与表结构保持一致。两轮 Angular 业务将候选、对照库登录计数从 `1/1` 经 `2/1` 推到 `3/1`，升级前后两份备份均实际恢复并逐行核对登录记录。[升级与双恢复点](r3-template-net10-upgrade.md#2026-11-25-正式运行验收) · [稳定规范](../../openspec/specs/template-runtime-upgrade/spec.md) · [归档](../../openspec/changes/archive/2026-11-25-validate-r3-net10-template-runtime-upgrade/)
 - R3 固定原版模板已在两个恢复点完成本机回退验收，OpenSpec 已同步并归档。原版 `net9.0` Migrator 和 Host 在 SQL Server Developer 上复现 Angular 登录及授权查询，两库成功登录计数从 `3/2` 经 `4/2` 到 `4/3`。升级后路径保留了 .NET 10 写入，升级前路径确认选择较早恢复点会舍弃该写入。[原版回退结果与范围](r3-original-template-rollback.md#正式运行结果) · [稳定规范](../../openspec/specs/template-application-rollback/spec.md) · [归档](../../openspec/changes/archive/2026-11-26-validate-r3-original-template-rollback/)
 
-- R4 首次发行候选已完成本地验收。13 对冻结归档通过固定模板双目标构建、同库安装与升级、原版双路径回退和映射引擎专项验收。实物与发布说明已交接，公开发行与公开源回装待后续步骤。[R4 本地验收与发布者交接](r4-release-candidate.md#发布者交接)
+- R4 已首次公开发行。13 个主包、13 个符号包和 18 个调试目标完成公开核验，两代四入口通过公开源同库接续，`net10.0` 新库安装通过。`net9.0` 留作存量应用迁移兼容性实测。原版双路径回退和映射专项使用同批冻结归档的本地证据。[发行说明](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [公开源复验](r4-release-candidate.md#公开源模板消费) · [历史冻结交接](r4-release-candidate.md#发布者交接)
 
 **原路线与研究说明**
 
@@ -244,12 +244,16 @@ R4 的发行对象是通过上述验收的具体候选。后续补丁进入 R5�
 2. 对该 SHA 执行 Release 构建、必要回归、命名检查和依赖审查。
 3. 用最终源码按正式版本重新打包，核对各包 nuspec 的依赖范围和符号包，记录供发布的最终产物摘要。若签名改变字节，以签名后的包作为验收输入。
 4. 复用 R3 的模板、测试库和迁移步骤，从空缓存只用这套最终框架包还原，核对实际依赖图，复验启动、升级、登录和受权限控制的业务请求。
-5. 按已确定的发布授权和流程，发布 tag、包和对应说明。
-6. 再从公开包源使用空缓存安装实际发布包，核对包身份、版本与依赖解析结果，并记录安装结果及对应的发行提交。
+5. 按发布授权建立 tag 并提交包。依赖主包先经匿名下载、仓库验签和冻结内容核对，再提交对应下游。分别登记公开主包及符号。
+6. 从公开包源使用空缓存验证实际发布包，并在空库实跑安装说明。通过公开消费和新库验收后发布 GitHub Release，附精确提交、支持范围、安装步骤及校验清单。
 
 绿色 badge、不同 SHA 的历史测试、自动 dependency submission，均不能替代候选版本的验证。NuGet 包应按不可变发行物管理，出现错误时发布新版本，不用覆盖同一版本来隐藏变化。
 
 ### R5：把持续维护控制在可承担的规模内
+
+R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer `16.0.4236.2` 和固定模板通过 `net10.0` 新库安装，实测运行时 `10.0.15`。同批 `net9.0` 存量迁移在 `9.0.10` 实测，可用作迁移对照，微软已于 2026-11-10 结束 .NET 9 支持。公开源同库接续使用冻结 Angular 客户端。原版两条回退路径沿用同批冻结源的历史实测。[公开发行与支持范围](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [回退实测](r4-release-candidate.md#实测支持矩阵)
+
+待补的 R4 组合包括 Windows、Linux 原生应用、其他数据库 Provider 和不同 Angular 组合。后续支持范围按实际证据更新。[公开发行规范](../../openspec/specs/public-package-release/spec.md) · [首发归档](../../openspec/changes/archive/2026-11-26-publish-r4-first-public-release/)
 
 初期建议只维护一条主发行线，另外保留清晰的上游跟踪引用。只有出现真实消费者需求且有验证能力时，再增加并行维护分支。
 

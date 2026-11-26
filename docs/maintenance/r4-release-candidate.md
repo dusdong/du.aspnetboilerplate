@@ -1,5 +1,7 @@
 # R4 首发候选与本地验收
 
+R4 已于 2026-11-26 公开发行。GitHub Release `458933029` 发布于 `2026-11-26T03:59:33Z`，以附注标签 `v10.5.1` 绑定主仓提交 `5758c8186b68dcc42ecc90164cf9d3f53cf3345e`。13 个主包及其符号来自本文登记的冻结批次，18 个公开 PDB 与冻结符号一致。[发行说明](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [新库安装指南](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-INSTALL-net10.md) · [公开校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json)
+
 [R4 组合清单](../../eng/r4_release_candidate.json)固定 11 个 `Du.Abp*` 包的 `10.5.1`、`Du.AutoMapper` 的 `14.0.0` 和 `Du.AutoMapper.Collection` 的 `11.0.0`。每个包登记生产仓、维护主页、旧包摘要，以及各目标 DLL 的路径和旧摘要。依赖和共享框架引用按 nuspec 目标组登记。裸版本表示包含该版本的下限，单个方括号版本表示精确约束。[验收稳定规范](../../openspec/specs/release-candidate-verification/spec.md) · [归档设计](../../openspec/changes/archive/2026-11-26-prepare-r4-first-release-candidate/design.md)
 
 生产仓的 `baseCommit` 取自历史比较基点的 gitlink。`gitlinkCommit` 固定本轮协调仓的 Git 树，生产仓的 `finalCommit` 与该树中的三个 gitlink 一致。模板固定在 `2e9536872673a7ff1986a19e798c51684d16afe5`。R3 归档的相对路径和生产清单摘要来自[历史冻结登记](../../eng/r3_template_net9_reference.json)。
@@ -120,7 +122,7 @@ R4 归档后，复核入口从归档目录读取规划制品，新的规划来�
 
 ## 发布者交接
 
-本轮状态为本地待发。验证机的 `.git/r4-first-release-candidate/package-4/work-root.txt` 记录保留目录。其子目录 `publish-handoff-v2/` 为当前可整体搬移的交接。原版 `publish-handoff/` 随原报告保留。v2 目录的 `packages.tsv` 列出 26 份实物及生产提交，`SHA256SUMS` 覆盖交接文件，`evidence/recheck/` 保存规划来源和四入口只读复核，`RELEASE-NOTES.md` 为发布说明草案，实际的主包、符号包、发布候选证据和恢复介质分别可从 `frozen/feed/`、`frozen/symbols/`、`evidence/` 和 `sql-media/` 取得。验收日志中的绝对路径定位验证机的原始记录，复跑使用本机路径。
+冻结交接时的状态为本地待发。验证机的 `.git/r4-first-release-candidate/package-4/work-root.txt` 记录保留目录。其子目录 `publish-handoff-v2/` 为当前可整体搬移的交接。原版 `publish-handoff/` 随原报告保留。v2 目录的 `packages.tsv` 列出 26 份实物及生产提交，`SHA256SUMS` 覆盖交接文件，`evidence/recheck/` 保存规划来源和四入口只读复核，`RELEASE-NOTES.md` 为发布说明草案，实际的主包、符号包、发布候选证据和恢复介质分别可从 `frozen/feed/`、`frozen/symbols/`、`evidence/` 和 `sql-media/` 取得。验收日志中的绝对路径定位验证机的原始记录，复跑使用本机路径。
 
 原始生产与冻结复验材料分别保存在同一保留目录的 `producer-evidence/` 和 `freeze-evidence/`。验证机上的旧临时路径通过符号链接供按绝对路径登记的历史记录读回。迁存记录及历史组件绑定复跑命令见 `.git/r4-first-release-candidate/closeout/README.md`。
 
@@ -128,4 +130,89 @@ R4 归档后，复核入口从归档目录读取规划制品，新的规划来�
 - 按内部依赖顺序使用交接归档上传主包与符号。发生签名或重新生产导致归档字节变化时，绑定变化后的摘要并完成受影响的来源、符号和消费者复验。
 - 从公开源独立空缓存回装已发布版本，复核实际下载的版本、摘要、符号、依赖闭包和正常消费者入口，记录公开源结果、发布标识与提交。
 
-本批应用实测覆盖上述 macOS ARM64 组合。Windows、Linux，本轮 CI，MySQL/PostgreSQL 等其他 Provider，其他数据库或运行时补丁、生产或分布式部署以及新 Angular 版本仍待验。早期版本的跨平台源码验证作为历史证据。公开发行及公开源回装待后续发行变更。
+本批应用实测覆盖上述 macOS ARM64 组合。Windows、Linux，本轮 CI，MySQL/PostgreSQL 等其他 Provider，其他数据库或运行时补丁、生产或分布式部署以及新 Angular 版本仍待验。早期版本的跨平台源码验证作为历史证据。同批公开源回装见[公开源模板消费](#公开源模板消费)。
+
+### 首次公开发行清单预检
+
+从主仓根目录运行下列命令。验证机可从 `work-root.txt` 定位交接目录。在其他机器使用完整移交的 `publish-handoff-v2/`，并确保主仓本地包含发行目标提交 `5758c8186b68dcc42ecc90164cf9d3f53cf3345e` 和实测协调提交 `19101266923a6422543a17e0963e3475c24923f2`。
+
+```sh
+R4_HANDOFF="$(cat .git/r4-first-release-candidate/package-4/work-root.txt)/publish-handoff-v2"
+R4_RELEASE_EVIDENCE="$(git rev-parse --git-path publish-r4-first-public-release/package-1)"
+mkdir -p "$R4_RELEASE_EVIDENCE"
+
+python3 -B eng/r4_release_manifest.py --handoff "$R4_HANDOFF" \
+  --output "$R4_RELEASE_EVIDENCE/release-manifest.json"
+```
+
+预检用固定摘要复核 `SHA256SUMS` 的 209 个条目，复用冻结批次的 `verify` 校验，并逐行把 `packages.tsv` 与 26 份归档的路径、大小、SHA-256、版本、目标框架和生产提交对账。清单标明拟用 tag、目标提交、三个生产 gitlink 和实测协调提交。归档路径相对于交接目录。每个主包记录实际 nuspec 各目标组的内部依赖范围。`directInternalDependencies` 将这些目标组的直接内部依赖合并为本批确切版本，`publishOrder` 将每个依赖排在使用者之前。
+
+将输出放在交接目录外。使用同一输出路径复跑时，预检重新核对全部输入，并要求现有清单字节与本轮结果一致。输入差异会使预检退出 1，并报告出错字段或归档路径。后续发布步骤以本轮预检退出 0 为使用该清单的前提。发布权限、远端状态和公开源核验见[首发设计归档](../../openspec/changes/archive/2026-11-26-publish-r4-first-public-release/design.md)及[公开发行稳定规范](../../openspec/specs/public-package-release/spec.md)。
+
+定向复跑会在独立临时副本中逐一替换 26 份归档，逐项验证退出码、摘要诊断和清单生成条件。
+
+```sh
+python3 -B eng/tests/verify_r4_release_manifest.py --handoff "$R4_HANDOFF" -v
+```
+
+### 公开主包、符号与进度核验
+
+在同一终端使用上一节的 `R4_HANDOFF` 和 `R4_RELEASE_EVIDENCE`。入口读取固定首发清单，使用 Python 3 与 `.NET SDK 10.0.404`，并将所有核验产物写入交接目录外的 `R4_PUBLIC_WORK`。
+
+```sh
+R4_PUBLIC_WORK="$(git rev-parse --git-path publish-r4-first-public-release/package-4/public)"
+r4_public() {
+  python3 -B eng/r4_public_release.py \
+    --manifest "$R4_RELEASE_EVIDENCE/release-manifest.json" \
+    --handoff "$R4_HANDOFF" --work "$R4_PUBLIC_WORK" "$@"
+}
+
+r4_public verify --main-only
+r4_public gate --package Du.AutoMapper.Collection
+r4_public verify --package Du.AutoMapper
+```
+
+- `verify` 默认回读全批主包及符号。用重复的 `--package` 指定一组包。它向 NuGet Gallery 匿名下载精确版本，并用服务索引登记的指纹和固定 SDK 验证仓库主签名、签名证书链、时间戳和时间戳证书链。验签进程使用 .NET 固定区域性和 UTC，并保存完整日志。主包另保存冻结及下载归档 SHA-256 和逐文件校验表。将仓库签名的所有者、当前公开搜索返回的所有者及已核对的发布记录三方对账。
+- 所有者查询依次使用服务索引列出的搜索节点。若服务索引转到地区镜像且其节点均未返回该包的所有者，继续查询 nuget.org 全球索引公布的主节点。逐项保存查询结果，本批签名、当前公开所有者和发布记录的核对要求相同。
+- `verify` 从已经核验的公开 DLL 读取 CodeView 标识和签入的调试校验和。它向符号服务请求 Portable PDB，核对 PDB 标识、调试校验和及冻结符号的整文件 SHA-256。PDB 核验按包、TFM 和 DLL 保存。符号归档的上传受理在 `progress.json` 的 `external` 中单独登记。全项通过需要每包最新的 `accepted` 或有凭证的 `confirmed` 记录与冻结符号归档摘要一致，且全部登记目标的 PDB 均通过。遇到上传退回或重复版本时，通过的 PDB 证据保留，全项核验随最新上传记录重新判定。重新检查仍待索引的项目时使用同一工作目录，按服务的 `Retry-After` 或索引状态间隔重跑。
+- `gate` 回读目标版本及其直接内部依赖的主包。退出 0 表明目标尚不可见且当前依赖均有已核验的公开下载记录。退出 2 时查看 JSON 的 `blockedBy` 和 `main`。目标已核验时可按已完成的主包接续到符号步骤。上传前仍须完成首次外部写入的授权、命名与权限预检。
+- `verify` 退出 0 表示所选检查全部通过，退出 1 表示核验失败、冲突或输入错误，退出 2 表示仍有待索引、超时或不可见的项目。主包通过后，`verified-downloads.json` 按清单原样的 ID 导出 `version`、`uploadSha256` 和 `downloadSha256`，文件头包含 `schemaVersion`、`nugetSource` 和 `manifestSha256`。公开消费者须用本批清单及其所需的全体包版本与下载摘要核对缓存。
+
+外部操作完成或结果不确定时，用 `record` 登记脱敏凭证引用。为主包使用 `--kind main --package ID`，为符号使用 `--kind symbols --package ID`，为 tag 或发行说明分别使用 `--kind tag` 和 `--kind release`。实际受理时登记 `--outcome accepted`，超时和重复版本分别登记 `timeout` 与 `duplicate`，并先回读。主包 `accepted` 和 `confirmed` 记录均需为每位已核对的所有者提供一个 `--owner`。符号归档的这两种记录均需用 `--upload-sha256` 提交实际上传件的 SHA-256。处理重复版本前，取得能证明同一发布批次及实际归属的凭证，再以 `confirmed` 和相应的 `--evidence` 续作。外部操作失败时用 `failed`。如已查明前次操作未受理且可以重新尝试，用 `retry` 记录调查证据，再执行 `gate`。
+
+`progress.json` 保留各次外部观察和验证结果。每次重跑复用有完整留存证据的通过记录。用新核验目录做独立回读时，按原发布者凭证登记相关外部观察。符号仍待索引时，通过核验的主包已能为直接依赖放行。具体证据文件在各条记录的 `evidence` 路径下。[NuGet 仓库签名](https://learn.microsoft.com/en-us/nuget/api/repository-signatures-resource) · [符号发布与索引](https://learn.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg#symbol-package-validation-and-indexing)
+
+复跑隔离反例和全部 18 个冻结调试目标。另传入新的 `--online-evidence` 目录可对真实公开的 `Serilog 4.2.0` 测试仓库签名与符号回读。该样本从公开包和符号构造独立对照输入，主包及 PDB 核验通过，样本的符号归档上传记录缺失，全项核验会退出 2。样本证据目录与 R4 正式记录独立。
+
+```sh
+python3 -B eng/tests/verify_r4_public_release.py --handoff "$R4_HANDOFF" \
+  --manifest "$R4_RELEASE_EVIDENCE/release-manifest.json" -v
+```
+
+### 公开源模板消费
+
+在上文固定目标的 13 个主包均有已验签下载记录后，向模板入口同时传入首发清单和本次 `verified-downloads.json`。继续使用[重放消费者](#重放消费者)的受控 SQL Server 实例、历史业务输入和配置。仅需核对构建资产时用 `build --tfm net9.0` 或 `build --tfm net10.0`，省去运行配置。以下 `upgrade` 命令从两个独立空 NuGet 缓存构建两代入口并运行同库接续和业务。
+
+```sh
+python3 -B eng/r4_template_consumer.py upgrade \
+  --batch-root "$R4_HANDOFF/frozen" --frozen-root "$R3_FROZEN_ROOT" \
+  --evidence-root "$R4_EVIDENCE_ROOT" --runtime-config "$R4_RUNTIME_CONFIG" \
+  --release-manifest "$R4_RELEASE_EVIDENCE/release-manifest.json" \
+  --verified-downloads "$R4_PUBLIC_WORK/verified-downloads.json"
+```
+
+公开报告使用带 `-public` 的目录和 profile，保留本轮两份输入的副本及摘要。`inputs.planning` 记录 `publish-r4-first-public-release` 实际读取的工作树制品路径和摘要，并登记执行提交和 Git 树。本变更归档后的复跑读取[首发归档](../../openspec/changes/archive/2026-11-26-publish-r4-first-public-release/)，将 `changeState` 记录为 `archived`。`inputs.frozenCandidatePlanning` 标明冻结批次的候选验收来源。
+
+每代显式配置 nuget.org，同时隔离全局包、HTTP、插件与临时缓存，清除环境继承的还原源与回退目录。固定模板和项目引用继续通过原有断言。每个维护 ID/版本的缓存主包核对实际来源和已验签公开下载的 SHA-256。编译与输出 DLL 对照冻结包内选中目标的 SHA-256。全部入口的实际加载在各阶段 `*-r4-assets.json` 登记。按需依赖同时记录输出和加载状态。两代报告共用同一快照的下载登记。缺少登记、来源偏离、任一摘要不符或业务断言失败，入口退出 1。
+
+2026-11-26 的公开源复验在 macOS ARM64、SDK `10.0.404`、SQL Server Developer `16.0.4236.2` 和 Chrome `158.0.8127.37` 通过。两代 Host 和 Migrator 分别还原 13 和 10 个维护包，缓存主包与已验签下载件的摘要相同。两代 Host 各实际加载 12 个维护 DLL，Migrator 各加载 7 个，全部通过冻结 DLL 对账。`net9.0` 和 `net10.0` 各使用实测运行时 `9.0.10` 和 `10.0.15`，在同一候选库保留 30 条迁移记录。两轮 `Default` 租户均获 `Pages.Users` 权限，授权查询返回 HTTP 200，唯一用户 ID 为 3。候选库和对照库的成功登录计数依次为 `1/1 → 2/1 → 3/1`。
+
+独立的新安装复验从公开固定模板和空缓存创建空库，`net10.0` Migrator 退出 0，SQL 读回 30 条迁移，Web.Host 的 Swagger JSON 返回 HTTP 200。复跑命令见[公开安装说明](r4-public-install.md)。冻结源模式和原版回退继续使用原命令，回退证据来自本地冻结源的候选验收。
+
+可用已登记的本地通过轮复跑公开消费的隔离反例。测试内的签名封装样本仅验证消费侧的归档及 DLL 对账。公开验签独立执行。
+
+```sh
+python3 -B eng/tests/verify_r4_public_consumer.py \
+  --batch-root "$R4_HANDOFF/frozen" --upgrade-run "$UPGRADE_RUN" \
+  --manifest "$R4_RELEASE_EVIDENCE/release-manifest.json" -v
+```
