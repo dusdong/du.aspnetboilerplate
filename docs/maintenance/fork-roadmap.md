@@ -265,10 +265,23 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 固定模板已用候选加十个公开 R4 包实测 `net10.0` 新库、两代同库接续。在固定 `net10.0` 与同一 SQL Server 库切换包并回退，候选及回退阶段均通过 Angular 授权查询读回首阶段经应用创建的租户用户，三阶段各自核对实际包图、编译输出和加载资产。[模板结果及发行交接条件](r5-automapper-template.md)
 
-**R5 的迁移交接与后续工作**
+#### 2026-11-26 收尾复核
 
-1. 公开 R4 包的存量应用迁移已有从消费者源码构建到同库回读的指引。目标共享运行时仍为两套 `10.0.15`，和固定模板 R4 历史实测相符。本轮新增四个 Release 构建及四图对账。消费者部署输入变化时，在隔离库补验后再声明对应范围。继续从增量记录的六条 SHA 和各公告水位查起。[迁移指引](r5-r4-net10-migration.md) · [续查水位](r5-runtime-migration-review.md#共享运行时与下轮检查点)
-2. 集合映射补丁已完成本机候选验收。后续按独立发行交接条件对账生产源码、归档和公开消费证据。运行时公告的待补查项继续沿各自的续查水位处理。[候选范围与交接](r5-automapper-template.md#支持范围与公开发行交接)
+主仓 `main` 的 `99f44b7` 固定引擎 `d264ff75`、Collection `d22aaf5` 和经典框架 `7933e71`。GitHub 三条本轮推送分支的头提交已回读，三个生产 gitlink 对应的源码树与原批次逐一相符。该提交下两项变更均已归档，活动变更为零。GitHub 最新发行是 `v10.5.1`；当日 NuGet 三个包的版本索引仅列 R4 版本。[主仓交付](https://github.com/dusdong/du.aspnetboilerplate/commit/99f44b730458ecacbc086b4ffc5dfc0ace367015) · [冻结来源与 gitlink](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md#批次交接) · [公开发行](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1)
+
+| 复核对象 | 证据与范围 |
+| --- | --- |
+| 归档与业务 | 收尾日志记录 OpenSpec 15/15、Python 45/45、R4 公开消费回归 12/12、资产诊断 9/9，以及从提交后 HEAD 离线回读两个归档、13 个维护包、407 个本地链接和 125 个锚点。SQL Server、Host 和浏览器结果来自相应模板实跑轮。[模板结果](r5-automapper-template.md) · [迁移审查](r5-runtime-migration-review.md) |
+| 缓存与保留证据 | 58 个缓存目录已按清单删除，未留恢复副本。原占 11.49 GiB，清理前后共享卷可用量的快照差为 10.38 GiB。清理前后登记的 1,142 项摘要一致。本次重新读取文件，1,141 项仍逐字节一致，包括冻结包、7 份 SQL 备份和正式报告。唯一差异是工作日志 `任务记录.md` 后续追加 824 字节，原 32,744 字节的摘要仍匹配。冻结批次离线复核通过。 |
+
+验证机保留两份原始交接记录，位于主仓 Git 目录的 `review-r5-runtime-migration-readiness/closeout/main/handoff.md` 和 `closeout/cleanup/handoff.md`（共用前述任务目录）。其他检出可用上表所引提交和归档文档复核源码与批次关系。
+
+后续三包待发批次完成复验和发行前演练，已同步候选验收规范并归档。新制包引擎 `54f6277a` 已交付到登记子仓的 `maintenance/v14`。本次归档的协调提交固定该引擎、两项沿用生产提交及同一模板。待发批次与 `99f44b7` 对应的原冻结批次分别登记。[新引擎交付](https://github.com/dusdong/AutoMapper/commit/54f6277af80783e5d07e896f75df0dcc0c4b4502) · [新批次与目标核对](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md)
+
+#### 下一轮工作计划
+
+1. **决定三包公开发行。** 新批次已冻结并通过独立消费者、固定模板和发行前演练。维护者决定发行后，从本次归档的协调提交核定拟用 `v10.5.2` 的目标并复核版本可用性。按三个待发和十个沿用的清单实施，完成实际公开主包、符号与业务验收再发布发行说明。[待发交接](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md) · [发行前演练](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-rehearsal.md)
+2. **持续维护已公开的 R4。** 存量应用按迁移指引核对两代四入口和同库业务。上游六条分支、包公告或 .NET 服务基线有更新时从上次完整检查点续查；CVE-2026-56158 待原始组件范围可读后补核。消费者的平台、Provider 或客户端发生变化时，以隔离环境的实测结果更新支持范围。[存量迁移指引](r5-r4-net10-migration.md) · [公告与下轮检查点](r5-runtime-migration-review.md#共享运行时与下轮检查点)
 
 建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。
 

@@ -27,23 +27,27 @@ DOCUMENT_HASHES = {
 R4_INSPECTION = ROOT / "eng/r4-inspection"
 
 
-def check_readme(archive, metadata, name, version, project_url, attribution):
+def check_readme(archive, metadata, name, version, project_url, attribution, *, source=None):
     path = metadata.findtext("readme")
     verify_equal("README.md", path, f"{name}/nuspec/readme")
     readme = archive.read(path).decode("utf-8-sig")
     field = f"{name}/{path}"
     for command, option in (("dotnet add package", "--version"), ("Install-Package", "-Version")):
         actual = re.findall(rf"^[ \t]*({re.escape(command)}[^\n]*)$", readme, re.M | re.I)
-        verify_equal([f"{command} {name} {option} {version}"], [line.strip() for line in actual], f"{field}/{command}")
+        source_option = {"dotnet add package": "--source", "Install-Package": "-Source"}[command]
+        suffix = f" {source_option} {source}" if source else ""
+        verify_equal([f"{command} {name} {option} {version}{suffix}"], [line.strip() for line in actual],
+                     f"{field}/{command}")
     links = re.findall(r"https://www\.nuget\.org/packages/([^\s)]+)", readme)
-    verify_equal([f"{name}/"], links, f"{field}/安装链接")
+    package_page = f"{name}/{version}" if source else f"{name}/"
+    verify_equal([package_page], links, f"{field}/安装链接")
     verify_equal([project_url + "/issues"], re.findall(r"https://github\.com/[^\s)]+/issues\b", readme),
                  f"{field}/维护入口")
     license_file, author, upstream = attribution
     for phrase in (author, upstream, f"`{license_file}`", "MIT", "版权"):
         require(phrase in readme, f"{field}/上游署名与许可：预期包含 {phrase!r}，实际缺失")
     return {"path": path, "sha256": bytes_sha256(archive.read(path)), "installId": name,
-            "version": version, "nugetUrl": f"https://www.nuget.org/packages/{name}/",
+            "version": version, "nugetUrl": f"https://www.nuget.org/packages/{package_page}",
             "issuesUrl": project_url + "/issues", "credit": author, "upstream": upstream}
 
 
@@ -55,6 +59,39 @@ def producer_git(source, *args):
 @cache
 def source_object(path, commit, relative):
     return producer_git({"path": path}, "show", f"{commit}:{relative}")
+
+
+def check_sources(pdb, source, files, field, *, production_commit=None):
+    repo = source["repository"].removesuffix(".git").removeprefix("https://github.com/")
+    commit = source["finalCommit"]
+    prefix = f"https://raw.githubusercontent.com/{repo}/{commit}/"
+    mapping = pdb["sourceLink"]["documents"]
+    require(mapping, f"{field}/Source Link 缺少文档映射")
+    for alias, target in mapping.items():
+        require(alias.endswith("*") and target.startswith(prefix) and target.endswith("*"),
+                f"{field}/Source Link：预期 {prefix} 下的映射，实际 {alias} → {target}")
+    tracked, generated = [], []
+    for doc in pdb["documents"]:
+        local = doc["path"]
+        for alias, target in mapping.items():
+            if not local.startswith(alias[:-1]):
+                continue
+            path = target[len(prefix):-1] + local[len(alias)-1:]
+            if path not in files:
+                continue
+            blob = source_object(source["path"], commit, path)
+            actual = DOCUMENT_HASHES[doc["hashAlgorithm"]](blob)
+            verify_equal(actual, doc["hash"], f"{field}/PDB/源码/{path}")
+            if production_commit is not None:
+                verify_equal(blob, source_object(source["path"], production_commit, path), f"{field}/生产源码/{path}")
+            tracked.append(path)
+            break
+        else:
+            require(doc["embedded"] and "/artifacts/obj/" in local,
+                    f"{field}/PDB/源码：{local} 缺少提交级定位或嵌入的生成源码")
+            generated.append(Path(local).name)
+    require(tracked, f"{field}/PDB/源码 没有对应的生产 Git 对象")
+    return len(tracked), sorted(generated)
 
 
 def project_identity(name, row, tfm, source, work, dotnet, run):
@@ -106,34 +143,7 @@ class ArchiveInspection:
         return work / "bin/Release" / tfm / f"{name}.dll"
 
     def check_sources(self, pdb, row, source, field):
-        repo = source["repository"].removesuffix(".git").removeprefix("https://github.com/")
-        commit = source["finalCommit"]
-        prefix = f"https://raw.githubusercontent.com/{repo}/{commit}/"
-        mapping = pdb["sourceLink"]["documents"]
-        require(mapping, f"{field}/Source Link 缺少文档映射")
-        for alias, target in mapping.items():
-            require(alias.endswith("*") and target.startswith(prefix) and target.endswith("*"),
-                    f"{field}/Source Link：预期 {prefix} 下的映射，实际 {alias} → {target}")
-        tracked, generated = [], []
-        for doc in pdb["documents"]:
-            local = doc["path"]
-            for alias, target in mapping.items():
-                if not local.startswith(alias[:-1]):
-                    continue
-                path = target[len(prefix):-1] + local[len(alias)-1:]
-                if path not in self.source_files[row["producer"]]:
-                    continue
-                blob = source_object(source["path"], commit, path)
-                actual = DOCUMENT_HASHES[doc["hashAlgorithm"]](blob)
-                verify_equal(actual, doc["hash"], f"{field}/PDB/源码/{path}")
-                tracked.append(path)
-                break
-            else:
-                require(doc["embedded"] and "/artifacts/obj/" in local,
-                        f"{field}/PDB/源码：{local} 缺少提交级定位或嵌入的生成源码")
-                generated.append(Path(local).name)
-        require(tracked, f"{field}/PDB/源码 没有对应的生产 Git 对象")
-        return len(tracked), sorted(generated)
+        return check_sources(pdb, source, self.source_files[row["producer"]], field)
 
     def inspect_target(self, name, row, source, tfm, target, archive, symbols, baseline, verify_project):
         field = f"{name}/{tfm}"

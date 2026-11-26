@@ -8,6 +8,7 @@
 | --- | --- |
 | 安装 R4 稳定维护包，在新 SQL Server 测试库运行 `net10.0` 模板 | [发行说明与包链接](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [已实跑安装指南](maintenance/r4-public-install.md) · [公开包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json) |
 | 查看各阶段目标、当前进度与发行条件 | [维护型 fork 路线](maintenance/fork-roadmap.md) |
+| 核对 R5 收尾、冻结包与清理记录，查阅三包待发交接 | [收尾复核](maintenance/fork-roadmap.md#2026-11-26-收尾复核) · [工作计划](maintenance/fork-roadmap.md#下一轮工作计划) · [三包待发交接](../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md) · [准备任务](../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/tasks.md) |
 | 核对首发证据、R5 的补丁决定和消费者行动 | [R4 归档后复核](maintenance/r4-release-candidate.md#首发归档后复核) · [R5 首轮维护审查](maintenance/r5-first-maintenance-review.md#本轮决定) · [下轮检查点](maintenance/r5-first-maintenance-review.md#下轮检查点) |
 | 准备存量 R4 应用迁往 `net10.0`，接续上游与公告审查 | [存量迁移指引](maintenance/r5-r4-net10-migration.md) · [增量审查与续查水位](maintenance/r5-runtime-migration-review.md) · [迁移与审查归档](../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/) · [R4 公开包同库实测](maintenance/r4-release-candidate.md#公开源模板消费) |
 | 复验 R5 集合补丁、冻结三包及独立消费者 | [固定模板安装、迁移与同库回退](maintenance/r5-automapper-template.md) · [引擎实包验收与复跑](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/engine-package-validation.md) · [共享集合计划对照](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/shared-collection-plan-observation.md) · [三包冻结与消费](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [补丁提案](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/proposal.md) · [候选设计](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/design.md) · [归档任务清单](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md) |
@@ -78,7 +79,9 @@ git submodule status
 
 同批 13 个包及其符号已公开，两代公开源消费者和 `net10.0` 新库安装验收通过。首次公开发行的稳定规范已同步，变更已归档。[公开发行规范](../openspec/specs/public-package-release/spec.md) · [首发归档](../openspec/changes/archive/2026-11-26-publish-r4-first-public-release/) · [R4 首次公开发行](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1)
 
-2026-11-26，R5 的存量迁移与增量审查、集合映射补丁候选均已同步规范并归档。映射补丁的公开发行另按交接条件验收。[维护审查稳定规范](../openspec/specs/maintenance-release-review/spec.md) · [迁移与审查归档](../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/) · [映射消费稳定规范](../openspec/specs/automapper-package-consumption/spec.md) · [集合补丁归档](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/) · [公开发行交接](maintenance/r5-automapper-template.md#支持范围与公开发行交接)
+2026-11-26，R5 的存量迁移与增量审查、集合映射补丁候选均已同步规范并归档。[维护审查稳定规范](../openspec/specs/maintenance-release-review/spec.md) · [迁移与审查归档](../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/) · [映射消费稳定规范](../openspec/specs/automapper-package-consumption/spec.md) · [集合补丁归档](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/)
+
+三包发行准备已同步候选验收规范并归档，批次为本地待发。维护者决定发行后，按交接核定目标提交并完成公开验收。[局部补丁稳定规范](../openspec/specs/release-candidate-verification/spec.md#requirement-局部补丁可从已验候选交接为本地待发批次) · [发行准备归档](../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/) · [待发交接](../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md)
 
 - 新能力、重大行为变化或跨子模块架构调整，先核对 `openspec/specs/` 和 `openspec/changes/`。可用 `openspec-cn list --specs` 和 `openspec-cn list` 查看。
 - 用 `openspec-cn new change <name>` 创建变更，在 `openspec/changes/<name>/` 中完成提案、增量规范、设计和任务清单。

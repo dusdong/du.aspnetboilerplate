@@ -29,6 +29,8 @@ git submodule update --init --recursive
 
 集合映射补丁的 7 项本地验收已完成，变更已归档。三个冻结候选与十个 R4 公开包通过固定模板的 `net10.0` 新库安装、`net9.0` 至 `net10.0` 同库接续。固定 `net10.0` 的公开 R4、候选、公开 R4 三阶段均读到首阶段通过应用写入的同一租户用户。公开发行设有独立交接条件。[固定模板结果与复跑](docs/maintenance/r5-automapper-template.md) · [三包冻结与独立消费](openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md)
 
+主仓 `99f44b7` 交付了前两项 R5 归档和原冻结批次的生产源码。三包发行准备也已同步规范并归档，新批次完成实物验收及发行前演练，状态为本地待发。新引擎源码已交付。拟用 `v10.5.2`，发行前从本次归档的协调提交核定目标。公开发行基线为 `v10.5.1`。[收尾复核](docs/maintenance/fork-roadmap.md#2026-11-26-收尾复核) · [下一轮工作计划](docs/maintenance/fork-roadmap.md#下一轮工作计划) · [三包待发交接](openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md)
+
 ### 已归档的基线与迁移
 
 截至 2026-11-25，上游 `v10.5.1` 的 R0 基线、R1 首项 .NET 9 查询过滤补丁和 R1 首批 .NET 10 / EF Core 10 源码迁移均已验收并归档。R1 源码兼容证据覆盖 macOS ARM64 回归、.NET 9 调用方、UTM Windows ARM64 和 GitHub 托管 Windows x64。[维护路线](docs/maintenance/fork-roadmap.md) · [R1 首项验收记录](docs/maintenance/r1-efcore-query-filter.md) · [R1 运行时迁移验收](docs/maintenance/r1-dotnet10-runtime-migration.md)

@@ -65,7 +65,7 @@ def verify_build_entry(directory, inputs, entry, batch_root, batch, inspection, 
     require(inputs.get("packageSourceMode", "frozen") == mode and inputs["nuget"]["cachesInitiallyEmpty"]
             and set(inputs["nuget"]["effectiveSources"]) == sources and (local_ids or not feed.exists()),
             f"{label} 的空缓存或维护包源不符")
-    batch_record = "r5Batch" if mode == "mixed" else "r4Batch"
+    batch_record = "r5Batch" if "r5Batch" in inputs else "r4Batch"
     require(inputs[batch_record]["sha256"] == sha256(batch_root / "batch.json"), f"{label} 的冻结批次不符")
     output = directory / "source/aspnet-core" / project_path(entry).parent / "bin/Release" / tfm
     manifest_file = directory / f"{entry}-output.json"
