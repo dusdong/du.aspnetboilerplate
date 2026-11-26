@@ -25,7 +25,7 @@ git submodule update --init --recursive
 
 ## 当前阶段
 
-2026-11-26，R4 公开版本 `v10.5.1` 仍对应已验源码 `5758c81`。R5 首轮维护审查已在主仓 `4d051e8` 归档。下一轮先用已发行的 `Du.AutoMapper 14.0.0` 核对普通集合映射的顺序差异，再验证引擎、Collection 与 ABP 适配器组成的补丁候选。当前结论来自源码比对，实包行为对照待执行。[R4 归档后复核](docs/maintenance/r4-release-candidate.md#首发归档后复核) · [R5 审查结论](docs/maintenance/r5-first-maintenance-review.md#本轮决定) · [补丁提案](openspec/changes/fix-r5-automapper-collection-context/proposal.md)
+截至 2026-11-26，公开版为 `v10.5.1`（源码 `5758c81`）。R5 首轮维护审查已在 `4d051e8` 归档，集合映射补丁规划已在 `c14c5b9` 交付，当时进度为 **0/7**。活动变更 `fix-r5-automapper-collection-context` 已完成 1.1–1.3，进度为 **3/7**。公开 `Du.AutoMapper 14.0.0` 和本地候选 `14.0.1` 在已测的普通集合用例中均符合预期，未观察到注册或预热顺序的影响。主仓已固定引擎源码 `d264ff75`。包与符号仍为本地候选，2.1 暂缓三包冻结。[R4 归档后复核](docs/maintenance/r4-release-candidate.md#首发归档后复核) · [R5 审查结论](docs/maintenance/r5-first-maintenance-review.md#本轮决定) · [引擎实包验收](openspec/changes/fix-r5-automapper-collection-context/engine-package-validation.md) · [实施任务清单](openspec/changes/fix-r5-automapper-collection-context/tasks.md)
 
 ### 已归档的基线与迁移
 

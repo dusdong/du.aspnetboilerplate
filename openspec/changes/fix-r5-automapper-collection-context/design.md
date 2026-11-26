@@ -10,11 +10,15 @@ R5 首轮已随主仓 `4d051e841ec1641a4ec0fcdc9540cb1f6327654d` 交付并归档
 
 ## Decisions
 
-### 先确定哪些顺序在真实引擎上表现不同
+### 在公开实包上隔离顺序影响
 
-以已验公开下载摘要核对 `Du.AutoMapper 14.0.0`。用两个复用同一集合类型的日常业务成员和少量固定 DTO 建立用例，预先确定输入、预期结果、配置注册次序和预热调用。两侧使用相同条件，各个顺序使用新配置或隔离进程，通过未启用 Collection 扩展的普通 `Map` 分别验证冷启动、两个预热方向和等价配置的两种注册顺序。另验元素自身需要上下文、默认与显式深度以及共享对象引用。
+旧版对照由独立消费者运行，引擎仅通过 `PackageReference` 精确引用 `Du.AutoMapper [14.0.0]`，在隔离空缓存从 nuget.org 还原。核对实际还原图的包身份、资产及来源，并将还原所得 `.nupkg` 的 SHA-256 与 R4 的已验公开下载记录对账。采用公开清单的 `mainPackage.anonymousDownloadSha256`，它与 `verified-downloads.json` 中的 `downloadSha256` 对应。登记进程报告的实际加载路径，核对该文件与这份归档内 `lib/net8.0/AutoMapper.dll` 的 SHA-256 一致。[R4 公开下载记录](../../../docs/maintenance/r5-first-maintenance-review.md#发行版本和上游基点) · [R4 公开包消费入口](../../../docs/maintenance/r4-release-candidate.md#公开源模板消费)
 
-初步分析和探索性构建可与旧版复现并行。正式冻结及交接前，公开包须在至少一个用例上稳定偏离预期，实际候选主包在同一条件下须符合预期，其他约定对照也须通过。保存两侧包来源、实际加载的 DLL 路径与 SHA-256、逐项结果或异常。未建立差异时记录待验证及未成立的条件，回到首轮维护评估。源码推断和两侧均通过的用例只用于分析或兼容性佐证。[上游普通集合修复](https://github.com/LuckyPennySoftware/AutoMapper/pull/4651) · [注册顺序回归](https://github.com/LuckyPennySoftware/AutoMapper/pull/4675) · [后续维护线回补](https://github.com/LuckyPennySoftware/AutoMapper/pull/4676)
+现有单元测试通过 `ProjectReference` 使用引擎源码，`RecursionProbe` 在 `CandidateVersion` 为空时也走源码路径。运行落入任一源码路径、还原了其他包，或来源及摘要不符时，修正输入后复测，发行包证据以重新对账通过的运行记录为准。[单元测试项目](../../../AutoMapper/src/UnitTests/AutoMapper.UnitTests.csproj) · [探针项目](../../../AutoMapper/src/RecursionProbe/RecursionProbe.csproj)
+
+用两个复用同一集合类型的业务成员和少量固定 DTO 建立有界用例，事先确定预期。两侧均通过未启用 Collection 扩展的普通 `Map` 独立运行每种顺序，每次新建等价配置，使用等价输入、目标初始状态和同一待测调用。预热对照固定注册顺序，只交换预热调用顺序。冷启动对照无预热，只交换等价映射的注册顺序。按原条件重复以确认结果或异常稳定。另验元素自身需要上下文、默认与显式深度以及共享对象引用。[上游普通集合修复](https://github.com/LuckyPennySoftware/AutoMapper/pull/4651) · [注册顺序回归](https://github.com/LuckyPennySoftware/AutoMapper/pull/4675) · [后续维护线回补](https://github.com/LuckyPennySoftware/AutoMapper/pull/4676)
+
+正式冻结及交接前，按增量规范判定并记录复现的是注册还是预热影响，保存两侧用例条件、结果或异常和实包对账。若各顺序出现相同错误，记录已证实的业务偏差和仍待证的顺序影响。若未观测到偏差，记录试过的条件。顺序影响待证时回到首轮维护评估，初步分析和探索性构建可先行。[冻结前判定](specs/automapper-package-consumption/spec.md#scenario-正式冻结前验证顺序影响及候选结果)
 
 ### 按 MIT 14 基线独立修正内建映射
 
