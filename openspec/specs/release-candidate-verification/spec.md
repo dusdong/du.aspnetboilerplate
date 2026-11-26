@@ -1,10 +1,10 @@
-# 首次发行候选验收
+# release-candidate-verification Specification
 
 ## Purpose
 
 让维护者可以从明确的源码提交制备一套带稳定版本号的安装包和符号包，从干净环境验证实际消费者使用的版本与运行文件，并把这些具体文件及其支持范围交给发布者。
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: 首发组合具有明确的版本和生产来源
 
@@ -63,7 +63,7 @@
 
 维护者 SHALL 使用同一批已核验归档复跑代表性模板的维护版安装、同库升级和原版回退，并将业务结果与这些归档绑定。
 
-维护者 SHALL 对冻结的 `Du.AutoMapper` 主包按[映射包稳定规范](../../../../specs/automapper-package-consumption/spec.md#scenario-判断安全修复能否纳入候选)复验三项已登记安全修复，全部通过后方可交接。
+维护者 SHALL 对冻结的 `Du.AutoMapper` 主包按[映射包稳定规范](../automapper-package-consumption/spec.md#scenario-判断安全修复能否纳入候选)复验三项已登记安全修复，全部通过后方可交接。
 
 #### Scenario: 从本轮引擎归档逐项复验安全修复
 

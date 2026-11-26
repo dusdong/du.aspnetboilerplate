@@ -67,7 +67,7 @@ git submodule status
 
 2026-11-26，R3 固定模板原版应用回退同步了稳定规范并归档。[回退稳定规范](../openspec/specs/template-application-rollback/spec.md) · [回退归档](../openspec/changes/archive/2026-11-26-validate-r3-original-template-rollback/)
 
-R4 首次发行候选已完成本地制备、消费者验收及待发交接。公共源发行与回装待后续步骤。[R4 变更](../openspec/changes/prepare-r4-first-release-candidate/)
+2026-11-26，R4 首次发行候选完成本地制备、消费者验收和待发交接，稳定规范已同步，变更已归档。公共源发行与回装待后续步骤。[首发候选验收稳定规范](../openspec/specs/release-candidate-verification/spec.md) · [R4 归档](../openspec/changes/archive/2026-11-26-prepare-r4-first-release-candidate/)
 
 - 新能力、重大行为变化或跨子模块架构调整，先核对 `openspec/specs/` 和 `openspec/changes/`。可用 `openspec-cn list --specs` 和 `openspec-cn list` 查看。
 - 用 `openspec-cn new change <name>` 创建变更，在 `openspec/changes/<name>/` 中完成提案、增量规范、设计和任务清单。

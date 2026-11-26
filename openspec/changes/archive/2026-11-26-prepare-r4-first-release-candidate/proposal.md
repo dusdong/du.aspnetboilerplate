@@ -2,7 +2,7 @@
 
 ## Why
 
-固定免费模板已在受测组合走完原版运行、同目标换包、.NET 10 同库升级及原版回退。现有 13 个包来自多个预发布批次，内部依赖仍引用这些批次。首发前需要确定一套稳定版本，从精确提交重打，用消费者实际安装的那批文件验证兼容性。[回退正式结果](../../../docs/maintenance/r3-original-template-rollback.md#正式运行结果) · [R4 发行顺序](../../../docs/maintenance/fork-roadmap.md#r4发布绑定精确提交和最终产物)
+固定免费模板已在受测组合走完原版运行、同目标换包、.NET 10 同库升级及原版回退。现有 13 个包来自多个预发布批次，内部依赖仍引用这些批次。首发前需要确定一套稳定版本，从精确提交重打，用消费者实际安装的那批文件验证兼容性。[回退正式结果](../../../../docs/maintenance/r3-original-template-rollback.md#正式运行结果) · [R4 发行顺序](../../../../docs/maintenance/fork-roadmap.md#r4发布绑定精确提交和最终产物)
 
 ## What Changes
 
@@ -21,4 +21,4 @@
 
 ## Impact
 
-主仓协调版本、证据和模板验收。实际生产者为 `aspnetboilerplate`、`AutoMapper`、`AutoMapper.Collection` 三个子仓。固定免费模板及冻结的 Angular production 客户端继续作为消费者。第一轮以已有 macOS ARM64、SQL Server 和原版前端组合界定模板支持范围。R0、R2、R3 的历史入口与冻结输入仍用于对照。拟用稳定版本仅用于本地待发物，公开发行身份及状态须在发布阶段另行确认。[R3 包登记](../../../eng/r3_template_net9_reference.json) · [主仓与子仓职责](../../../docs/README.md)
+主仓协调版本、证据和模板验收。实际生产者为 `aspnetboilerplate`、`AutoMapper`、`AutoMapper.Collection` 三个子仓。固定免费模板及冻结的 Angular production 客户端继续作为消费者。第一轮以已有 macOS ARM64、SQL Server 和原版前端组合界定模板支持范围。R0、R2、R3 的历史入口与冻结输入仍用于对照。拟用稳定版本仅用于本地待发物，公开发行身份及状态须在发布阶段另行确认。[R3 包登记](../../../../eng/r3_template_net9_reference.json) · [主仓与子仓职责](../../../../docs/README.md)

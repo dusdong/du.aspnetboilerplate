@@ -1,6 +1,6 @@
 # R4 首发候选与本地验收
 
-[R4 组合清单](../../eng/r4_release_candidate.json)固定 11 个 `Du.Abp*` 包的 `10.5.1`、`Du.AutoMapper` 的 `14.0.0` 和 `Du.AutoMapper.Collection` 的 `11.0.0`。每个包登记生产仓、维护主页、旧包摘要，以及各目标 DLL 的路径和旧摘要。依赖和共享框架引用按 nuspec 目标组登记。裸版本表示包含该版本的下限，单个方括号版本表示精确约束。[R4 设计](../../openspec/changes/prepare-r4-first-release-candidate/design.md)
+[R4 组合清单](../../eng/r4_release_candidate.json)固定 11 个 `Du.Abp*` 包的 `10.5.1`、`Du.AutoMapper` 的 `14.0.0` 和 `Du.AutoMapper.Collection` 的 `11.0.0`。每个包登记生产仓、维护主页、旧包摘要，以及各目标 DLL 的路径和旧摘要。依赖和共享框架引用按 nuspec 目标组登记。裸版本表示包含该版本的下限，单个方括号版本表示精确约束。[验收稳定规范](../../openspec/specs/release-candidate-verification/spec.md) · [归档设计](../../openspec/changes/archive/2026-11-26-prepare-r4-first-release-candidate/design.md)
 
 生产仓的 `baseCommit` 取自历史比较基点的 gitlink。`gitlinkCommit` 固定本轮协调仓的 Git 树，生产仓的 `finalCommit` 与该树中的三个 gitlink 一致。模板固定在 `2e9536872673a7ff1986a19e798c51684d16afe5`。R3 归档的相对路径和生产清单摘要来自[历史冻结登记](../../eng/r3_template_net9_reference.json)。
 
@@ -99,7 +99,7 @@ python -B eng/r4_template_consumer.py rollback --batch-root "$BATCH_ROOT" \
 
 ## 从原始通过轮只读复核
 
-原始通过报告在活跃 R4 变更下生成，继承的规划字段标成了历史 R3。新版入口记录 `prepare-r4-first-release-candidate`、实际读取的 OpenSpec 制品路径和摘要、规划基点 `bd5f29f8a02ffcc8868deb2c8e60f49306d6668a`、冻结批次协调提交以及实际执行树。本轮的协调与执行提交同为 `19101266923a6422543a17e0963e3475c24923f2`。新版交接的 `evidence/recheck/planning-provenance.json` 保留三个原始报告的 SHA-256 和原规划字段，再关联本轮 R4 制品。旧报告原样保留。
+原始通过报告在活跃 R4 变更下生成，继承的规划字段标成了历史 R3。新版入口记录 `prepare-r4-first-release-candidate`、实际读取的 OpenSpec 制品路径和摘要、规划基点 `bd5f29f8a02ffcc8868deb2c8e60f49306d6668a`、冻结批次协调提交以及实际执行树。正式消费通过轮的协调与执行提交同为 `19101266923a6422543a17e0963e3475c24923f2`。新版交接的 `evidence/recheck/planning-provenance.json` 保留三个原始报告的 SHA-256 和原规划字段，再关联本轮 R4 制品。旧报告原样保留。
 
 `evidence/recheck/template-entry-assets.json` 用已登记的原交接校验清单确认原报告、构建清单和实际加载记录，并从保留的缓存、冻结包及 Release 产物重新核对四个入口的归档、编译、输出和进程加载。SQL 和浏览器沿用这些已校验的原始通过轮。给定原始交接目录、正式升级和回退目录及一个新的输出路径，从主仓执行：
 
@@ -116,9 +116,13 @@ python3 -B eng/tests/verify_r4_template_assets.py --batch-root "$BATCH_ROOT" \
 
 其中 `PRIOR_HANDOFF` 为原版 `publish-handoff/`。本轮正式升级与回退原始目录分别是 `runs/r4-template-upgrade-_1drcs_1/` 与 `runs/r4-template-original-rollback-f1akkml_/`。专项诊断从原观测派生独立输入，确认错 DLL 路径或摘要、编译来源或摘要不符、必需加载缺失、错误执行树均被拒绝。
 
+R4 归档后，复核入口从归档目录读取规划制品，新的规划来源报告将 `changeState` 记录为 `archived`。随 v2 保存的报告仍记录当时实际读取的活跃变更。验证机的归档后复核记录见 `.git/r4-first-release-candidate/closeout/`。[R4 归档](../../openspec/changes/archive/2026-11-26-prepare-r4-first-release-candidate/)
+
 ## 发布者交接
 
-本轮状态为本地待发。验证机的 `.git/r4-first-release-candidate/package-4/work-root.txt` 记录保留目录。其子目录 `publish-handoff-v2/` 为当前可整体搬移的交接。原版 `publish-handoff/` 随原报告保留。该目录的 `packages.tsv` 列出 26 份实物及生产提交，`SHA256SUMS` 覆盖交接文件，`evidence/recheck/` 保存规划来源和四入口只读复核，`RELEASE-NOTES.md` 为发布说明草案，实际的主包、符号包、发布候选证据和恢复介质分别可从 `frozen/feed/`、`frozen/symbols/`、`evidence/` 和 `sql-media/` 取得。验收日志中的绝对路径定位验证机的原始记录，复跑使用本机路径。
+本轮状态为本地待发。验证机的 `.git/r4-first-release-candidate/package-4/work-root.txt` 记录保留目录。其子目录 `publish-handoff-v2/` 为当前可整体搬移的交接。原版 `publish-handoff/` 随原报告保留。v2 目录的 `packages.tsv` 列出 26 份实物及生产提交，`SHA256SUMS` 覆盖交接文件，`evidence/recheck/` 保存规划来源和四入口只读复核，`RELEASE-NOTES.md` 为发布说明草案，实际的主包、符号包、发布候选证据和恢复介质分别可从 `frozen/feed/`、`frozen/symbols/`、`evidence/` 和 `sql-media/` 取得。验收日志中的绝对路径定位验证机的原始记录，复跑使用本机路径。
+
+原始生产与冻结复验材料分别保存在同一保留目录的 `producer-evidence/` 和 `freeze-evidence/`。验证机上的旧临时路径通过符号链接供按绝对路径登记的历史记录读回。迁存记录及历史组件绑定复跑命令见 `.git/r4-first-release-candidate/closeout/README.md`。
 
 - 发布前核对目标公共源、13 个包名和版本、账号权限和元数据。随后按授权发布对应提交的 tag 与说明。
 - 按内部依赖顺序使用交接归档上传主包与符号。发生签名或重新生产导致归档字节变化时，绑定变化后的摘要并完成受影响的来源、符号和消费者复验。
