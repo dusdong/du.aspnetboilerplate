@@ -39,13 +39,13 @@ RUNTIME_PATCH_PREIMAGES = {
 }
 
 
-def runtime_patch(root):
+def runtime_patch(root, preimages=RUNTIME_PATCH_PREIMAGES):
     patches, projects = [], {}
     for name in TOPOLOGY:
         relative = project_path(name)
         before = (root / relative).read_bytes()
         blob = git_blob(before)
-        require(blob == RUNTIME_PATCH_PREIMAGES[name], f"{relative} 换包后 Git blob 不符：{blob}")
+        require(blob == preimages[name], f"{relative} 换包后 Git blob 不符：{blob}")
         old = b"<TargetFramework>net9.0</TargetFramework>"
         require(before.count(old) == 1, f"{relative} 缺少唯一的 net9.0 声明")
         after = before.replace(old, f"<TargetFramework>{TFM}</TargetFramework>".encode())
@@ -154,6 +154,7 @@ class UpgradeBuildRun(CandidateRun):
     tfm = TFM
     deps_target = DEPS_TARGET
     upgrade_core = True
+    runtime_patch_preimages = RUNTIME_PATCH_PREIMAGES
     planning_commit = "a4ffcaa83a48bb8c7684264ca6aad0d82faf63ae"
     planning_tree = "366e598c95b33f037be23b738895a335689fbfe2"
 
@@ -164,7 +165,7 @@ class UpgradeBuildRun(CandidateRun):
         self.command([*apply, "--reverse", package_patch], self.root.parent, "package-patch-rewind.log")
         self.command([*apply, "--check", package_patch], self.root.parent, "package-patch-check.log")
         self.command([*apply, package_patch], self.root.parent, "package-patch-replay.log")
-        patch, projects = runtime_patch(self.root)
+        patch, projects = runtime_patch(self.root, self.runtime_patch_preimages)
         path = self.evidence_file("template-runtime-upgrade.patch")
         path.write_text(patch, encoding="utf-8")
         self.command([*apply, "--check", path], self.root.parent, "runtime-patch-check.log")

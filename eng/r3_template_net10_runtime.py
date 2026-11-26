@@ -180,6 +180,9 @@ class UpgradeRuntime(CandidateRuntime, UpgradeBuildRun):
     def migrate_net10(self):
         self.run_migrator("net10", 2, self.report["sql"]["upgradeStartLoginRows"])
 
+    def comparable_steps(self, outcome):
+        return outcome["steps"]
+
     def run_browser(self, phase, count, expected_logins):
         self.phase = phase
         self.output, self.host_output = self.entry_output(phase, "Web.Host")
@@ -197,7 +200,7 @@ class UpgradeRuntime(CandidateRuntime, UpgradeBuildRun):
         outcome = self.round(source, phase, before_login=before_login)
         record["afterLoginRows"] = self.login_rows()
         record["addedLogin"] = added_login(record["beforeLoginRows"], record["afterLoginRows"], source, control)
-        require(outcome["steps"] == self.baseline["rounds"]["restore"]["steps"],
+        require(self.comparable_steps(outcome) == self.baseline["rounds"]["restore"]["steps"],
                 f"{phase} 的请求、授权、响应、单元格或入口脚本与基线不同")
         require(all(state == self.business for state in self.sql_state().values()),
                 f"{phase} 登录后既有迁移历史或业务字段变化")

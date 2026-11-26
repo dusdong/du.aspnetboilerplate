@@ -18,6 +18,7 @@
 | 从升级前后两份介质复跑固定原版应用回退，核对查询和成功登录的实际目标库 | [复跑与正式结果](maintenance/r3-original-template-rollback.md) · [稳定规范](../openspec/specs/template-application-rollback/spec.md) · [归档](../openspec/changes/archive/2026-11-26-validate-r3-original-template-rollback/) |
 | 生成或复验 SignalR 与 Log4Net 本地候选，核对独立宿主的通知和日志 | [R3 SignalR 与 Log4Net 候选验收](maintenance/r3-signalr-log4net-candidates.md) · [Git 交付](maintenance/r3-signalr-log4net-candidates.md#git-交付) |
 | 生成或复验 Module Zero 本地候选，核对 SQLite 角色提交及双向租户隔离 | [R3 Module Zero 候选验收](maintenance/r3-module-zero-candidates.md) |
+| 核对 R4 首发冻结归档、模板升级与回退及待发交接 | [R4 组合与复验](maintenance/r4-release-candidate.md) · [发布者交接](maintenance/r4-release-candidate.md#发布者交接) |
 | 比较第三方 fork 的迁移、补丁与独立发包实践 | [ASP.NET Boilerplate fork 调研](maintenance/fork-references.md) |
 | 复验 R3 映射候选、Collection 依赖与模板业务投影 | [AutoMapper 兼容维护](compatibility/automapper.md) · [原版基线](maintenance/r3-automapper-baseline.md) · [引擎验收](maintenance/r3-automapper-engine.md) · [独立消费者验收与复跑](maintenance/r3-automapper-downstream.md#主仓实包消费与复验) · [Git 交付](maintenance/r3-automapper-downstream.md#git-交付) |
 | 核对 Angular 适配器、Web Resources 与模板的版本组合 | [Angular 生态维护](compatibility/angular-ecosystem.md) |
@@ -64,7 +65,9 @@ git submodule status
 
 截至 2026-11-25，R0 基线、R0 统一复验、R1 首项 .NET 9 查询过滤补丁、R1 首批核心源码运行时迁移、R2 首批核心候选包的本机双目标消费验收，以及 R3 原版 Web.Host 基线、SignalR 与 Log4Net 候选验收、Module Zero 候选验收、AutoMapper 候选验收、原版模板运行对照、固定模板 `net9.0` 同目标换包和维护版模板 .NET 10 运行时升级均已归档。[R0 基线归档](../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/) · [R0 统一复验归档](../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/) · [R1 首项归档](../openspec/changes/archive/2026-11-24-adopt-efcore-query-filter-fix/) · [R1 运行时迁移归档](../openspec/changes/archive/2026-11-25-migrate-r1-core-to-dotnet10/) · [R2 归档](../openspec/changes/archive/2026-11-25-validate-r2-core-package-consumption/) · [R3 首包归档](../openspec/changes/archive/2026-11-25-baseline-r3-web-host-dependencies/) · [R3 第二包归档](../openspec/changes/archive/2026-11-25-add-r3-signalr-log4net-candidates/) · [R3 Module Zero 归档](../openspec/changes/archive/2026-11-25-add-r3-module-zero-candidates/) · [R3 AutoMapper 归档](../openspec/changes/archive/2026-11-25-add-r3-automapper-candidates/) · [R3 原版模板运行归档](../openspec/changes/archive/2026-11-25-baseline-r3-original-template-runtime/) · [R3 模板换包归档](../openspec/changes/archive/2026-11-25-validate-r3-net9-template-package-migration/) · [R3 模板升级归档](../openspec/changes/archive/2026-11-25-validate-r3-net10-template-runtime-upgrade/) · [维护路线](maintenance/fork-roadmap.md)
 
-2026-11-26，R3 固定模板原版应用回退同步了稳定规范并归档。当前没有活动变更。[回退稳定规范](../openspec/specs/template-application-rollback/spec.md) · [回退归档](../openspec/changes/archive/2026-11-26-validate-r3-original-template-rollback/)
+2026-11-26，R3 固定模板原版应用回退同步了稳定规范并归档。[回退稳定规范](../openspec/specs/template-application-rollback/spec.md) · [回退归档](../openspec/changes/archive/2026-11-26-validate-r3-original-template-rollback/)
+
+R4 首次发行候选已完成本地制备、消费者验收及待发交接。公共源发行与回装待后续步骤。[R4 变更](../openspec/changes/prepare-r4-first-release-candidate/)
 
 - 新能力、重大行为变化或跨子模块架构调整，先核对 `openspec/specs/` 和 `openspec/changes/`。可用 `openspec-cn list --specs` 和 `openspec-cn list` 查看。
 - 用 `openspec-cn new change <name>` 创建变更，在 `openspec/changes/<name>/` 中完成提案、增量规范、设计和任务清单。

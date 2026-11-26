@@ -1,6 +1,6 @@
 # 参考 Silo：一条适合维护型 fork 的路线
 
-## 当前阶段（2026-11-25）
+## 当前阶段（2026-11-26）
 
 - R0 已验收并归档。上游 `v10.5.1` 的首批五包源码基线记录了公共 API、还原图和三套回归，实测环境为 macOS ARM64、.NET 9，EF Core 关系型用例使用 SQLite。[R0 基线](release-baseline.json) · [R0 归档](../../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)
 - R0 统一复验已完成本地与 GitHub Actions 的独立配对验收并归档。两次执行均用 `python3 eng/verify.py --profile r0` 复验固定的原版 R0 源码。[复验手册](baseline-evidence/README.md#统一入口) · [配对验收记录](baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](../../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
@@ -14,6 +14,8 @@
 - R3 固定模板 `net9.0` 同目标换包已通过正式运行验收并归档。Web.Host 和 Migrator 使用 13 个冻结维护包，在 macOS ARM64、两项 `.NET 9.0.10` 共享运行时、SQL Server Developer `16.0.4236.2` 和原版 Angular production 产物上复验。候选库与独立对照库均从最终返修轮的登录前备份恢复，浏览器复现相同的租户登录、授权和用户查询，两库成功登录计数从 `1/1` 变为 `2/1`。[正式运行结果](r3-template-net9-packages.md#正式运行结果) · [模板维护包消费规范](../../openspec/specs/template-maintenance-package-consumption/spec.md) · [归档](../../openspec/changes/archive/2026-11-25-validate-r3-net9-template-package-migration/) · [后续验收顺序](#r3验证升级路径和实际消费者)
 - R3 固定维护版模板的 .NET 10 / EF Core 10 升级已通过本机完整运行验收，OpenSpec 已同步并归档。两代应用在同一 SQL Server 候选库接续，原 30 条迁移与表结构保持一致。两轮 Angular 业务将候选、对照库登录计数从 `1/1` 经 `2/1` 推到 `3/1`，升级前后两份备份均实际恢复并逐行核对登录记录。[升级与双恢复点](r3-template-net10-upgrade.md#2026-11-25-正式运行验收) · [稳定规范](../../openspec/specs/template-runtime-upgrade/spec.md) · [归档](../../openspec/changes/archive/2026-11-25-validate-r3-net10-template-runtime-upgrade/)
 - R3 固定原版模板已在两个恢复点完成本机回退验收，OpenSpec 已同步并归档。原版 `net9.0` Migrator 和 Host 在 SQL Server Developer 上复现 Angular 登录及授权查询，两库成功登录计数从 `3/2` 经 `4/2` 到 `4/3`。升级后路径保留了 .NET 10 写入，升级前路径确认选择较早恢复点会舍弃该写入。[原版回退结果与范围](r3-original-template-rollback.md#正式运行结果) · [稳定规范](../../openspec/specs/template-application-rollback/spec.md) · [归档](../../openspec/changes/archive/2026-11-26-validate-r3-original-template-rollback/)
+
+- R4 首次发行候选已完成本地验收。13 对冻结归档通过固定模板双目标构建、同库安装与升级、原版双路径回退和映射引擎专项验收。实物与发布说明已交接，公开发行与公开源回装待后续步骤。[R4 本地验收与发布者交接](r4-release-candidate.md#发布者交接)
 
 **原路线与研究说明**
 

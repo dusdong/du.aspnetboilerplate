@@ -314,20 +314,28 @@ class RollbackRun(RuntimeSupport, R3Run):
         self.original_hashes.update({self.original_frontend / path: hash_
                                      for path, hash_ in self.original_angular["files"].items()})
 
+    def upgrade_registration(self):
+        return "r3-template-net10-upgrade-runtime", UPGRADE_RUN, UPGRADE_REPORT, None
+
     def upgrade_inputs(self):
-        source = self.frozen_file(self.upgrade_run, "report.json", UPGRADE_REPORT)
+        profile, registered_run, digest, registered_checkpoints = self.upgrade_registration()
+        source = self.frozen_file(self.upgrade_run, "report.json", digest)
         upgrade = read_json(source)
-        require(upgrade["profile"] == "r3-template-net10-upgrade-runtime" and upgrade["status"] == "passed"
+        require(upgrade["profile"] == profile and upgrade["status"] == "passed"
                 and upgrade["exitCode"] == 0
                 and upgrade["inputs"]["submodules"][TEMPLATE]["commit"] == INPUTS[TEMPLATE][0]
                 and upgrade["inputs"]["originalRuntime"]["sha256"] == ORIGINAL_REPORT,
                 "正式升级报告的状态、固定模板或原版来源不符")
+        if registered_checkpoints is not None:
+            require(upgrade["runId"] == registered_run and set(registered_checkpoints) == set(ROLES),
+                    "升级报告运行标识或登记恢复点不符")
+            self.check_upgrade_provenance(upgrade)
         self.checkpoints = upgrade["sql"]["checkpoints"]
         self.sql_version = upgrade["sql"]["productVersion"]
         require(set(self.checkpoints) == set(ROLES), "正式升级报告缺少升级前后恢复点")
         self.expected_catalogs = {}
-        media_inputs = self.report["inputs"]["upgrade"] = {"runId": UPGRADE_RUN, "path": str(source),
-                                                           "sha256": UPGRADE_REPORT, "checkpoints": {}}
+        media_inputs = self.report["inputs"]["upgrade"] = {"runId": registered_run, "path": str(source),
+                                                           "sha256": digest, "checkpoints": {}}
         for index, role in enumerate(ROLES):
             checkpoint = self.checkpoints[role]
             media = checkpoint["media"]
@@ -335,9 +343,16 @@ class RollbackRun(RuntimeSupport, R3Run):
             require(name == f"r3_template_{upgrade['runId']}_{role}.bak"
                     and checkpoint["recovered"]["backupSetId"] == media["backupSetId"],
                     f"{role} 介质角色、备份集或正式轮实际恢复记录不符")
+            catalog_digest = UPGRADE_CATALOG
+            if registered_checkpoints is not None:
+                registered = registered_checkpoints[role]
+                require(registered["name"] == name and all(
+                    media[field] == registered[field] for field in ("sha256", "size", "backupSetId")),
+                    f"{role} 介质与本轮登记不符")
+                catalog_digest = registered["catalogSha256"]
             self.expected_catalogs[role] = self.frozen_file(
                 self.upgrade_run, "net10-catalog-after.json" if index == 0 else "net10-catalog-before.json",
-                UPGRADE_CATALOG)
+                catalog_digest)
             rows = checkpoint["loginRows"]
             require(checkpoint["business"] == self.business and len(self.business["migrations"]) == 30
                     and [row["id"] for row in rows] == list(range(1, 4 - index))
@@ -345,7 +360,7 @@ class RollbackRun(RuntimeSupport, R3Run):
                     f"{role} 正式恢复点的迁移、业务或成功登录行不符")
             media_inputs["checkpoints"][role] = {
                 "name": name, "sha256": media["sha256"], "backupSetId": media["backupSetId"],
-                "size": media["size"], "catalogSha256": UPGRADE_CATALOG,
+                "size": media["size"], "catalogSha256": catalog_digest,
             }
         require(self.checkpoints["after_upgrade"]["loginRows"][:-1] == self.checkpoints["before_upgrade"]["loginRows"],
                 "正式升级报告的保留登录行不一致")

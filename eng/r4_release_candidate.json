@@ -1,0 +1,414 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "bd5f29f8a02ffcc8868deb2c8e60f49306d6668a",
+  "gitlinkCommit": "19101266923a6422543a17e0963e3475c24923f2",
+  "baselineReference": {
+    "path": "eng/r3_template_net9_reference.json",
+    "sha256": "a73497b146fe4da9193433e6548caf371765943b65ed252677c1201255b7938b"
+  },
+  "producers": {
+    "framework": {
+      "path": "aspnetboilerplate",
+      "repository": "https://github.com/dusdong/aspnetboilerplate.git",
+      "baseCommit": "806a9c7c87ccfd9740b4ec49d60577dadfb02af9",
+      "finalCommit": "bed57726b56f6f9de5c2d82e8dbe55e0130bddd0"
+    },
+    "engine": {
+      "path": "AutoMapper",
+      "repository": "https://github.com/dusdong/AutoMapper.git",
+      "baseCommit": "d249ed3a1c99470f42aaff648045acbc89e79dbb",
+      "finalCommit": "f646d492df918d27b9ac96c086933570965efef3"
+    },
+    "collection": {
+      "path": "AutoMapper.Collection",
+      "repository": "https://github.com/dusdong/AutoMapper.Collection.git",
+      "baseCommit": "cab138e2b86c7ea890fc242bab015a6dbbb3c8c5",
+      "finalCommit": "306b49d7a59b7335a61d8116e1ab2f623a04740e"
+    }
+  },
+  "template": {
+    "path": "module-zero-core-template",
+    "repository": "https://github.com/dusdong/module-zero-core-template.git",
+    "baseCommit": "2e9536872673a7ff1986a19e798c51684d16afe5"
+  },
+  "packages": {
+    "Du.Abp": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp",
+        "version": "10.5.1-r2.1",
+        "archiveSha256": "0f6d9da908af7b6b51bedb5b942be8fcdc54fa6b07897224dfb2a647c4e75769"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.dll",
+          "baselineAssetSha256": "142c0f3d540e909c720996086386089394a180c16289e237cc1a228601bfbc35",
+          "internalDependencies": {},
+          "thirdPartyDependencies": {
+            "Castle.Core": "5.2.1",
+            "Castle.Core.AsyncInterceptor": "2.1.0",
+            "Castle.LoggingFacility": "6.0.0",
+            "JetBrains.Annotations": "2026.2.0",
+            "Microsoft.Extensions.Caching.Memory": "9.0.18",
+            "Microsoft.Extensions.Options": "9.0.18",
+            "Newtonsoft.Json": "13.0.4",
+            "Nito.AsyncEx.Context": "5.1.2",
+            "Nito.AsyncEx.Coordination": "5.1.2",
+            "System.Configuration.ConfigurationManager": "9.0.18",
+            "System.Linq.Dynamic.Core": "1.7.3",
+            "System.Runtime.Serialization.Formatters": "9.0.18",
+            "System.Xml.XPath.XmlDocument": "4.7.0",
+            "TimeZoneConverter": "7.2.0"
+          },
+          "frameworkReferences": []
+        },
+        "net10.0": {
+          "asset": "lib/net10.0/Abp.dll",
+          "baselineAssetSha256": "5736efa12356e69f723ca8aaead8d9d28ed8011d0345344235b0d48db1e6fc36",
+          "internalDependencies": {},
+          "thirdPartyDependencies": {
+            "Castle.Core": "5.2.1",
+            "Castle.Core.AsyncInterceptor": "2.1.0",
+            "Castle.LoggingFacility": "6.0.0",
+            "JetBrains.Annotations": "2026.2.0",
+            "Microsoft.Extensions.Caching.Memory": "10.0.15",
+            "Microsoft.Extensions.Options": "10.0.15",
+            "Newtonsoft.Json": "13.0.4",
+            "Nito.AsyncEx.Context": "5.1.2",
+            "Nito.AsyncEx.Coordination": "5.1.2",
+            "System.ComponentModel.Annotations": "5.0.0",
+            "System.Configuration.ConfigurationManager": "9.0.18",
+            "System.Linq.Dynamic.Core": "1.7.3",
+            "System.Runtime.Serialization.Formatters": "9.0.18",
+            "System.Xml.XPath.XmlDocument": "4.7.0",
+            "TimeZoneConverter": "7.2.0"
+          },
+          "frameworkReferences": []
+        }
+      }
+    },
+    "Du.Abp.AspNetCore": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.AspNetCore",
+        "version": "10.5.1-r2.1",
+        "archiveSha256": "53f1fcbdf3be677e62f36d49b7b37b9d4146e3c2b0bade7e40716025136dd091"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.AspNetCore.dll",
+          "baselineAssetSha256": "25268dd6d8170c5d98b0d03da23d766a73697de9fc9061ab7e2445fc1b435c6a",
+          "internalDependencies": {
+            "Du.Abp.Web.Common": "10.5.1"
+          },
+          "thirdPartyDependencies": {
+            "Castle.LoggingFacility.MsLogging": "3.1.0",
+            "Castle.Windsor.MsDependencyInjection": "4.1.0",
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "9.0.18",
+            "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "9.0.18"
+          },
+          "frameworkReferences": [
+            "Microsoft.AspNetCore.App"
+          ]
+        },
+        "net10.0": {
+          "asset": "lib/net10.0/Abp.AspNetCore.dll",
+          "baselineAssetSha256": "fdb4b71c5247db0130a07e64b54e5722b00a605bc159d0bbed0801836fc7fe9b",
+          "internalDependencies": {
+            "Du.Abp.Web.Common": "10.5.1"
+          },
+          "thirdPartyDependencies": {
+            "Castle.LoggingFacility.MsLogging": "3.1.0",
+            "Castle.Windsor.MsDependencyInjection": "4.1.0",
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "10.0.15",
+            "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "10.0.15"
+          },
+          "frameworkReferences": [
+            "Microsoft.AspNetCore.App"
+          ]
+        }
+      }
+    },
+    "Du.Abp.AspNetCore.SignalR": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.AspNetCore.SignalR",
+        "version": "10.5.1-r3.1",
+        "archiveSha256": "c047be4378a163cca85e4e9fae3fa60316d6d3a390094072ee1eab434e55e6c8"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.AspNetCore.SignalR.dll",
+          "baselineAssetSha256": "d3c638b7ea7a480103cd04ad56aae4c160ec73d9ea57d9fb55d3ce1253d5506c",
+          "internalDependencies": {
+            "Du.Abp": "[10.5.1]"
+          },
+          "thirdPartyDependencies": {},
+          "frameworkReferences": [
+            "Microsoft.AspNetCore.App"
+          ]
+        }
+      }
+    },
+    "Du.Abp.AutoMapper": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.AutoMapper",
+        "version": "10.5.1-r3.4",
+        "archiveSha256": "bef6ab4305110de967d334fd0db71ace4a83a5247939f94235086bf9da641b0a"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.AutoMapper.dll",
+          "baselineAssetSha256": "10200fe03a1a7965d27b7eadc7539bc476d8c19c40ef749d6a863724ad6cc4b3",
+          "internalDependencies": {
+            "Du.Abp": "[10.5.1]",
+            "Du.AutoMapper": "[14.0.0]",
+            "Du.AutoMapper.Collection": "[11.0.0]"
+          },
+          "thirdPartyDependencies": {},
+          "frameworkReferences": []
+        }
+      }
+    },
+    "Du.Abp.Castle.Log4Net": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.Castle.Log4Net",
+        "version": "10.5.1-r3.1",
+        "archiveSha256": "4db7dcb9b0ced698c1d4f6ee1a12b0c67a9df43fca6c93f975b2bea8c8881dea"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.Castle.Log4Net.dll",
+          "baselineAssetSha256": "fa6567b9ecab3e415f6470ee21938e9fdafc8fc542bed3dab105c9c55cf3f8cb",
+          "internalDependencies": {
+            "Du.Abp": "[10.5.1]"
+          },
+          "thirdPartyDependencies": {
+            "log4net": "3.3.2"
+          },
+          "frameworkReferences": []
+        }
+      }
+    },
+    "Du.Abp.EntityFramework.Common": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.EntityFramework.Common",
+        "version": "10.5.1-r2.1",
+        "archiveSha256": "cc8be8158fd8bde6b8c2a6374ca1fb362b14965e17435df2f1b8780217a57234"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.EntityFramework.Common.dll",
+          "baselineAssetSha256": "6db9c08c5baf7620ff96fa259cda7157cf26f1a36fbd7eca2594e51784330d35",
+          "internalDependencies": {
+            "Du.Abp": "10.5.1"
+          },
+          "thirdPartyDependencies": {},
+          "frameworkReferences": []
+        },
+        "net10.0": {
+          "asset": "lib/net10.0/Abp.EntityFramework.Common.dll",
+          "baselineAssetSha256": "10fde5d36fce4d027022f4a769a9d5c6fbf15766a7522ee036f01cc59e30c040",
+          "internalDependencies": {
+            "Du.Abp": "10.5.1"
+          },
+          "thirdPartyDependencies": {},
+          "frameworkReferences": []
+        }
+      }
+    },
+    "Du.Abp.EntityFrameworkCore": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.EntityFrameworkCore",
+        "version": "10.5.1-r2.1",
+        "archiveSha256": "a3e8caf24c765be13877ee7cd48908b951d25a1a61fb837a99eb5fece9d8dbb6"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.EntityFrameworkCore.dll",
+          "baselineAssetSha256": "243486fb3e5baeed05453739db180ece03e8631d0d159ea9976cdd3b325c0932",
+          "internalDependencies": {
+            "Du.Abp.EntityFramework.Common": "10.5.1"
+          },
+          "thirdPartyDependencies": {
+            "Microsoft.EntityFrameworkCore": "9.0.18",
+            "Microsoft.EntityFrameworkCore.Relational": "9.0.18"
+          },
+          "frameworkReferences": []
+        },
+        "net10.0": {
+          "asset": "lib/net10.0/Abp.EntityFrameworkCore.dll",
+          "baselineAssetSha256": "3a1e77d385044ec0c7bad9fd1b5f3ef149e88854f990631a116e487b508c0f0a",
+          "internalDependencies": {
+            "Du.Abp.EntityFramework.Common": "10.5.1"
+          },
+          "thirdPartyDependencies": {
+            "Microsoft.EntityFrameworkCore": "10.0.15",
+            "Microsoft.EntityFrameworkCore.Relational": "10.0.15"
+          },
+          "frameworkReferences": []
+        }
+      }
+    },
+    "Du.Abp.Web.Common": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.Web.Common",
+        "version": "10.5.1-r2.1",
+        "archiveSha256": "4724bd69ce91286ba641fec37da556b0d80fec6b1b6e8c43c06e3f499d81f84a"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.Web.Common.dll",
+          "baselineAssetSha256": "a7ea8dff8aa08cd84ccd050e6a4afebc01544c61946a578cd2150ba437dfc926",
+          "internalDependencies": {
+            "Du.Abp": "10.5.1"
+          },
+          "thirdPartyDependencies": {
+            "NUglify": "1.22.0"
+          },
+          "frameworkReferences": []
+        },
+        "net10.0": {
+          "asset": "lib/net10.0/Abp.Web.Common.dll",
+          "baselineAssetSha256": "b9da8ea73707a9996e5458e911ec9a217d1ddd4545ede5ec641fa60529398eee",
+          "internalDependencies": {
+            "Du.Abp": "10.5.1"
+          },
+          "thirdPartyDependencies": {
+            "NUglify": "1.22.0"
+          },
+          "frameworkReferences": []
+        }
+      }
+    },
+    "Du.Abp.Zero.Common": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.Zero.Common",
+        "version": "10.5.1-r3.3",
+        "archiveSha256": "f714811c53f9e5544e168fbf32971612652c0c5e5ede4d72f9942d076d4d3e93"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.Zero.Common.dll",
+          "baselineAssetSha256": "a3778dcbf473e127109c2aaae96fa58939cff8cb2fa2f5445d5a0786052c5731",
+          "internalDependencies": {
+            "Du.Abp": "[10.5.1]"
+          },
+          "thirdPartyDependencies": {},
+          "frameworkReferences": []
+        }
+      }
+    },
+    "Du.Abp.ZeroCore": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.ZeroCore",
+        "version": "10.5.1-r3.3",
+        "archiveSha256": "d31388aa0dce09f714ab9ffcd6cf1d1a013079f6a416a7f0685647a236444739"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.ZeroCore.dll",
+          "baselineAssetSha256": "1b75a7814d40321185e1d4e8ea60a8497d41f24c0b4c72dfbe66cf1f6926cde5",
+          "internalDependencies": {
+            "Du.Abp.Zero.Common": "[10.5.1]"
+          },
+          "thirdPartyDependencies": {},
+          "frameworkReferences": [
+            "Microsoft.AspNetCore.App"
+          ]
+        }
+      }
+    },
+    "Du.Abp.ZeroCore.EntityFrameworkCore": {
+      "version": "10.5.1",
+      "producer": "framework",
+      "projectUrl": "https://github.com/dusdong/aspnetboilerplate",
+      "baseline": {
+        "id": "Du.Abp.ZeroCore.EntityFrameworkCore",
+        "version": "10.5.1-r3.3",
+        "archiveSha256": "67d0a16eb5fef9026f1c7f82c96e5147be66e7d80b2419d8762834ee2866d942"
+      },
+      "targets": {
+        "net9.0": {
+          "asset": "lib/net9.0/Abp.ZeroCore.EntityFrameworkCore.dll",
+          "baselineAssetSha256": "fa37276957ea9ce1a0dfab112795b3741fb76e6785c8f394e1a6f9fea8ef46fb",
+          "internalDependencies": {
+            "Du.Abp.EntityFrameworkCore": "[10.5.1]",
+            "Du.Abp.ZeroCore": "[10.5.1]"
+          },
+          "thirdPartyDependencies": {},
+          "frameworkReferences": []
+        }
+      }
+    },
+    "Du.AutoMapper": {
+      "version": "14.0.0",
+      "producer": "engine",
+      "projectUrl": "https://github.com/dusdong/AutoMapper",
+      "baseline": {
+        "id": "Du.AutoMapper",
+        "version": "14.0.0-r3.4",
+        "archiveSha256": "7b3d0cc1df220454ad66d34ad4e9ec01699afc4410082698a392aa9db94bd86b"
+      },
+      "targets": {
+        "net8.0": {
+          "asset": "lib/net8.0/AutoMapper.dll",
+          "baselineAssetSha256": "aee0719706bb3d909550832dc7aafb276253e8bf0718151480ad8f76badde72b",
+          "internalDependencies": {},
+          "thirdPartyDependencies": {
+            "Microsoft.Extensions.Options": "8.0.0"
+          },
+          "frameworkReferences": []
+        }
+      }
+    },
+    "Du.AutoMapper.Collection": {
+      "version": "11.0.0",
+      "producer": "collection",
+      "projectUrl": "https://github.com/dusdong/AutoMapper.Collection",
+      "baseline": {
+        "id": "Du.AutoMapper.Collection",
+        "version": "11.0.0-r3.4",
+        "archiveSha256": "ce6b4e822203a6e6c3cdca2e93c4b19f4268a58cbdda4dd78750d5f077b12931"
+      },
+      "targets": {
+        "net8.0": {
+          "asset": "lib/net8.0/AutoMapper.Collection.dll",
+          "baselineAssetSha256": "2b40c0b711cd0a8c32b96a4c3f14f2fea1937da1e9587f407833a9c279001d26",
+          "internalDependencies": {
+            "Du.AutoMapper": "[14.0.0]"
+          },
+          "thirdPartyDependencies": {},
+          "frameworkReferences": []
+        }
+      }
+    }
+  }
+}
