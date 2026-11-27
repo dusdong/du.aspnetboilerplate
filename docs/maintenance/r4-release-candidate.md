@@ -227,7 +227,7 @@ python3 -B eng/tests/verify_r4_public_consumer.py \
 
 ## GitHub Actions 受信任发布接入建议
 
-截至 2026-11-26，主仓的 GitHub Actions 用于 R0 复验。以下方案供后续补丁采用 NuGet Trusted Publishing（OIDC）时实施，当前状态为待演练。现行发行条件见[公开发行稳定规范](../../openspec/specs/public-package-release/spec.md)。
+以下是 2026-11-26 为后续补丁拟定的接入方案，当时主仓 GitHub Actions 用于 R0 复验。2026-11-27，R5 通过 OIDC 登录并完成三个包的正式发布。[R5 受信任发布记录](r5-public-release.md#nuget-受信任发布) · [公开发行稳定规范](../../openspec/specs/public-package-release/spec.md)
 
 **发布身份。** 建议在主仓设置显式启动入口（如 `workflow_dispatch`），由发布者指定已授权的主仓 tag、目标提交和冻结清单摘要。NuGet 信任策略绑定 `dusdong/du.aspnetboilerplate`、实际工作流文件名，以及选用的 GitHub Environment。按本批清单限定包范围。以首发为例，范围包括根包 `Du.Abp`、10 个 `Du.Abp.*` 子包、`Du.AutoMapper` 和 `Du.AutoMapper.Collection`。发布这些已有 ID 的补丁时，选择发布已有包新版本的权限。[首发包清单](../../eng/r4_release_candidate.json) · [NuGet 信任策略](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing)
 

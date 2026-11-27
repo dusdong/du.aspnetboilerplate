@@ -2,6 +2,8 @@
 
 ## 当前阶段（2026-11-27）
 
+公开版 `v10.5.2` 已在 `0d42db5` 完成收尾。2026-11-27 已按四张公开消费依赖图完成补丁后维护审查，决定为**维护包无需补丁**。存量 .NET 9 部署继续迁往受支持的 .NET 10 组合。遇到适用的上游变动、依赖变更或新服务公告时，从本次记录续查。[收尾交付](#2026-11-27-公开发行收尾) · [维护决定与行动](r5-public-patch-review.md#本轮维护决定) · [下轮检查点](r5-public-patch-review.md#下轮检查点与验证边界)
+
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
 集合映射补丁已公开发行 `v10.5.2`。三个新主包、三个符号包、三个公开 PDB 和十个沿用包完成核验。发布者公开源安装与同库接续，以及独立消费者按固定公开指南新装，均通过实测。公开发行规范已同步，发行变更已归档。原冻结候选的本地三阶段同库包切换保留为历史回退依据。[R5 发行验收](r5-public-release.md) · [公开发行稳定规范](../../openspec/specs/public-package-release/spec.md) · [发行归档](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [补丁候选任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)
@@ -282,9 +284,15 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 主仓协调提交为 `cebc3e38a511783092963893bf5ad3161d0f0a19`。GitHub 的 `main`、引擎 `maintenance/v14` 和协调提交中的四个 gitlink 已回读。引擎为 `54f6277a`，Collection 为 `d22aaf58`，经典框架为 `7933e71f`，固定模板为 `2e953687`。GitHub Actions 运行 `45846709281` 对该主仓提交执行了 R0 基线复验，`verify-r0` 于北京时间 11 月 26 日 23:14:42 成功结束。[主仓提交](https://github.com/dusdong/du.aspnetboilerplate/commit/cebc3e38a511783092963893bf5ad3161d0f0a19) · [CI 运行](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
 
-该提交交付时活动变更为零。本次规划前重新执行校验，稳定规范 15/15、归档任务检查 19/19。归档后 `net9.0`、`net10.0` 两份原始构建报告各有 9 个通过阶段、退出码 0，读取的九份归档制品均与交付提交逐字节对账。两轮输入是 **R4 已公开签名包**。其中 `net10.0` 外层记账脚本因 zsh 只读变量退出 1，构建子进程及报告已单独核对。R5 的六份归档通过本轮离线复核，真实 R5 公开回装仍待发行。[归档与发行前演练](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-rehearsal.md) · [批次与发行清单摘要](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#实物清单)
+该提交交付时活动变更为零。发行准备阶段的复核通过稳定规范 15/15、归档任务检查 19/19。归档后 `net9.0`、`net10.0` 两份原始构建报告各有 9 个通过阶段、退出码 0，读取的九份归档制品均与交付提交逐字节对账。两轮输入是 **R4 已公开签名包**。其中 `net10.0` 外层记账脚本因 zsh 只读变量退出 1，构建子进程及报告已单独核对。R5 的六份归档当时通过了离线复核。R5 公开包的消费结果见下节。[归档与发行前演练](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-rehearsal.md) · [批次与发行清单摘要](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#实物清单)
 
 发行准备复核时，GitHub 最新 Release 为 `v10.5.1`，目标仓库没有 `v10.5.2` tag，NuGet 三个版本索引仅列出 `14.0.0`、`11.0.0` 和 `10.5.1`。[当时的公开发行](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [发行前版本核对](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/source-and-engine-validation.md#版本与原批次核对)
+
+#### 2026-11-27 公开发行收尾
+
+附注标签 `v10.5.2` 指向生产组合 `cebc3e38`。发布者公开源新装通过 16/16 个阶段，同库升级通过 26/26 个阶段。独立消费者按固定指南从空缓存新装，Migrator 退出 0、数据库有 30 条迁移记录，Swagger 返回 HTTP 200。[公开发行验收](r5-public-release.md) · [三项消费实测](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/consumption-validation.md)
+
+收尾提交 `0d42db5` 已交付至 GitHub `main`。该提交下发行任务 6/6 已归档、活动变更为零，稳定规范 15/15、归档 20/20，36 组本地链接检查通过。该提交的路径未命中 R0 工作流，发行工作流由手动触发，GitHub 对此 SHA 返回 0 次运行。协调提交的 R0 运行另有记录。[收尾提交](https://github.com/dusdong/du.aspnetboilerplate/commit/0d42db5eb4ff620863b5f58c7eb9c675c2f67d87) · [发行归档](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/tasks.md) · [协调提交 R0 运行](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
 
 #### 本轮缓存处置
 
@@ -294,10 +302,28 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 验证机的原始清单位于主仓 Git 目录的 `prepare-r5-mapping-patch-release/closeout/cache-inventory/cleanup-preview.tsv`，SHA-256 为 `994b59a1cd2b58d4c345c954d732a6dff870784cf4ca1e87666d05c13e6a2479`。逐项处置和复核证据见同一 Git 目录下的 `publish-r5-mapping-patch/close-cache/handoff.md`。上一轮已删除的 58 项见上节。
 
-#### 下一轮工作计划
+#### 2026-11-27 公开补丁维护决定
 
-1. **沿用 R5 公开发行的证据链。** `v10.5.2` 的 tag、GitHub Release、校验附件和公开消费结果已关联。后续补丁沿用依赖放行、独立公开消费和发布后回读。[R5 发行验收](r5-public-release.md) · [执行手册](r5-automapper-template.md#执行待发交接手册)
-2. **持续维护公开版本。** 存量应用按迁移指引核对两代四入口和同库业务。上游六条分支、包公告或 .NET 服务基线有更新时从上次完整检查点续查。CVE-2026-56158 待原始组件范围可读后补核。消费者的平台、Provider 或客户端发生变化时，以隔离环境的实测结果更新支持范围。[存量迁移指引](r5-r4-net10-migration.md) · [公告与下轮检查点](r5-runtime-migration-review.md#共享运行时与下轮检查点)
+同一公开版本的四图共核对 207 个实际或原上游身份与版本组合。原名命中的三个 AutoMapper 公告都有本版同摘要实物的回补证据，内建集合上下文已随本版修正。**维护包无需补丁。** CVE-2026-56158 的精确组件与版本范围继续待 Microsoft 补充，四个入口的实际运行时按已确认的服务状态处理。[上游及公告审查](r5-public-patch-review.md#三仓六分支与上轮未决项) · [共享运行时](r5-public-patch-review.md#共享运行时与-cve-2026-56158)
+
+| 负责方 | 行动及检查点 |
+| --- | --- |
+| 维护包 | 沿用公开组合。按六条分支、NuGet 全页、GitHub 重叠水位续查。收到确认适用的修复或 14 基线的定向兼容场景后复审。 |
+| 模板 | 以固定提交和四入口还原图为消费基线，模板或依赖改变时重新验证两个入口。 |
+| 运行环境 | .NET 9 已停止服务，迁至支持中的 .NET 10。当前两套共享框架的基线为 `10.0.15`，按官方后续服务版复查，并继续跟踪 CVE-2026-56158 原始范围。 |
+| 应用 | 按部署实测两个入口的加载版本并复核包图，结合实际配置验证集合映射与回退点。更换平台、Provider 或 Angular 产物后形成对应实测。 |
+
+[四方详细行动](r5-public-patch-review.md#本轮维护决定) · [精确续查水位](r5-public-patch-review.md#下轮检查点与验证边界)
+
+维护审查任务 6/6 已完成并归档。审查报告登记的严格校验 16/16 对应归档前的 15 份稳定规范和 1 项活动变更。归档后活动变更为 0，稳定规范严格校验 15/15，归档任务检查 21/21。[稳定规范](../../openspec/specs/maintenance-release-review/spec.md#requirement-跨公开补丁的审查能说明既有结论的适用范围) · [审查任务归档](../../openspec/changes/archive/2026-11-27-review-r5-public-patch-baseline/tasks.md)
+
+#### 公开补丁维护审查的原计划
+
+审查启动时，`review-r5-public-patch-baseline` 要回答使用 `v10.5.2` 的应用是否还需要维护包补丁，以及模板或部署环境应承担哪些行动。完成结论见上节。[归档提案](../../openspec/changes/archive/2026-11-27-review-r5-public-patch-baseline/proposal.md)
+
+1. **确定消费者实际安装了什么。** 用公开校验附件和同一次升级的四张原图，逐入口列出三个更新包、十个沿用包和传递依赖相对 R4 的差异。[R5 消费实测](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/consumption-validation.md)
+2. **重新判断公告适用性。** 按新包图和原上游身份匹配存量及新修订公告，从上次完整位置接续三仓六分支和 Microsoft 服务公告。单独补核 CVE-2026-56158 的组件范围。[续查起点](r5-runtime-migration-review.md#共享运行时与下轮检查点)
+3. **给出维护决定。** 按包、模板、运行环境和应用分别登记行动，结论为需补丁、无需补丁或暂不能判定，并留下依据和下一次重查条件。Windows、Linux、其他 Provider 和 Angular 组合按实际消费者需求安排验收，R6 按既有立项条件推进。[维护审查规范](../../openspec/specs/maintenance-release-review/spec.md)
 
 建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。
 

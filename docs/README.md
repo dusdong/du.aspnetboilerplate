@@ -9,8 +9,9 @@
 | 安装 R5 映射补丁，在新 SQL Server 测试库运行 `net10.0` 模板 | [R5 新库安装指南](maintenance/r5-public-install.md) · [发行说明](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.2) · [校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.2/R5-PACKAGE-CHECKSUMS.json) |
 | 安装 R4 稳定维护包，在新 SQL Server 测试库运行 `net10.0` 模板 | [发行说明与包链接](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [已实跑安装指南](maintenance/r4-public-install.md) · [公开包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json) |
 | 查看各阶段目标、当前进度与发行条件 | [维护型 fork 路线](maintenance/fork-roadmap.md) |
-| 核对 R5 发行验收、发布者交接和缓存处置记录 | [公开发行验收记录](maintenance/r5-public-release.md) · [交付复核](maintenance/fork-roadmap.md#2026-11-27-发行准备复核) · [52 项缓存处置](maintenance/fork-roadmap.md#本轮缓存处置) · [手册执行环境](maintenance/r5-automapper-template.md#执行待发交接手册) |
+| 核对 R5 发行验收、交付和缓存处置 | [公开发行验收记录](maintenance/r5-public-release.md) · [收尾交付](maintenance/fork-roadmap.md#2026-11-27-公开发行收尾) · [52 项缓存处置](maintenance/fork-roadmap.md#本轮缓存处置) |
 | 核对首发证据、R5 的补丁决定和消费者行动 | [R4 归档后复核](maintenance/r4-release-candidate.md#首发归档后复核) · [R5 首轮维护审查](maintenance/r5-first-maintenance-review.md#本轮决定) · [下轮检查点](maintenance/r5-first-maintenance-review.md#下轮检查点) |
+| 核对 `v10.5.2` 维护决定、四入口包图及公告续查 | [本轮决定](maintenance/r5-public-patch-review.md#本轮维护决定) · [四入口依赖清单](maintenance/r5-public-patch-dependencies.tsv) · [后续检查点](maintenance/r5-public-patch-review.md#下轮检查点与验证边界) |
 | 准备存量 R4 应用迁往 `net10.0`，接续上游与公告审查 | [存量迁移指引](maintenance/r5-r4-net10-migration.md) · [增量审查与续查水位](maintenance/r5-runtime-migration-review.md) · [迁移与审查归档](../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/) · [R4 公开包同库实测](maintenance/r4-release-candidate.md#公开源模板消费) |
 | 复验 R5 集合补丁、冻结三包及独立消费者 | [固定模板安装、迁移与同库回退](maintenance/r5-automapper-template.md) · [引擎实包验收与复跑](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/engine-package-validation.md) · [共享集合计划对照](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/shared-collection-plan-observation.md) · [三包冻结与消费](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [补丁提案](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/proposal.md) · [候选设计](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/design.md) · [归档任务清单](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md) |
 | 用 `python3 eng/verify.py --profile r0` 复验 R0 的还原、Release 构建、公共 API 与回归 | [统一复验入口](maintenance/baseline-evidence/README.md#统一入口) · [本地与 GitHub Actions 配对验收](maintenance/baseline-evidence/README.md#统一入口验收记录) |
@@ -25,7 +26,7 @@
 | 生成或复验 SignalR 与 Log4Net 本地候选，核对独立宿主的通知和日志 | [R3 SignalR 与 Log4Net 候选验收](maintenance/r3-signalr-log4net-candidates.md) · [Git 交付](maintenance/r3-signalr-log4net-candidates.md#git-交付) |
 | 生成或复验 Module Zero 本地候选，核对 SQLite 角色提交及双向租户隔离 | [R3 Module Zero 候选验收](maintenance/r3-module-zero-candidates.md) |
 | 核对 R4 首发冻结归档、公开源模板与历史回退 | [R4 组合与复验](maintenance/r4-release-candidate.md) · [公开源模板消费](maintenance/r4-release-candidate.md#公开源模板消费) · [发布者交接](maintenance/r4-release-candidate.md#发布者交接) |
-| 规划主仓用 GitHub Actions 向 NuGet 发布补丁 | [OIDC 接入与只读演练（待验收）](maintenance/r4-release-candidate.md#github-actions-受信任发布接入建议) |
+| 核对 GitHub Actions 向 NuGet 发布补丁的权限和实际运行 | [R5 受信任发布与续作记录](maintenance/r5-public-release.md#nuget-受信任发布) · [发行手册](maintenance/r5-automapper-template.md#执行待发交接手册) |
 | 比较第三方 fork 的迁移、补丁与独立发包实践 | [ASP.NET Boilerplate fork 调研](maintenance/fork-references.md) |
 | 复验 R3 映射候选、Collection 依赖与模板业务投影 | [AutoMapper 兼容维护](compatibility/automapper.md) · [原版基线](maintenance/r3-automapper-baseline.md) · [引擎验收](maintenance/r3-automapper-engine.md) · [独立消费者验收与复跑](maintenance/r3-automapper-downstream.md#主仓实包消费与复验) · [Git 交付](maintenance/r3-automapper-downstream.md#git-交付) |
 | 核对 Angular 适配器、Web Resources 与模板的版本组合 | [Angular 生态维护](compatibility/angular-ecosystem.md) |
@@ -83,6 +84,8 @@ git submodule status
 2026-11-26，R5 的存量迁移与增量审查、集合映射补丁候选均已同步规范并归档。[维护审查稳定规范](../openspec/specs/maintenance-release-review/spec.md) · [迁移与审查归档](../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/) · [映射消费稳定规范](../openspec/specs/automapper-package-consumption/spec.md) · [集合补丁归档](../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/)
 
 三包发行准备已同步候选验收规范并归档。2026-11-27，R5 包、符号和三项公开消费验收通过，`v10.5.2` 已公开并读回，公开发行规范已同步，发行变更已归档。[公开发行验收记录](maintenance/r5-public-release.md) · [正式发行任务清单](../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/tasks.md) · [公开发行稳定规范](../openspec/specs/public-package-release/spec.md) · [局部补丁候选验收规范](../openspec/specs/release-candidate-verification/spec.md#requirement-局部补丁可从已验候选交接为本地待发批次) · [发行准备归档](../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/)
+
+2026-11-27，`v10.5.2` 补丁后的维护审查已同步稳定规范并归档，覆盖跨公开版本的包图对照、上游未决事项和公告适用性。[跨公开补丁的审查要求](../openspec/specs/maintenance-release-review/spec.md#requirement-跨公开补丁的审查能说明既有结论的适用范围) · [审查任务归档](../openspec/changes/archive/2026-11-27-review-r5-public-patch-baseline/tasks.md)
 
 - 新能力、重大行为变化或跨子模块架构调整，先核对 `openspec/specs/` 和 `openspec/changes/`。可用 `openspec-cn list --specs` 和 `openspec-cn list` 查看。
 - 用 `openspec-cn new change <name>` 创建变更，在 `openspec/changes/<name>/` 中完成提案、增量规范、设计和任务清单。

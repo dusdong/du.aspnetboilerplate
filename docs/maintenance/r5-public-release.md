@@ -14,6 +14,12 @@ GitHub Release `460000507` 于 2026-11-27 09:31:09（北京时间）公开，沿
 
 三个主包通过匿名下载、nuget.org 仓库验签和冻结成员对账，公开包新增仓库签名成员。三个符号归档分别获受理，公开符号服务读回的三个 Portable PDB 与签后 DLL 的调试标识和冻结符号实物一致。十个沿用包均为 R4 的 `10.5.1`，签后摘要逐项与 R4 公开清单一致。[R4 校验附件](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json) · [冻结批次与来源](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/source-and-engine-validation.md#三包待发批次)
 
+## NuGet 受信任发布
+
+发行时，NuGet 策略 `r5-mapping-patch` 将 `dusdong/du.aspnetboilerplate` 的 `publish-r5-mapping.yml` 绑定到 `nuget-r5`，授权范围为上表三个已有包的新版本。GitHub 环境仅允许 `main` 分支。工作流使用 OIDC 兑换短期凭据。运行 `45916029211` 的凭据交换和登录核对均成功，上传步骤按仅登录模式跳过。正式上传另有各包的成功运行和公开实物回读。[固定工作流](https://github.com/dusdong/du.aspnetboilerplate/blob/f5d708cc30e30369a4e8a6b5a7be4ebbfb5c2751/.github/workflows/publish-r5-mapping.yml) · [仅登录运行](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45916029211) · [引擎主包上传](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45913056384) · [适配器符号上传](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45916320721)
+
+引擎主包与符号包各有一次运行因 GitHub 运行信息延迟而中止。两次均从原运行读到实际上传步骤为 `skipped`，并与本地收据 `started: false` 对账后，才重新放行该件。最终收据覆盖三个主包和三个符号包。[主包中止运行](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45911951268) · [符号中止运行](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45914895430)
+
 ## 公开消费与回退证据
 
 R5 在 macOS ARM64、SQL Server 2022 Developer `16.0.4236.2` 与固定模板上通过三项公开源消费。发布者新装验证 `net10.0` 新库迁移和冻结 Angular 的业务登录及授权查询。同库接续实测 `net9.0` 到 `net10.0` 的 Web.Host 和 Migrator 四入口，以及升级前后两个恢复点。.NET 与 ASP.NET Core 实测运行时分别为 `9.0.10` 和 `10.0.15`。微软已于 2026-11-10 结束 .NET 9 支持。独立消费者使用已实跑的固定公开指南安装 `net10.0`，Migrator 退出 0，写入 30 条迁移记录，Swagger 返回 HTTP 200。[三项消费验收汇总](https://github.com/dusdong/du.aspnetboilerplate/blob/91ca2348261ab5050d6f5e913896f35853f75cb9/openspec/changes/publish-r5-mapping-patch/consumption-validation.md) · [已实跑的固定指南](https://github.com/dusdong/du.aspnetboilerplate/blob/ab4957bb0326a3754ffc5b50cdbdf1244f411dfd/docs/maintenance/r5-public-install.md) · [.NET 支持周期](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)

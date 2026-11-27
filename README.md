@@ -33,6 +33,8 @@ R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 应用迁往 `net
 
 主仓 `cebc3e38` 固定了 `v10.5.2` 的生产组合，R0 基线复验通过。三个新包、三个公开 PDB 和三项公开消费均已核验。公开发行规范已同步，R5 发行变更已归档。[R5 发行验收记录](docs/maintenance/r5-public-release.md) · [发行归档](openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [R0 工作流](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
 
+`v10.5.2` 已在 `0d42db5` 完成发行收尾。基于两代 Web.Host 和 Migrator 的四张公开消费图，补丁后维护审查已完成并归档，**维护包无需补丁**。存量 .NET 9 部署继续迁往受支持的 .NET 10。后续按已登记的上游、包公告和运行时水位续查。[维护决定](docs/maintenance/r5-public-patch-review.md#本轮维护决定) · [下轮检查点](docs/maintenance/r5-public-patch-review.md#下轮检查点与验证边界) · [审查归档](openspec/changes/archive/2026-11-27-review-r5-public-patch-baseline/)
+
 ### 已归档的基线与迁移
 
 截至 2026-11-25，上游 `v10.5.1` 的 R0 基线、R1 首项 .NET 9 查询过滤补丁和 R1 首批 .NET 10 / EF Core 10 源码迁移均已验收并归档。R1 源码兼容证据覆盖 macOS ARM64 回归、.NET 9 调用方、UTM Windows ARM64 和 GitHub 托管 Windows x64。[维护路线](docs/maintenance/fork-roadmap.md) · [R1 首项验收记录](docs/maintenance/r1-efcore-query-filter.md) · [R1 运行时迁移验收](docs/maintenance/r1-dotnet10-runtime-migration.md)
