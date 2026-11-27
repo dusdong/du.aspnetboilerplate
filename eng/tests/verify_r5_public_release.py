@@ -240,14 +240,16 @@ exit 0
         with (self.protocol_root / "sitecustomize.py").open("a", encoding="utf-8") as stream:
             stream.write('''
 import r5_oidc
+from unittest.mock import patch
 
 protocol.owners = lambda name: {"owners": ["dusdong"]}
 workflow = case / "workflow"
 workflow.mkdir(exist_ok=True)
 head = "a" * 40
 archive = "Du.AutoMapper.14.0.1.nupkg"
+real_github = r5_oidc.github
 
-def github(endpoint, *, data=None, method="GET", download=None, timeout=45):
+def github(endpoint, *, data=None, method="GET", download=None, timeout=45, include_status=False):
     with (workflow / "calls.log").open("a") as out:
         out.write(f"{method} {endpoint}\\n")
     if endpoint == "git/ref/heads/main":
@@ -282,15 +284,40 @@ def github(endpoint, *, data=None, method="GET", download=None, timeout=45):
                 "repository": {"full_name": r5_oidc.REPO}, "head_repository": {"full_name": r5_oidc.REPO},
                 "status": "in_progress" if not login and action == "running" else "completed",
                 "conclusion": "success"}
-        if not login and action in ("settling-run", "wrong-publish-run"):
-            assert timeout == 4
+        if not login and action in ("settling-run", "wrong-publish-run", "settling-http",
+                                    "run-404", "run-403", "non-http-error", "receipt-404"):
             gets = (workflow / "calls.log").read_text().count("GET actions/runs/901/attempts/1\\n")
             intent = json.loads((case / "progress/progress.json").read_text())["uploadIntents"]["main/Du.AutoMapper"][-1]
             assert intent["workflow"]["runId"] == "901"
-            if gets == 1 and action == "settling-run":
+            if action == "receipt-404":
+                assert not include_status and timeout == 45
+            else:
+                assert include_status and timeout == 4
+            if (gets == 1 and action == "settling-run") or (gets == 3 and action == "settling-http"):
                 run.update(head_repository=None, display_title="")
             elif action == "wrong-publish-run":
                 run.update(head_sha="wrong-head-fixture", display_title="private-title-fixture")
+            if action in ("settling-http", "run-404", "run-403", "non-http-error", "receipt-404"):
+                status = 404 if action in ("run-404", "receipt-404") or (action == "settling-http" and gets == 1) else 200
+                if action == "run-403":
+                    status = 403
+                body = json.dumps(run if status == 200 else {"status": "404", "message": "private-body-fixture"})
+                response = f"HTTP/2.0 {status}\\r\\nContent-Type: application/json\\r\\n\\r\\n{body}"
+
+                def gh_request(command, **options):
+                    assert ("--include" in command) == include_status
+                    assert options["stderr"] == (subprocess.DEVNULL if include_status else None)
+                    if action == "settling-http" and gets == 2:
+                        raise subprocess.TimeoutExpired(command, timeout, stderr=b"private-timeout-fixture")
+                    if action == "non-http-error":
+                        return subprocess.CompletedProcess(command, 1, b'{"status":"404"}',
+                                                           b"private-non-http-fixture (HTTP 404)")
+                    return subprocess.CompletedProcess(command, 0 if status == 200 else 1,
+                                                       (response if include_status else body).encode(),
+                                                       b"private-stderr-fixture (HTTP 404)")
+
+                with patch.object(r5_oidc.subprocess, "run", side_effect=gh_request):
+                    return real_github(endpoint, timeout=timeout, include_status=include_status)
         return run
     if endpoint.endswith("/attempts/1/jobs"):
         login = endpoint.split("/")[2] == "900"
@@ -349,6 +376,56 @@ r5_oidc.time.sleep = lambda seconds: None
         self.assertEqual(1, calls.count("/dispatches\n"))
         self.assertNotIn("PATCH", calls)
         self.assertEqual(0, self.upload_count())
+
+    def test_oidc_cli_waits_for_unavailable_run_and_then_checks_all_identity_fields(self):
+        self.prepare_oidc_cli()
+        arguments = (ENGINE, "--owner", "dusdong", "--oidc", "700", "900")
+        result = self.assert_cli(0, "r5_publish_main", *arguments, action="settling-http")
+        self.assertIn("读取 1/5）：HTTP 404", result.stderr)
+        self.assertIn("读取 2/5）：GET 超时", result.stderr)
+        self.assertIn("读取 3/5）：display_title=missing, head_repository.full_name=missing", result.stderr)
+        self.assertNotIn("fixture", result.stderr + result.stdout)
+        calls = (self.case / "workflow/calls.log").read_text().splitlines()
+        get_run = "GET actions/runs/901/attempts/1"
+        self.assertEqual([get_run] * 4 + ["PATCH releases/assets/800"], calls[-5:])
+        self.assertEqual(1, sum(call.endswith("/dispatches") for call in calls))
+        self.assertTrue((self.case / "workflow/label").exists())
+        first = self.intent("main")
+        result = self.assert_cli(1, "r5_readback", "workflow-receipt", "--kind", "main", "--package", ENGINE,
+                                 action="receipt-404")
+        self.assertNotIn("读取", result.stderr)
+        self.assertEqual(5, (self.case / "workflow/calls.log").read_text().splitlines().count(get_run))
+        self.assertFalse((self.work / first["receipt"]).exists())
+        self.assertEqual(0, self.upload_count())
+
+    def test_oidc_cli_refuses_unavailable_or_unauthorized_run_without_new_dispatch(self):
+        case = self.case
+        for action, tries, diagnostic in (
+            ("run-404", 5, "HTTP 404"), ("run-403", 1, "HTTP 403"),
+            ("non-http-error", 1, "缺少有效 HTTP 响应"),
+        ):
+            with self.subTest(action=action):
+                self.case = case / action
+                self.work = self.case / "progress"
+                self.work.mkdir(parents=True)
+                self.prepare_oidc_cli()
+                arguments = (ENGINE, "--owner", "dusdong", "--oidc", "700", "900")
+                result = self.assert_cli(1, "r5_publish_main", *arguments, action=action)
+                self.assertIn(diagnostic, result.stderr)
+                self.assertNotIn("fixture", result.stderr + result.stdout)
+                if tries == 1:
+                    self.assertNotIn("HTTP 404", result.stderr)
+                    self.assertNotIn("读取", result.stderr)
+                first = self.intent("main")
+                self.assertEqual("901", first["workflow"]["runId"])
+                self.assertNotIn("result", first)
+                self.assertFalse((self.case / "workflow/label").exists())
+                self.assert_cli(2, "r5_publish_main", *arguments)
+                calls = (self.case / "workflow/calls.log").read_text().splitlines()
+                self.assertEqual(tries, calls.count("GET actions/runs/901/attempts/1"))
+                self.assertEqual(1, sum(call.endswith("/dispatches") for call in calls))
+                self.assertFalse(any(call.startswith("PATCH") for call in calls))
+                self.assertEqual(0, self.upload_count())
 
     def test_oidc_cli_can_resolve_only_proven_unstarted_push(self):
         self.prepare_oidc_cli()

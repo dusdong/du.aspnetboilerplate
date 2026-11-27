@@ -44,14 +44,34 @@ NUGET_HTTP_STATUS = {
 }
 
 
-def github(endpoint, *, data=None, method="GET", download=None, timeout=45):
+class GitHubHTTPError(VerificationError):
+    def __init__(self, status, endpoint):
+        self.status = status
+        super().__init__(f"GitHub API GET {endpoint} 返回 HTTP {status}")
+
+
+def github(endpoint, *, data=None, method="GET", download=None, timeout=45, include_status=False):
     command = ["gh", "api", "--hostname", "github.com", "--method", method,
                "-H", "X-GitHub-Api-Version: 2026-03-10", f"repos/{REPO}/{endpoint}"]
     if data is not None:
         command += ["--input", "-"]
     if download is None:
+        if include_status:
+            command.append("--include")
         result = subprocess.run(command, input=None if data is None else json.dumps(data).encode(),
-                                stdout=subprocess.PIPE, timeout=timeout)
+                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL if include_status else None,
+                                timeout=timeout)
+        if include_status:
+            # 以 gh 输出的 HTTP 状态行为准，忽略响应正文及 stderr 中的错误描述。
+            response = re.split(rb"\r?\n\r?\n", result.stdout, maxsplit=1)
+            status_line = re.match(rb"HTTP/[0-9]+(?:\.[0-9]+)? ([1-5][0-9]{2})(?: [^\r\n]*)?\r?\n",
+                                   result.stdout)
+            require(len(response) == 2 and status_line, f"GitHub API GET {endpoint} 缺少有效 HTTP 响应")
+            status = int(status_line[1])
+            if status != 200:
+                raise GitHubHTTPError(status, endpoint)
+            require(result.returncode == 0, f"GitHub API 操作失败 GET {endpoint}")
+            return json.loads(response[1])
         require(result.returncode == 0, f"GitHub API 操作失败 {method} {endpoint}")
         return json.loads(result.stdout)
     command += ["-H", "Accept: application/octet-stream"]
@@ -104,18 +124,28 @@ def run_attempt(run_id, title, head, *, await_identity=False):
     endpoint = f"actions/runs/{run_id}/attempts/1"
     attempts = 5 if await_identity else 1
     for attempt in range(1, attempts + 1):
-        run = github(endpoint, timeout=4 if await_identity else 45)
-        actual = run.copy()
-        if actual.get("id") is not None:
-            actual["id"] = str(actual["id"])
-        for key in ("repository", "head_repository"):
-            repo = actual.get(key)
-            actual[f"{key}.full_name"] = repo.get("full_name") if isinstance(repo, dict) else None
-        differences = [f"{field}={'missing' if actual.get(field) in (None, '') else 'mismatch'}"
-                       for field, value in expected.items() if actual.get(field) != value]
-        if not differences:
-            return run
-        detail = ", ".join(differences)
+        try:
+            run = github(endpoint, timeout=4, include_status=True) if await_identity else github(endpoint)
+        except GitHubHTTPError as error:
+            if not await_identity or error.status != 404:
+                raise
+            detail = "HTTP 404"
+        except subprocess.TimeoutExpired:
+            if not await_identity:
+                raise
+            detail = "GET 超时"
+        else:
+            actual = run.copy()
+            if actual.get("id") is not None:
+                actual["id"] = str(actual["id"])
+            for key in ("repository", "head_repository"):
+                repo = actual.get(key)
+                actual[f"{key}.full_name"] = repo.get("full_name") if isinstance(repo, dict) else None
+            differences = [f"{field}={'missing' if actual.get(field) in (None, '') else 'mismatch'}"
+                           for field, value in expected.items() if actual.get(field) != value]
+            if not differences:
+                return run
+            detail = ", ".join(differences)
         if attempt < attempts:
             print(f"GitHub 运行 {run_id} 身份尚未匹配（读取 {attempt}/{attempts}）：{detail}",
                   file=sys.stderr, flush=True)
