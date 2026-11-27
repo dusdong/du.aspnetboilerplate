@@ -4,6 +4,8 @@
 
 `v10.5.2` 已公开发行三份映射补丁包。固定模板已用公开 R4 与 R5 完成同库切换和用户查询。两代公开包在同一 macOS ARM64、.NET 10 与 SQLite 环境下各自通过已有用户更新、按键集合更新和查询投影。[发行记录](../maintenance/r5-public-release.md) · [同库回退实测](../maintenance/r5-automapper-template.md#独立消费者验收) · [逐项实测与公开复跑](../maintenance/r5-public-mapping-behavior.md)
 
+两代公开包还在固定模板与各自的 SQL Server 新库中验证了用户更新。显式空值保留直接角色，单元素数组替换，空数组清空关联，创建时间保持原值。[固定模板用户角色更新实测](../maintenance/r5-template-user-role-update.md)
+
 <a id="当前状态2026-11-26"></a>
 
 ## R5 候选验收（2026-11-26）

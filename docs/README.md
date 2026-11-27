@@ -10,6 +10,7 @@
 | 安装 R4 稳定维护包，在新 SQL Server 测试库运行 `net10.0` 模板 | [发行说明与包链接](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [已实跑安装指南](maintenance/r4-public-install.md) · [公开包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json) |
 | 查看各阶段目标、当前进度与发行条件 | [维护型 fork 路线](maintenance/fork-roadmap.md) |
 | 用公开 R4 与 R5 对照已有用户更新、按键集合与 SQLite 投影 | [逐项实测和公开复跑](maintenance/r5-public-mapping-behavior.md) · [对照计划](maintenance/r5-public-mapping-consumer-plan.md) |
+| 对照两代公开包的固定模板用户角色更新提交 | [实测结果与复跑](maintenance/r5-template-user-role-update.md) · [验收计划](maintenance/r5-template-user-role-update-plan.md) · [OpenSpec 归档任务](../openspec/changes/archive/2026-11-27-validate-r5-template-user-role-update/tasks.md) |
 | 核对 R5 发行验收、交付和缓存处置 | [公开发行验收记录](maintenance/r5-public-release.md) · [收尾交付](maintenance/fork-roadmap.md#2026-11-27-公开发行收尾) · [52 项缓存处置](maintenance/fork-roadmap.md#本轮缓存处置) |
 | 查阅 R4 首发证据与决定制备 R5 映射补丁的依据 | [R4 归档后复核](maintenance/r4-release-candidate.md#首发归档后复核) · [R5 首轮维护审查](maintenance/r5-first-maintenance-review.md#本轮决定) |
 | 核对 `v10.5.2` 维护决定、四入口包图及公告续查 | [本轮决定](maintenance/r5-public-patch-review.md#本轮维护决定) · [四入口依赖清单](maintenance/r5-public-patch-dependencies.tsv) · [后续检查点](maintenance/r5-public-patch-review.md#下轮检查点与验证边界) |

@@ -667,7 +667,8 @@ class RollbackRun(RuntimeSupport, R3Run):
                                                   ("r3_template_original_rollback.py", "r3_template_upgrade_sql.py",
                                                    "r3_template_net9_runtime.py", "r3_template_net10_runtime.py",
                                                    "r3-template-observer/Observer.csproj",
-                                                   "r3-template-observer/StartupHook.cs")]
+                                                   "r3-template-observer/StartupHook.cs",
+                                                   "r3-template-observer/RoleRequestObserver.cs")]
         actions = (self.original_inputs, self.inputs, self.angular_inputs, self.upgrade_inputs,
                    self.sql_preflight, self.restore_pair)
         return tuple(zip(STEPS, actions, strict=True))

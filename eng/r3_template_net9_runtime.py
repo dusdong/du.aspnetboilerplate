@@ -156,7 +156,8 @@ class CandidateRuntime(RuntimeSupport, CandidateRun):
         self.report["inputs"]["profileSources"].extend(
             artifact(self.repo / "eng" / source, self.repo)
             for source in ("r3_template_net9_runtime.py", "r3_template_net9_packages.py",
-                           "r3-template-observer/StartupHook.cs", "r3-template-observer/Observer.csproj"))
+                           "r3-template-observer/StartupHook.cs", "r3-template-observer/RoleRequestObserver.cs",
+                           "r3-template-observer/Observer.csproj"))
         self.report["inputs"]["runtimeOverrides"]["ConnectionStrings__Default"] = "按进程使用本轮候选库连接"
         for name, expected in (("report.json", ORIGINAL_REPORT), ("angular-production-files.json", ANGULAR_MANIFEST)):
             path = checked_file(self.frozen_root, ORIGINAL / name, expected)

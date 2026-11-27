@@ -89,10 +89,10 @@ def bound_json(directory, ref):
     return read_json(checked_file(directory, ref["path"], ref["sha256"]))
 
 
-def entry_graph(directory, report, inventory, entry, *, historical, archive_directory=None):
+def entry_graph(directory, report, inventory, entry, *, historical, archive_directory=None, cache=None):
     raw = bound_json(directory, report["rawAssets"][entry])
     output = bound_json(directory, report["inputs"]["entryOutputs"]["net10"][entry])
-    cache = (archive_directory or directory) / "packages"
+    cache = cache if cache is not None else (archive_directory or directory) / "packages"
     selected = raw["targets"][TFM]
     framework = raw["project"]["frameworks"][TFM]
     require(set(raw["targets"]) == {TFM}

@@ -16,10 +16,23 @@ internal static class StartupHook
         switch (Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_MODE"))
         {
             case "host":
-                new AssemblyObserver(evidence).Start();
+                var hostAssemblies = new AssemblyObserver(evidence);
+                hostAssemblies.Start();
                 if (Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_REQUESTS") is { } requests)
                 {
                     DiagnosticListener.AllListeners.Subscribe(new UserQueryObserver(requests));
+                }
+                if (Environment.GetEnvironmentVariable("R5_ROLE_REQUEST_EVIDENCE") is { } roleRequests)
+                {
+                    var initial = Environment.GetEnvironmentVariable("R5_ROLE_INITIAL_REQUEST");
+                    var snapshot = Environment.GetEnvironmentVariable("R5_ROLE_INITIAL_ASSEMBLIES");
+                    DiagnosticListener.AllListeners.Subscribe(new RoleRequestObserver(roleRequests, id =>
+                    {
+                        if (id == initial && snapshot is not null)
+                        {
+                            hostAssemblies.WriteAssemblies(snapshot);
+                        }
+                    }));
                 }
                 break;
             case "migrator":
@@ -77,6 +90,11 @@ internal static class StartupHook
         private void WriteAssemblies()
         {
             AppDomain.CurrentDomain.AssemblyLoad -= RecordAssembly;
+            WriteAssemblies(evidence);
+        }
+
+        public void WriteAssemblies(string path)
+        {
             LoadedAssembly[] assemblies;
             lock (gate)
             {
@@ -84,7 +102,7 @@ internal static class StartupHook
             }
 
             // 只读取已经观测到的磁盘文件，PE 元数据读取不会加载程序集。
-            using var output = new FileStream(evidence, FileMode.CreateNew);
+            using var output = new FileStream(path, FileMode.CreateNew);
             var rows = assemblies.Select(assembly =>
             {
                 using var file = assembly.Path.Length == 0 ? null : File.OpenRead(assembly.Path);
