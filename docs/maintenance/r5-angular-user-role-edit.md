@@ -66,6 +66,8 @@ python3 -B eng/tests/test_r5_angular_role_edit.py --replay "$WORK/formal/report.
 
 冻结生产构建默认读取原版返修轮，允许用 `--angular-source` 指向同一已登记实物的单独路径，仍核对固定清单文件和完整内容。封存 Development Host 的静态资产清单引用上一轮已清理的 `obj`。本轮传入 API Host 专用的空静态资产清单，冻结 Angular 页面由各侧独立的环回静态服务提供。两个 Host 的实际 CORS 和运行程序集在报告中单独核对。
 
+可从公开模板和空缓存准备冻结前端，并在离线环境先核验。运行上例的 `eng/r5_angular_role_edit.py` 时可附加 `--angular-source "$CANDIDATE"`，其中 `CANDIDATE` 为通过核验的准备目录或搬移目录。[准备与离线核验](r5-public-angular-rebuild.md#准备和离线核验) · [构建后清单与字体诊断](r5-public-angular-rebuild.md#字体诊断修正实测) · [前端准备稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-公开消费者可独立准备冻结-angular-前端)
+
 回放的 `--output` 必须指向新文件。已有文件、符号链接和硬链接会被拒绝，入口退出 `2`，已有内容保留。
 
 正式报告在 `.git/validate-r5-angular-user-role-edit/implementation-01/formal-v7/report.json`，SHA-256 为 `85d3e3107e834c6c9a5b966430219c5096d591d9b35721e2c184a15fc77fe417`。报告保留逐侧服务清单、实际 HTTP、窗口读数和 SQL 状态。逐侧 `user-requests.jsonl`、`Migrator-target.jsonl` 与程序集 JSON 保留原始观测，`sql-commands.json` 记录独立 SQL 查询及退出结果。同级保留命令、退出码、回放以及前序尝试。前四次分别定位历史静态清单路径、Playwright 监听回调、导航后读取旧资源响应体和观测标记导致 Playwright 请求 URL 更新的问题。第五轮两侧通过。第六轮 R5 租户选择响应等待超时，该侧未尝试编辑，R4 三步通过。最后一轮保留握手响应顺序，使用两座新空库完成两侧验收。
