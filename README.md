@@ -6,6 +6,8 @@
 
 首个稳定版 `v10.5.1` 已发布。nuget.org 提供 11 个 `Du.Abp*` 框架包 `10.5.1`、`Du.AutoMapper 14.0.0` 和 `Du.AutoMapper.Collection 11.0.0`。`net10.0` 新库示例使用实测运行时 `10.0.15`。存量 `net9.0` 迁移已在 `9.0.10` 实测，微软于 2026-11-10 结束 .NET 9 支持。[发行说明与包链接](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [新库安装指南](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-INSTALL-net10.md) · [包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json)
 
+R5 映射补丁的三个精确版本已可从 nuget.org 获取。可以用固定模板在新 SQL Server 测试库安装 R5 组合。正式的 GitHub Release 将在公开消费验收完成后发布。[R5 新库安装指南](docs/maintenance/r5-public-install.md) · [R5 发行进度](openspec/changes/publish-r5-mapping-patch/tasks.md)
+
 ## 获取源码
 
 首次克隆时，在准备存放仓库的目录执行：
@@ -29,7 +31,7 @@ git submodule update --init --recursive
 
 集合映射补丁的 7 项本地验收已完成，变更已归档。三个冻结候选与十个 R4 公开包通过固定模板的 `net10.0` 新库安装、`net9.0` 至 `net10.0` 同库接续。固定 `net10.0` 的公开 R4、候选、公开 R4 三阶段均读到首阶段通过应用写入的同一租户用户。公开发行设有独立交接条件。[固定模板结果与复跑](docs/maintenance/r5-automapper-template.md) · [三包冻结与独立消费](openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md)
 
-主仓 `cebc3e38` 已交付映射补丁的发行准备归档，固定引擎 `54f6277a`。远端 R0 基线复验通过，三包处于本地待发。下一轮计划在获得发行授权后，将 `v10.5.2` 绑定到该协调提交，完成三个新包的公开验签、符号和模板回装。验证机的 52 项可重建缓存另行处置。[交付与缓存复核](docs/maintenance/fork-roadmap.md#2026-11-27-发行准备复核) · [下一轮任务](openspec/changes/publish-r5-mapping-patch/tasks.md) · [R0 工作流](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
+主仓 `cebc3e38` 固定了 `v10.5.2` 的生产组合，远端 R0 基线复验已通过。三个新包和调试符号已公开核验。[发行任务](openspec/changes/publish-r5-mapping-patch/tasks.md) · [R0 工作流](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
 
 ### 已归档的基线与迁移
 
