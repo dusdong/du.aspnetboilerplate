@@ -16,7 +16,7 @@
 
 ## 3. 公开消费与 Release
 
-- [ ] 3.1 完成发布者公开源回归和独立消费者新装。
+- [x] 3.1 完成发布者公开源回归和独立消费者新装。[公开消费验收记录](consumption-validation.md)
   - 以本次实际下载登记和独立空缓存执行纯 nuget.org 的 `install` 与 `upgrade`，核对两代四入口的包图、编译输出、实际加载及新库、同库迁移、登录授权和业务查询。
   - 交付完整的 `docs/maintenance/r5-public-install.md`，使用匿名可取得的固定指南版本和模板提交 `2e9536872673a7ff1986a19e798c51684d16afe5`，从干净目录实跑独立的 `net10.0` 新装，全部输入均可公开取得或由消费者自行准备。
   - Core 精确引用 `Du.Abp.AutoMapper [10.5.2]`。模板中其余直接引用的 Du 维护包均沿用精确版本 `[10.5.1]`，例如 Core 的 `Du.Abp.ZeroCore.EntityFrameworkCore`。用独立空缓存、仅 nuget.org 还原并核对实际解析的 `Du.AutoMapper 14.0.1`、`Du.AutoMapper.Collection 11.0.1` 和 `Du.Abp.AutoMapper 10.5.2`。
