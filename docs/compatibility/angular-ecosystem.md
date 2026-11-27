@@ -2,11 +2,12 @@
 
 ## abp-ng2-module、abp-web-resources 与 module-zero-core-template
 
-## 当前状态（2026-11-24）
+## 当前状态（2026-11-28）
 
 - 适配器与免费启动模板已接入主仓。主仓 `8dcdca6f5aaa892225bcef74846eefce24f4f0d0` 固定的适配器源码声明 `13.0.0`、Angular peer `^21.0.0`。固定模板声明 Angular `^19.2.1`、适配器 `12.1.0` 和资源包 `^6.1.0`。已为模板选定适配器 `12.1.0` 的独立参考提交，其 peer 为 `^19.1.7`。[组件参考与模板依赖](../maintenance/release-baseline.json) · [gitlink 核对方法](../README.md#子模块分工)
 - Web Resources 源码随框架子模块维护，位于 `src/Abp.Web.Resources/Abp/Framework`。历史分发快照声明 npm `abp-web-resources 6.1.0`，旧提取配置指向 NuGet `Abp.Web.Resources 5.1.0`。[资源分发清单][R10] · [旧提取配置][R11]
-- 项目已有上述源码声明和模板后端依赖盘点。适配器与资源包的实际安装和构建、完整模板的依赖闭合与应用集成、浏览器端到端消费验证仍待执行。[R0 验证范围](../maintenance/release-baseline.json) · [R3 维护路线](../maintenance/fork-roadmap.md)
+- 固定免费模板已在 macOS ARM64 从空缓存安装公开 `abp-ng2-module 12.1.0` 和 `abp-web-resources 6.1.0`，并以 Angular `19.2.1` 重建冻结 production 前端。公开 R4 和 R5 的浏览器角色编辑另有同一冻结前端下的实测记录。[公开冷构建](../maintenance/r5-public-angular-rebuild.md#实测结果) · [角色编辑实测](../maintenance/r5-angular-user-role-edit.md)
+- macOS ARM64 实测中，适配器 `12.1.0` 发布参考提交 `afbd23e` 的根锁冻结安装失败。相同库源码在后续提交 `a8ca4b3` 成功制包，固定 Angular `19.2.1` 模板只替换适配器后通过 production 编译，并从新浏览器 JS 追溯到候选 FESM。资源包沿用公开 `6.1.0`。[适配器制包与消费实测](../maintenance/r5-angular19-adapter-package-plan.md#实测结果) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收源码制成的适配器包)
 
 **下文保留原调研证据和当时的组合判断。**
 

@@ -14,6 +14,8 @@
 
 公开固定模板在 macOS ARM64 从空缓存重建了冻结 Angular 前端，1193 个文件及两个清单摘要均匹配。隔离读回、单静态文件篡改、错误清单拒绝和有效副本复验均达到预期。构建后的字体诊断已按 `font-family` 定位内联块，四份静态副本回放通过独立复核。稳定规范已同步，七项任务已归档。[字体诊断实测](r5-public-angular-rebuild.md#字体诊断修正实测) · [公开复跑和实测](r5-public-angular-rebuild.md) · [固定基线与计划](r5-public-angular-rebuild-plan.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-公开消费者可独立准备冻结-angular-前端) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-27-prepare-r5-public-angular-rebuild/)
 
+2026-11-28，Angular 19 适配器 `12.1.0` 的发布参考提交 `afbd23e` 冻结安装失败。后续提交 `a8ca4b3` 的同一库源码成功制包，固定免费模板通过候选包 production 编译。实测覆盖 macOS ARM64 的制包与编译消费。五项验收任务已归档。[实测及复跑](r5-angular19-adapter-package-plan.md#实测结果) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收源码制成的适配器包) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-adapter-package/tasks.md)
+
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
 集合映射补丁已公开发行 `v10.5.2`。三个新主包、三个符号包、三个公开 PDB 和十个沿用包完成核验。发布者公开源安装与同库接续，以及独立消费者按固定公开指南新装，均通过实测。公开发行规范已同步，发行变更已归档。原冻结候选的本地三阶段同库包切换保留为历史回退依据。[R5 发行验收](r5-public-release.md) · [公开发行稳定规范](../../openspec/specs/public-package-release/spec.md) · [发行归档](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [补丁候选任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)
