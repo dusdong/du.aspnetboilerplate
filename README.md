@@ -33,7 +33,9 @@ R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 应用迁往 `net
 
 主仓 `cebc3e38` 固定了 `v10.5.2` 的生产组合，R0 基线复验通过。三个新包、三个公开 PDB 和三项公开消费均已核验。公开发行规范已同步，R5 发行变更已归档。[R5 发行验收记录](docs/maintenance/r5-public-release.md) · [发行归档](openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [R0 工作流](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
 
-`v10.5.2` 已在 `0d42db5` 完成发行收尾。基于两代 Web.Host 和 Migrator 的四张公开消费图，补丁后维护审查已完成并归档，**维护包无需补丁**。存量 .NET 9 部署继续迁往受支持的 .NET 10。后续按已登记的上游、包公告和运行时水位续查。[维护决定](docs/maintenance/r5-public-patch-review.md#本轮维护决定) · [下轮检查点](docs/maintenance/r5-public-patch-review.md#下轮检查点与验证边界) · [审查归档](openspec/changes/archive/2026-11-27-review-r5-public-patch-baseline/)
+`v10.5.2` 已在 `0d42db5` 完成发行收尾。补丁后维护审查在 `800cdbe` 归档。按固定模板两代 Web.Host 和 Migrator 的四张公开消费图，**该组合无需再发维护包补丁**。存量 .NET 9 部署继续迁往受支持的 .NET 10，服务公告按各自检查点续查。[维护决定](docs/maintenance/r5-public-patch-review.md#本轮维护决定) · [公告检查点](docs/maintenance/r5-public-patch-review.md#下轮检查点与验证边界) · [审查归档](openspec/changes/archive/2026-11-27-review-r5-public-patch-baseline/)
+
+固定 `net10.0` 模板在公开 R4 → R5 → R4 同库切换后，从同一租户查回两版各自创建的用户。验证范围为 macOS ARM64、.NET 和 ASP.NET Core `10.0.15`、SQL Server Developer `16.0.4236.2` 与冻结 Angular。[实测结果与写入边界](docs/maintenance/r5-automapper-template.md#公开-r4r5-同库回退实测) · [同库回退归档](openspec/changes/archive/2026-11-27-validate-r5-public-package-rollback/)
 
 ### 已归档的基线与迁移
 

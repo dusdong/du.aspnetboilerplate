@@ -261,7 +261,7 @@ class RuntimeSupport:
         require(record["exitCode"] == 0, f"Release Host {label} 未正常停止，退出 {record['exitCode']}")
 
 
-    def round(self, database, label, *, before_login=None, after_browser=None, search_request_id=None):
+    def round(self, database, label, *, before_login=None, after_browser=None, search_request_id=None, searches=None):
         require(inventory(self.browser_output, include_app_data=True) == self.angular_inventory,
                 "实际提供的 Angular production 产物已改变")
         outcome = {"database": database, "inputs": self.report["inputs"]["host"]["entry"],
@@ -276,7 +276,8 @@ class RuntimeSupport:
                     thread.start()
                     try:
                         browser_round(self.runtime, self.browser_output, self.business, self.admin_password,
-                                      outcome, before_login=before_login, search_request_id=search_request_id)
+                                      outcome, before_login=before_login, search_request_id=search_request_id,
+                                      searches=searches)
                     finally:
                         try:
                             if after_browser:
@@ -307,7 +308,7 @@ class RuntimeSupport:
                                                       "status": status, "success": True})
         return data["result"]
 
-    def create_fixture_user(self, seed, keyword):
+    def create_fixture_user(self, seed, keyword, *, on_created=None):
         headers = {"Abp-TenantId": str(seed["tenant"]["tenantId"])}
         login = self.api(AUTH, {"userNameOrEmailAddress": ADMIN, "password": self.admin_password}, headers)
         self.passwords.extend(item for item in (login.get("accessToken"), login.get("encryptedAccessToken")) if item)
@@ -320,7 +321,9 @@ class RuntimeSupport:
                            "emailAddress": keyword + "@example.invalid", "isActive": True,
                            "roleNames": [], "password": password},
                           headers | {"Authorization": "Bearer " + login["accessToken"]})
-        expected_user = {"id": result["id"], "userName": result["userName"]}
+        expected_user = {"id": result["id"], "userName": result.get("userName")}
+        if on_created:
+            on_created(expected_user)
         require(expected_user["userName"] == keyword, "应用创建的测试用户名与本轮搜索词不符")
         return expected_user
 

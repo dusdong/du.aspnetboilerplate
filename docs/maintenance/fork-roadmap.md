@@ -4,6 +4,8 @@
 
 公开版 `v10.5.2` 已在 `0d42db5` 完成收尾。2026-11-27 已按四张公开消费依赖图完成补丁后维护审查，决定为**维护包无需补丁**。存量 .NET 9 部署继续迁往受支持的 .NET 10 组合。遇到适用的上游变动、依赖变更或新服务公告时，从本次记录续查。[收尾交付](#2026-11-27-公开发行收尾) · [维护决定与行动](r5-public-patch-review.md#本轮维护决定) · [下轮检查点](r5-public-patch-review.md#下轮检查点与验证边界)
 
+固定模板已在公开 `v10.5.1 → v10.5.2 → v10.5.1` 同库实测中验证，切回 R4 后管理员可以查回 R4 和 R5 各自写入的用户。[公开包同库回退结果](#公开包同库回退与后续检查)
+
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
 集合映射补丁已公开发行 `v10.5.2`。三个新主包、三个符号包、三个公开 PDB 和十个沿用包完成核验。发布者公开源安装与同库接续，以及独立消费者按固定公开指南新装，均通过实测。公开发行规范已同步，发行变更已归档。原冻结候选的本地三阶段同库包切换保留为历史回退依据。[R5 发行验收](r5-public-release.md) · [公开发行稳定规范](../../openspec/specs/public-package-release/spec.md) · [发行归档](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [补丁候选任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)
@@ -315,7 +317,7 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 [四方详细行动](r5-public-patch-review.md#本轮维护决定) · [精确续查水位](r5-public-patch-review.md#下轮检查点与验证边界)
 
-维护审查任务 6/6 已完成并归档。审查报告登记的严格校验 16/16 对应归档前的 15 份稳定规范和 1 项活动变更。归档后活动变更为 0，稳定规范严格校验 15/15，归档任务检查 21/21。[稳定规范](../../openspec/specs/maintenance-release-review/spec.md#requirement-跨公开补丁的审查能说明既有结论的适用范围) · [审查任务归档](../../openspec/changes/archive/2026-11-27-review-r5-public-patch-baseline/tasks.md)
+审查收尾提交 `800cdbe` 已交付至 GitHub `main`。稳定规范新增一条要求和四个场景，归档任务 6/6。归档前全仓严格校验 16/16。该提交下活动变更为零，稳定规范 15/15、归档 21/21，收尾记录检查了 64 组本地链接和 38 个锚点。该提交的改动未命中 R0 推送触发路径，GitHub Actions 运行数为零。[收尾提交](https://github.com/dusdong/du.aspnetboilerplate/commit/800cdbea50fe7ed2b481f2d1303a1d0c64a3c37c) · [稳定规范](../../openspec/specs/maintenance-release-review/spec.md#requirement-跨公开补丁的审查能说明既有结论的适用范围) · [审查任务归档](../../openspec/changes/archive/2026-11-27-review-r5-public-patch-baseline/tasks.md)
 
 #### 公开补丁维护审查的原计划
 
@@ -324,6 +326,14 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 1. **确定消费者实际安装了什么。** 用公开校验附件和同一次升级的四张原图，逐入口列出三个更新包、十个沿用包和传递依赖相对 R4 的差异。[R5 消费实测](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/consumption-validation.md)
 2. **重新判断公告适用性。** 按新包图和原上游身份匹配存量及新修订公告，从上次完整位置接续三仓六分支和 Microsoft 服务公告。单独补核 CVE-2026-56158 的组件范围。[续查起点](r5-runtime-migration-review.md#共享运行时与下轮检查点)
 3. **给出维护决定。** 按包、模板、运行环境和应用分别登记行动，结论为需补丁、无需补丁或暂不能判定，并留下依据和下一次重查条件。Windows、Linux、其他 Provider 和 Angular 组合按实际消费者需求安排验收，R6 按既有立项条件推进。[维护审查规范](../../openspec/specs/maintenance-release-review/spec.md)
+
+#### 公开包同库回退与后续检查
+
+公开包三阶段在 macOS ARM64、固定 `net10.0` 模板、.NET 和 ASP.NET Core `10.0.15`、SQL Server Developer `16.0.4236.2` 与冻结 Angular 通过。各段从独立空缓存还原两个入口，首末包图一致，中段符合已登记的三个映射包及四条约束变化。回退 R4 使用同一管理员会话分别查回 R4 创建的 A 和 R5 创建的 B，保留三段迁移历史和成功登录行。[三阶段证据与复跑](r5-automapper-template.md#公开-r4r5-同库回退实测) · [映射消费稳定规范](../../openspec/specs/automapper-package-consumption/spec.md#scenario-切回公开旧版后仍可查询新版写入) · [实施与验收归档](../../openspec/changes/archive/2026-11-27-validate-r5-public-package-rollback/tasks.md)
+
+历史本地候选切换验证了 R4 创建的一个用户。备份恢复按各自选定的历史恢复点验证，恢复点之后的写入会舍弃。其他业务、平台、Provider 和客户端组合仍按实际消费者需求验证。[公开发行与历史证据](r5-public-release.md#公开消费与回退证据)
+
+**公告续查按来源变化启动。** GitHub 包公告从 `2026-11-27T03:08:35Z` 重叠查询，Microsoft 服务公告从 `03:08:30Z` 接续。CVE-2026-56158 等待 MSRC、CVRF 或 CVE Program 提供现代 .NET 的产品、组件和版本范围，再对照四入口实际加载资产。若指向独立包，再按包图判断维护包责任。Windows .NET Framework 的文档更正单独保留。上游六条分支与四项待核实或暂缓的兼容问题按原检查点复查。[服务公告证据](r5-public-patch-review.md#共享运行时与-cve-2026-56158) · [各来源续查条件](r5-public-patch-review.md#下轮检查点与验证边界)
 
 建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。
 

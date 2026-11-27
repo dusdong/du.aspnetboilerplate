@@ -185,10 +185,9 @@ internal static class StartupHook
         private const string CommandExecuting = "Microsoft.EntityFrameworkCore.Database.Command.CommandExecuting";
         private const string CommandExecuted = "Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted";
         private const string UserListPath = "/api/services/app/User/GetAll";
-        private readonly string requestId = Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_REQUEST_ID")!;
-        private readonly string keyword = Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_KEYWORD")!;
+        private readonly Dictionary<string, string> expected = SearchRequests();
         private readonly bool failList = Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_FAIL_LIST") == "1";
-        private readonly ConditionalWeakTable<Activity, object> requests = new();
+        private readonly ConditionalWeakTable<Activity, SearchRequest> requests = new();
         private readonly System.Collections.Concurrent.ConcurrentDictionary<string, string> commands = new();
         private readonly object gate = new();
 
@@ -218,18 +217,20 @@ internal static class StartupHook
             }
 
             Activity? request = current;
-            while (request is not null && !requests.TryGetValue(request, out _))
+            SearchRequest? match = null;
+            while (request is not null && !requests.TryGetValue(request, out match))
             {
                 request = request.Parent;
             }
 
-            if (request is null || Property(payload, "CommandId")?.ToString() is not { } commandId)
+            if (request is null || match is null || Property(payload, "CommandId")?.ToString() is not { } commandId)
             {
                 return;
             }
 
             var pid = Environment.ProcessId;
             var activityId = request.Id;
+            var (requestId, keyword) = match;
             if (diagnostic.Key == CommandExecuted)
             {
                 if (commands.TryRemove(commandId, out var completedStep))
@@ -288,10 +289,10 @@ internal static class StartupHook
             var activityId = activity.Id;
             if (phase == RequestStop)
             {
-                if (requests.TryGetValue(activity, out _))
+                if (requests.TryGetValue(activity, out var match))
                 {
                     var status = Property(Property(context, "Response"), "StatusCode");
-                    Write(new { kind = "response", pid, requestId, activityId, status });
+                    Write(new { kind = "response", pid, requestId = match.Id, activityId, status });
                 }
                 return;
             }
@@ -299,21 +300,45 @@ internal static class StartupHook
             var request = Property(context, "Request");
             var method = Property(request, "Method")?.ToString();
             var path = Property(request, "Path")?.ToString();
-            if (method != "GET" || path != UserListPath || requestId.Length == 0 || keyword.Length == 0)
+            if (method != "GET" || path != UserListPath)
             {
                 return;
             }
 
             var query = Property(request, "QueryString")?.ToString() ?? "";
             var fields = query.TrimStart('?').Split('&').Select(Uri.UnescapeDataString).ToArray();
-            if (fields.Count(field => field == $"Keyword={keyword}") != 1
-                || fields.Count(field => field == $"r3RollbackRequest={requestId}") != 1)
+            const string marker = "r3RollbackRequest=";
+            var ids = fields.Where(field => field.StartsWith(marker, StringComparison.Ordinal)).ToArray();
+            if (ids.Length != 1)
             {
                 return;
             }
-            requests.Add(activity, gate);
+            var requestId = ids[0][marker.Length..];
+            if (!expected.TryGetValue(requestId, out var keyword)
+                || fields.Count(field => field == $"Keyword={keyword}") != 1)
+            {
+                return;
+            }
+            requests.Add(activity, new SearchRequest(requestId, keyword));
             Write(new { kind = "request", pid, requestId, activityId, method, path, keyword });
         }
+
+        private static Dictionary<string, string> SearchRequests()
+        {
+            if (Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_SEARCHES") is { } searches)
+            {
+                return JsonSerializer.Deserialize<Dictionary<string, string>>(searches)
+                    ?? throw new InvalidOperationException("缺少模板搜索请求登记");
+            }
+
+            var requestId = Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_REQUEST_ID");
+            var keyword = Environment.GetEnvironmentVariable("R3_TEMPLATE_OBSERVER_KEYWORD");
+            return string.IsNullOrEmpty(requestId) || string.IsNullOrEmpty(keyword)
+                ? new Dictionary<string, string>()
+                : new Dictionary<string, string> { [requestId] = keyword };
+        }
+
+        private sealed record SearchRequest(string Id, string Keyword);
 
         private static object? Property(object? value, string name) => value?.GetType().GetProperty(name)?.GetValue(value);
 

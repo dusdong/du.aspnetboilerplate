@@ -57,7 +57,7 @@ def response_json(response, origin=None, *, wrapped=True):
     return data
 
 
-def browser_round(config, browser_output, baseline, password, report, *, before_login=None, search_request_id=None):
+def browser_round(config, browser_output, baseline, password, report, *, before_login=None, search_request_id=None, searches=None):
     from playwright.sync_api import Error, TimeoutError, expect, sync_playwright
 
     frontend, host = config["frontend"], config["host"]
@@ -157,45 +157,58 @@ def browser_round(config, browser_output, baseline, password, report, *, before_
                     steps["initialList"] = {"path": USERS, "status": initial.value.status,
                                             "route": route, "totalCount": before["totalCount"]}
 
-                    action = f"提交搜索并等候 Keyword={baseline['keyword']} 的列表响应"
-                    search = page.locator("input[name=keyword]")
-                    search.fill(baseline["keyword"])
-                    tagged = []
-                    if search_request_id:
-                        def tag_search(route):
-                            request = route.request
-                            url = urlsplit(request.url)
-                            if (f"{url.scheme}://{url.netloc}", url.path, request.method,
-                                    keyword_for(request.url)) == (host, USERS, "GET", [baseline["keyword"]]):
-                                tagged.append(request)
-                                route.continue_(url=request.url + "&r3RollbackRequest=" + search_request_id)
-                            else:
-                                route.continue_()
-
-                        page.route(host + USERS + "?*", tag_search)
-                    with page.expect_response(lambda r: matches(r, host, USERS) and
-                                              keyword_for(r.url) == [baseline["keyword"]]) as result:
-                        search.press("Enter")
-                    response = result.value
-                    step = steps["search"] = {"path": USERS, "method": response.request.method,
-                                              "keyword": keyword_for(response.url), "status": response.status}
-                    if search_request_id:
-                        require(tagged == [response.request], "浏览器搜索响应与本轮标记请求不一致")
-                        step["requestId"] = search_request_id
-                    payload = response_json(response, frontend)
-                    fields = ("id", "userName", *baseline.get("searchFields", ()))
-                    items = [{field: item.get(field) for field in fields}
-                             for item in payload.get("items", [])]
-                    step.update(totalCount=payload.get("totalCount"), items=items)
-                    check_query(step["keyword"], step["totalCount"], items, baseline)
-                    action = "等待搜索渲染并核对唯一行的用户名列"
-                    expect(rows).to_have_count(1, timeout=20000)
-                    expect(rows.locator("td").first).to_have_text(baseline["keyword"], timeout=20000)
-                    step["userNameCells"] = [name.strip() for name in rows.locator("td:first-child").all_text_contents()]
-                    check_search(step["keyword"], step["totalCount"], items, step["userNameCells"], baseline)
+                    if searches is None:
+                        action = f"搜索并核对 Keyword={baseline['keyword']} 的用户"
+                        search_users(page, host, frontend, rows, baseline, steps, "search", search_request_id, expect)
+                    else:
+                        results = steps["searches"] = {}
+                        for label, (expected, request_id) in searches.items():
+                            action = f"搜索并核对 {label} 的用户"
+                            search_users(page, host, frontend, rows, expected, results, label, request_id, expect)
             finally:
                 browser.close()
     except (TimeoutError, AssertionError) as error:
         raise VerificationError(f"浏览器未完成「{action}」") from error
     except Error as error:
         raise VerificationError(f"浏览器操作失败「{action}」") from error
+
+
+def search_users(page, host, frontend, rows, baseline, steps, label, search_request_id, expect):
+    search = page.locator("input[name=keyword]")
+    search.fill(baseline["keyword"])
+    tagged = []
+    if search_request_id:
+        def tag_search(route):
+            request = route.request
+            url = urlsplit(request.url)
+            if (f"{url.scheme}://{url.netloc}", url.path, request.method,
+                    keyword_for(request.url)) == (host, USERS, "GET", [baseline["keyword"]]):
+                tagged.append(request)
+                route.continue_(url=request.url + "&r3RollbackRequest=" + search_request_id)
+            else:
+                route.continue_()
+
+        page.route(host + USERS + "?*", tag_search)
+    try:
+        with page.expect_response(lambda r: matches(r, host, USERS) and
+                                  keyword_for(r.url) == [baseline["keyword"]]) as result:
+            search.press("Enter")
+    finally:
+        if search_request_id:
+            page.unroute(host + USERS + "?*", tag_search)
+    response = result.value
+    step = steps[label] = {"path": USERS, "method": response.request.method,
+                              "keyword": keyword_for(response.url), "status": response.status}
+    if search_request_id:
+        require(tagged == [response.request], "浏览器搜索响应与本轮标记请求不一致")
+        step["requestId"] = search_request_id
+    payload = response_json(response, frontend)
+    fields = ("id", "userName", *baseline.get("searchFields", ()))
+    items = [{field: item.get(field) for field in fields}
+             for item in payload.get("items", [])]
+    step.update(totalCount=payload.get("totalCount"), items=items)
+    check_query(step["keyword"], step["totalCount"], items, baseline)
+    expect(rows).to_have_count(1, timeout=20000)
+    expect(rows.locator("td").first).to_have_text(baseline["keyword"], timeout=20000)
+    step["userNameCells"] = [name.strip() for name in rows.locator("td:first-child").all_text_contents()]
+    check_search(step["keyword"], step["totalCount"], items, step["userNameCells"], baseline)

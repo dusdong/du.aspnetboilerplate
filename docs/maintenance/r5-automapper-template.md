@@ -33,6 +33,25 @@ python -B eng/r5_template_consumer.py switch \
 
 `switch` 另外需要 R4 交接冻结目录、固定首发清单和完整的已验签下载登记。两个 R4 阶段各自通过原 R4 入口在空缓存从 nuget.org 还原全部公开包。候选阶段仅将三个精确 ID 映射到单独的本地源，其他包从 nuget.org 还原。两代均核对实际 nuspec、还原图、Release 编译引用和输出 DLL，再核对实际加载路径及摘要。R4 候选制备和公开发行的 OpenSpec 均已归档时，公开源复跑从原协调提交核对生产 gitlink，并在当前执行提交核对固定模板。活动制备、活动公开发行和冻结源模式仍核对当前提交的生产 gitlink。[入口](../../eng/r5_template_consumer.py) · [R4 公开源复跑](r4-release-candidate.md#公开源模板消费)
 
+### 公开包切换复跑
+
+在主仓根目录执行 `switch-public`。使用固定模板 `2e9536872673a7ff1986a19e798c51684d16afe5`、SDK `10.0.404`、macOS ARM64、.NET 和 ASP.NET Core `10.0.15`、专用环回 SQL Server Developer `16.0.4236.2` 与冻结 Angular production 客户端。准备带 `pymssql` 和 Playwright 的 Python、Chrome 或 Playwright Chromium，按运行基线的环境变量约定注入测试实例和模板管理员凭据。入口每轮生成新库名，从空库开始接续三段。[运行配置与凭据变量](r3-template-runtime-baseline.md#复跑)
+
+`R4_BATCH_ROOT` 和 `R5_BATCH_ROOT` 分别指向两版发行冻结目录。实跑使用的 `batch.json` SHA-256 分别为 `4d25f237938d04aeb985c2057a6287ba0f18425b94d73e9c494e313684470757` 和 `b914f5669c504a3a85cd7120fb63ff0d14667924d6dd0ff1f92fea9a1a76eaf1`。每个版本分别使用公开校验附件、附件绑定的发行清单和签后下载登记，以及对应的历史公开升级通过轮目录。历史目录需保留父报告、原始还原图、资产清单与输出清单。两版公开附件和历史报告身份见审查记录。[公开发行与源码](r5-public-patch-review.md#公开发行与源码) · [四入口的原始还原图](r5-public-patch-review.md#四入口的原始还原图)
+
+```sh
+python -B eng/r5_template_consumer.py switch-public --tfm net10.0 \
+  --batch-root "$R5_BATCH_ROOT" --batch-sha256 "$R5_BATCH_SHA256" \
+  --r4-batch-root "$R4_BATCH_ROOT" --frozen-root "$R3_FROZEN_ROOT" \
+  --r4-checksums "$R4_CHECKSUMS" --r4-release-manifest "$R4_MANIFEST" \
+  --r4-verified-downloads "$R4_DOWNLOADS" --r4-baseline "$R4_BASELINE" \
+  --r5-checksums "$R5_CHECKSUMS" --r5-release-manifest "$R5_MANIFEST" \
+  --r5-verified-downloads "$R5_DOWNLOADS" --r5-baseline "$R5_BASELINE" \
+  --runtime-config "$R5_RUNTIME_CONFIG" --evidence-root "$R5_TEMPLATE_EVIDENCE"
+```
+
+每段从独立空缓存，仅用 nuget.org 源还原。入口先核对发行证据和两个完整包图，再建库执行业务。公开输入或包图偏离时先定位报告的失败阶段。业务读回失败时，从 `report.json` 的 `sql.creations` 核对已有创建回执与数据库读回状态，从 `businessReads` 查看每次授权查询和未执行阶段。复跑生成另一个独立目录和新库。
+
 ## 本机验收结果
 
 本轮在 macOS ARM64 `27.2.1`（`26B131`）运行原生 Release 应用，SQL Server Developer `16.0.4236.2` 在专用实例 `r5-template-20261126` 供测试，浏览器为 Chrome `158.0.8127.37`。冻结 Angular 客户端有 1,193 个文件，服务副本只改前后端两个环回地址，实载脚本为 `main-PZGEMKYC.js`。本机证据根为 `.git/review-r5-runtime-migration-readiness/template/`。
@@ -72,9 +91,33 @@ python -B eng/r5_template_consumer.py switch \
 
 报告 `runs/r5-template-switch-j16yrlho/report.json` SHA-256 为 `ed39277503e576f52d34823eb467b22479a38ed3a373ba84dec2cdba9ed58e61`。证据目录中的 `evidence-index.json` 汇总各轮入参、程序集、数据库、用户、权限和备份摘要。各轮保留实际命令、退出码、原始还原图、迁移连接、查询观测和浏览器结果。首轮升级读取了错误的候选字段，在还原前退出 1。修正后一次运行已完成真实升级，在最终登记时误用 R4 冻结分支，外层退出 1。修正登记条件后从空缓存及独立恢复库复跑，正式结果退出 0；原尝试及其备份保留。
 
+### 公开 R4、R5 同库回退实测
+
+三段的 Web.Host 各还原 94 个包（13 个维护包），Migrator 各还原 66 个包（10 个维护包）。首末 R4 的包图一致，各版均匹配对应历史公开 `net10.0` 入口。中段三个映射包依次使用 `14.0.1 / 11.0.1 / 10.5.2`，首末为 `14.0.0 / 11.0.0 / 10.5.1`。每个入口只改变四条精确依赖约束和三个 DLL 的摘要，资产路径及角色保持一致。每个 DLL 在所选编译、所选运行、实际编译引用和 Release 输出各留一条摘要对照。两版十个沿用包的签后归档摘要一致，三段均从实际缓存逐入口对账。[四条约束与三个 DLL](r5-public-patch-review.md#解析版本依赖边和所选资产)
+
+2026-11-27，`switch-public` 在上述固定组合退出 0，22 个阶段通过。各进程实际使用 .NET 和 ASP.NET Core `10.0.15`。Web.Host 加载适配器与唯一引擎，Collection 在 Release 输出中。Migrator 的三个映射 DLL 均只在 Release 输出中。Chrome `158.0.8127.37` 实际加载冻结的 `main-PZGEMKYC.js`，1,193 个前端文件中仅配置文件的两个环回地址按本轮调整。
+
+数据库为 `r3_template_61b4e4c2c5237070_source`，数据库 ID 5、GUID `0D4FFD6F-8FAD-4D12-B7A7-E73744251CD8`，三段的实例、物理文件和数据库身份一致。首次迁移写入 30 条历史记录，后两段保持这些迁移 ID 和版本及已核对的表结构。A、B 的独立应用创建回执对应 ID 3、4，直接 SQL 读取核对租户 1、创建者 2、创建时间、姓名、邮件和启用状态。
+
+| 包阶段 | Migrator PID／实际迁移连接观测 | 写入和浏览器授权读回 | 成功登录行总数 |
+| --- | --- | --- | --- |
+| 公开 R4 `v10.5.1` | `34649`／33 条 | Host `34863` 创建 A，Host `34945` 查回 A。 | 0 → 2 |
+| 公开 R5 `v10.5.2` | `35273`／3 条 | Host `35438` 查回 A，Host `35651` 创建 B，Host `35725` 查回 B。 | 2 → 5 |
+| 回退公开 R4 `v10.5.1` | `35906`／3 条 | 同一 Host `35945`、同一管理员登录，分别用两个关键词查回 A、B。 | 5 → 6 |
+
+每次关键词查询均由 `Default/admin`（租户 1、账号 2）获 `Pages.Users`，返回 HTTP 200、总数 1，响应 ID、业务字段和页面用户名与各自创建、SQL 读回结果相符。末段 A、B 的请求标识分别为 `2db70389aff965a8534d5681e43d471b`、`b13b1100d6ccc28b0c65f05195d7cc80`。两个请求的各自计数和列表均从同一隔离库实际执行。登录增量分别来自 1 次写入会话加 1 次浏览器登录、1 次写入会话加 2 次浏览器登录、1 次浏览器登录。三段 Migrator 均保持成功登录行。
+
+本机证据根为 `.git/validate-r5-public-package-rollback/package-2/attempt-1/`。实际命令、工作目录及退出码见上一级的 `attempt-1-wrapper.log`，`evidence-index.json` 关联三段的原始还原图、签后输入、迁移及逐人授权证据。正式运行目录为 `runs/r5-template-switch-public-ufbvqw2v/`，`report.json` 的 SHA-256 为 `3c2471e58d509bf3b5484a5a3b46f86d77a959ec3aafae0c9aed5f4deb928673`，`public-graph-comparison.json` 的 SHA-256 为 `539b69f6c0c5218aab201dcfa669707117ed40c34b4491bb82461278ff8a26ea`。回退两次授权读回分别保存在 `rollback-AB-A-read.json`、`rollback-AB-B-read.json`。
+
+本机保留原始 NuGet 包归档、还原图、编译和输出清单、业务回执、SQL、进程与前端观测。收尾时移除了本轮临时 HTTP 缓存、运行 home 和回退阶段可从对应归档逐字节还原的重复解包文件。清单见同一 Git 目录下的 `validate-r5-public-package-rollback/closeout/cleanup-preview.json`。复跑时使用新的证据目录和独立空缓存。
+
+同库切换保留了两版各自创建的业务用户和上述登录写入。切回 R4 同时恢复旧集合映射行为，本轮业务覆盖为用户创建和查询。历史 `switch` 切换使用本地候选，验证的是首段 R4 创建的一个用户和后续登录行。
+
+备份恢复另有历史实测。公开 R5 接续轮分别恢复升级前后备份，读回同一业务用户和 2、3 条成功登录行。原版应用回退实测也对照了两个恢复点，选择较早恢复点会舍弃其后的写入。本轮公开包切换全程使用同一库状态，A、B 和 6 条成功登录行属于这次同库实测。Windows、Linux 原生应用、其他运行时、Provider、客户端、集合业务及生产环境仍按各自组合验证。[公开 R5 接续及恢复实测](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/consumption-validation.md) · [原版双恢复点实测](r3-original-template-rollback.md#正式运行结果)
+
 ### 支持范围与公开发行交接
 
-本轮结论适用于上表的 macOS ARM64、固定模板、SQL Server Developer、指定共享运行时及同一冻结 Angular 产物。`net9.0` 只用于存量接续对照。三阶段包回退实测了首阶段创建的业务用户和后续登录行的保留。候选阶段未新增业务用户。包切换始终使用同一个库，三阶段最终备份执行了 `RESTORE VERIFYONLY WITH CHECKSUM`。Windows、Linux 原生应用、其他 SQL Server 版本或 Provider、其他客户端组合、候选阶段业务实体新增后的回退及生产部署待各自实测。[运行时迁移指引](r5-r4-net10-migration.md) · [R4 实测支持范围](r4-release-candidate.md#实测支持矩阵)
+历史候选验收适用于上表的 macOS ARM64、固定模板、SQL Server Developer、指定共享运行时及同一冻结 Angular 产物。`net9.0` 用于存量接续对照。历史三阶段切换实测了首阶段创建的业务用户和后续登录行的保留，最终备份执行了 `RESTORE VERIFYONLY WITH CHECKSUM`。两个公开发行之间的回退范围见[公开 R4、R5 同库回退实测](#公开-r4r5-同库回退实测)。[运行时迁移指引](r5-r4-net10-migration.md) · [R4 实测支持范围](r4-release-candidate.md#实测支持矩阵)
 
 2026-11-26，主仓 `99f44b7` 固定了上述原冻结批次的三个生产提交。公开发行准备从新引擎 `54f6277a` 制备含公开安装说明的主包，独立登记新批次与受影响的复验。新引擎已交付到子仓，本次归档的协调提交固定了对应 gitlink。上述本地验收结果仍对应原冻结批次。[原批次源码树与编译提交](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md#批次交接) · [新批次实物与来源](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/source-and-engine-validation.md#三包待发批次) · [新批次模板验收](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/consumption-validation.md#固定模板与同库业务)
 
