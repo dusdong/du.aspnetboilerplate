@@ -4,7 +4,7 @@
 
 公开版 `v10.5.2` 已在 `0d42db5` 完成收尾。2026-11-27 已按四张公开消费依赖图完成补丁后维护审查，决定为**维护包无需补丁**。存量 .NET 9 部署继续迁往受支持的 .NET 10 组合。遇到适用的上游变动、依赖变更或新服务公告时，从本次记录续查。[收尾交付](#2026-11-27-公开发行收尾) · [维护决定与行动](r5-public-patch-review.md#本轮维护决定) · [下轮检查点](r5-public-patch-review.md#下轮检查点与验证边界)
 
-固定模板已在公开 `v10.5.1 → v10.5.2 → v10.5.1` 同库实测中验证，切回 R4 后管理员可以查回 R4 和 R5 各自写入的用户。[公开包同库回退结果](#公开包同库回退与后续检查)
+固定模板已按消费者指南用公开输入完成 `v10.5.1 → v10.5.2 → v10.5.1` 同库回退。保存的 R4 在一次管理员新登录后分别查回两版写入的用户，替换映射 DLL 的副本在启动迁移前被拒绝。[消费者指南](r5-consumer-package-rollback.md) · [独立验收与适用范围](r5-automapper-template.md#独立消费者验收) · [公开包同库回退历史](#公开包同库回退与后续检查)
 
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
@@ -333,7 +333,13 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 历史本地候选切换验证了 R4 创建的一个用户。备份恢复按各自选定的历史恢复点验证，恢复点之后的写入会舍弃。其他业务、平台、Provider 和客户端组合仍按实际消费者需求验证。[公开发行与历史证据](r5-public-release.md#公开消费与回退证据)
 
+2026-11-27，收尾提交 `75ca30d` 已交付至 GitHub `main`。该提交下五项任务全部归档，稳定规范新增三个场景，活动变更为零。Python 回归 56/56，稳定规范 15/15，归档检查 22/22。归档后的 CLI 探针读到五份规划制品。同库业务结论来自此前 22/22 阶段的正式实跑。GitHub Actions 为此提交通过了 R0 基线复验。[收尾提交](https://github.com/dusdong/du.aspnetboilerplate/commit/75ca30d93ebe3855c03d85f5020d202f4e1371f9) · [R0 运行](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45947407474) · [同库实跑与清理边界](r5-automapper-template.md#公开-r4r5-同库回退实测)
+
 **公告续查按来源变化启动。** GitHub 包公告从 `2026-11-27T03:08:35Z` 重叠查询，Microsoft 服务公告从 `03:08:30Z` 接续。CVE-2026-56158 等待 MSRC、CVRF 或 CVE Program 提供现代 .NET 的产品、组件和版本范围，再对照四入口实际加载资产。若指向独立包，再按包图判断维护包责任。Windows .NET Framework 的文档更正单独保留。上游六条分支与四项待核实或暂缓的兼容问题按原检查点复查。[服务公告证据](r5-public-patch-review.md#共享运行时与-cve-2026-56158) · [各来源续查条件](r5-public-patch-review.md#下轮检查点与验证边界)
+
+#### 消费者指南的独立验收
+
+`document-r5-consumer-package-rollback` 的指南及实跑已完成。在干净目录用固定模板、匿名发行附件和 nuget.org 构建 R4、R5，各版 Web.Host 和 Migrator 分别核对 13 个、10 个维护包。三阶段沿用同一座测试库及 30 个迁移 ID，末段直接运行首段封存的 R4 产物。独立演练覆盖 macOS ARM64、`net10.0`、SQL Server Developer `16.0.4236.2` 的后端 API。Angular 和备份恢复以各自的历史实测为准。[消费者指南](r5-consumer-package-rollback.md) · [独立验收结果](r5-automapper-template.md#独立消费者验收) · [历史 Angular 实测](r5-automapper-template.md#公开-r4r5-同库回退实测) · [历史备份实测](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/consumption-validation.md#sql-server-与租户业务) · [归档任务](../../openspec/changes/archive/2026-11-27-document-r5-consumer-package-rollback/tasks.md)
 
 建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。
 

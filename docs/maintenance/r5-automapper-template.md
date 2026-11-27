@@ -1,6 +1,6 @@
 # R5 集合映射补丁的固定模板验收
 
-正式补丁已于 2026-11-27 公开。用户可按固定指南从 nuget.org 安装，查看两代同库实测和历史候选回退的来源。[R5 新库安装指南](r5-public-install.md) · [公开发行与验收记录](r5-public-release.md)
+正式补丁已于 2026-11-27 公开。新装可按公开指南从 nuget.org 还原。已有 R4 的应用维护者可以按消费者指南，在专用测试库演练切至 R5 再切回 R4，核对两版各自写入的数据。发布者留存的输入用于历史 Angular 复跑。[R5 新库安装指南](r5-public-install.md) · [独立消费者指南](r5-consumer-package-rollback.md) · [独立消费者验收](#独立消费者验收) · [历史 Angular 实测](#公开-r4r5-同库回退实测) · [公开发行与验收记录](r5-public-release.md)
 
 本轮候选由 `Du.AutoMapper 14.0.1`、`Du.AutoMapper.Collection 11.0.1`、`Du.Abp.AutoMapper 10.5.2` 和十个 R4 公开维护包组成。三包冻结批次 SHA-256 是 `8d0d4dc762a3582327d8829e5952fadbd55b7448d7c2de85c32e6a76d6a3cf40`，模板固定在 `2e9536872673a7ff1986a19e798c51684d16afe5`。三个子仓的编译提交、实际生产树、冻结补丁、主包及符号包摘要见批次交接记录。[三包冻结与独立消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md#批次交接)
 
@@ -34,6 +34,8 @@ python -B eng/r5_template_consumer.py switch \
 `switch` 另外需要 R4 交接冻结目录、固定首发清单和完整的已验签下载登记。两个 R4 阶段各自通过原 R4 入口在空缓存从 nuget.org 还原全部公开包。候选阶段仅将三个精确 ID 映射到单独的本地源，其他包从 nuget.org 还原。两代均核对实际 nuspec、还原图、Release 编译引用和输出 DLL，再核对实际加载路径及摘要。R4 候选制备和公开发行的 OpenSpec 均已归档时，公开源复跑从原协调提交核对生产 gitlink，并在当前执行提交核对固定模板。活动制备、活动公开发行和冻结源模式仍核对当前提交的生产 gitlink。[入口](../../eng/r5_template_consumer.py) · [R4 公开源复跑](r4-release-candidate.md#公开源模板消费)
 
 ### 公开包切换复跑
+
+按公开输入运行后端 API 演练见[独立消费者指南](r5-consumer-package-rollback.md)。本节用于复跑发布者的固定 Angular 验收。
 
 在主仓根目录执行 `switch-public`。使用固定模板 `2e9536872673a7ff1986a19e798c51684d16afe5`、SDK `10.0.404`、macOS ARM64、.NET 和 ASP.NET Core `10.0.15`、专用环回 SQL Server Developer `16.0.4236.2` 与冻结 Angular production 客户端。准备带 `pymssql` 和 Playwright 的 Python、Chrome 或 Playwright Chromium，按运行基线的环境变量约定注入测试实例和模板管理员凭据。入口每轮生成新库名，从空库开始接续三段。[运行配置与凭据变量](r3-template-runtime-baseline.md#复跑)
 
@@ -109,11 +111,38 @@ python -B eng/r5_template_consumer.py switch-public --tfm net10.0 \
 
 本机证据根为 `.git/validate-r5-public-package-rollback/package-2/attempt-1/`。实际命令、工作目录及退出码见上一级的 `attempt-1-wrapper.log`，`evidence-index.json` 关联三段的原始还原图、签后输入、迁移及逐人授权证据。正式运行目录为 `runs/r5-template-switch-public-ufbvqw2v/`，`report.json` 的 SHA-256 为 `3c2471e58d509bf3b5484a5a3b46f86d77a959ec3aafae0c9aed5f4deb928673`，`public-graph-comparison.json` 的 SHA-256 为 `539b69f6c0c5218aab201dcfa669707117ed40c34b4491bb82461278ff8a26ea`。回退两次授权读回分别保存在 `rollback-AB-A-read.json`、`rollback-AB-B-read.json`。
 
-本机保留原始 NuGet 包归档、还原图、编译和输出清单、业务回执、SQL、进程与前端观测。收尾时移除了本轮临时 HTTP 缓存、运行 home 和回退阶段可从对应归档逐字节还原的重复解包文件。清单见同一 Git 目录下的 `validate-r5-public-package-rollback/closeout/cleanup-preview.json`。复跑时使用新的证据目录和独立空缓存。
+收尾移除了 13 个临时缓存目录及回退阶段的 2,729 个重复解包文件，正式运行目录占用减少约 430 MiB。清理后逐项核对了 6 张入口还原图、39 份签后维护包归档及 1,683 个实际 Release DLL，A、B 的创建回执与授权查询证据均保留。清单和核对日志位于验证机 Git 目录下的 `validate-r5-public-package-rollback/closeout/`，见其中的 `交接.md`。复跑时使用新的证据目录和独立空缓存。
 
 同库切换保留了两版各自创建的业务用户和上述登录写入。切回 R4 同时恢复旧集合映射行为，本轮业务覆盖为用户创建和查询。历史 `switch` 切换使用本地候选，验证的是首段 R4 创建的一个用户和后续登录行。
 
 备份恢复另有历史实测。公开 R5 接续轮分别恢复升级前后备份，读回同一业务用户和 2、3 条成功登录行。原版应用回退实测也对照了两个恢复点，选择较早恢复点会舍弃其后的写入。本轮公开包切换全程使用同一库状态，A、B 和 6 条成功登录行属于这次同库实测。Windows、Linux 原生应用、其他运行时、Provider、客户端、集合业务及生产环境仍按各自组合验证。[公开 R5 接续及恢复实测](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/consumption-validation.md) · [原版双恢复点实测](r3-original-template-rollback.md#正式运行结果)
+
+### 独立消费者验收
+
+2026-11-27，从干净目录按指南原文执行成功，退出码为 `0`。指南 SHA-256 为 `ae9ac3abc6def77b0b0e35039656de8227c993bfe1e6c3b6de9518c592c8cdb1`，从中提取的脚本 SHA-256 为 `3eca781f8cf1c44a762da0d8a1b713c09e2756cca44149ff211c951851bfd8c1`。[已验指南与完整步骤](r5-consumer-package-rollback.md)
+
+实际环境为 macOS ARM64 `27.2.1`（`26B131`）、Python `3.14.7`、pymssql `2.4.6`、SDK `10.0.404`、SQL Server Developer `16.0.4236.2`。六个 `net10.0` 入口进程均选择 .NET 和 ASP.NET Core `10.0.15`。两版分别从空缓存经 nuget.org 还原模板 `2e9536872673a7ff1986a19e798c51684d16afe5` 的对应引用。Web.Host 各 13 个、Migrator 各 10 个维护包的版本、来源和实际还原归档的签后 SHA-256 分别匹配公开附件。每个入口的三份映射 DLL 与包图选中的归档成员字节一致。
+
+实际执行的演练命令如下。`guide` 为冻结的原文快照，`work` 为该次新建的工作根。凭据由执行进程注入。四个入口的 `dotnet restore`、`dotnet build` 均退出 `0`。各阶段在对应 Release 目录运行 `dotnet AbpCompanyName.AbpProjectName.Migrator.dll -q` 与 `dotnet AbpCompanyName.AbpProjectName.Web.Host.dll`。
+
+```bash
+"$work/venv/bin/python" "$work/exercise.py" --guide "$guide" --output-parent "$work" \
+  --sql-port 60223 --sql-login sa --server-name du-consumer-rollback-b128a22a --http-port 60222
+```
+
+| 阶段 | Migrator / Web.Host PID | 同库观察 | 新增成功认证行 ID |
+| --- | --- | --- | --- |
+| R4 | `33745` / `34150` | 空库迁移后有 30 个迁移 ID，创建 A `durollbacka49e981230fc2`（ID 3）并从 SQL 回读。 | 1 |
+| R5 | `35220` / `35390` | 迁移前后历史均与首段一致，查回 A，创建并单独查回 B `durollbackb49e981230fc2`（ID 4）。 | 2 |
+| 封存的 R4 | `36255` / `36335` | 原目录的两套完整输出通过清单核对，迁移历史仍一致。一次新登录后分别查回 A 和 B。 | 3 |
+
+六个进程均退出 `0`。数据库为 `DuRollback_49e981230fc2`，ID `5`，GUID `53772F67-193E-48D3-98A5-8C6C775C7A5E`。四次逐人授权查询均由 `Default/admin`（租户 1、账号 2）发起，获 `Pages.Users`，返回 HTTP 200、总数 1，ID、用户名、姓名、邮箱和启用状态与创建回执、直接 SQL 读回对应。末段的两个请求标识为 `9656cbcc2b46dd21` 与 `ccd7df291be72b9c`。
+
+在 R4 产物副本中替换 Migrator 的 `AutoMapper.dll` 后，清单校验报告该文件预期与实际摘要不同。该次切换在连接预检前即被拒绝，未启动 Migrator 或 Host。库身份、迁移、用户和认证记录的前后快照相同。另以两个定向模拟确认 R5 创建 B 后查询返回 403 时仍可读回创建回执及 SQL 行，以及回退阶段 B 返回多条时仍分别保留 A、B 的结果。
+
+验证机 Git 目录下的 `document-r5-consumer-package-rollback/package-1/` 保留五轮命令和初次错误、`handoff.md` 与独立回读。正式结果目录为 `attempt-5/du-package-rollback.V2BQWdY9/run-6kv7gbrm/`，含四张入口包图、签后摘要、封存清单、三段进程和 SQL、逐人回执及替换 DLL 的前后快照。
+
+本次支持结论限于上述模板、运行时、平台和 SQL Server 组合的用户创建与授权查询 API。Angular 和恢复点行为继续引用其独立实测。[历史 Angular 实测](#公开-r4r5-同库回退实测) · [历史备份恢复实测](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/consumption-validation.md#sql-server-与租户业务)
 
 ### 支持范围与公开发行交接
 
