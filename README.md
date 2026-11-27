@@ -4,9 +4,9 @@
 
 ## 公开发行
 
-首个稳定版 `v10.5.1` 已发布。nuget.org 提供 11 个 `Du.Abp*` 框架包 `10.5.1`、`Du.AutoMapper 14.0.0` 和 `Du.AutoMapper.Collection 11.0.0`。`net10.0` 新库示例使用实测运行时 `10.0.15`。存量 `net9.0` 迁移已在 `9.0.10` 实测，微软于 2026-11-10 结束 .NET 9 支持。[发行说明与包链接](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [新库安装指南](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-INSTALL-net10.md) · [包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json)
+当前公开版 `v10.5.2` 修复集合映射上下文问题。nuget.org 提供 `Du.Abp.AutoMapper 10.5.2`、`Du.AutoMapper.Collection 11.0.1` 和 `Du.AutoMapper 14.0.1`，其余十个维护包沿用 `10.5.1`。从公开源完成了 `net10.0` 新库安装，并在 `9.0.10` 到 `10.0.15` 上完成存量应用同库接续实测。[发行说明](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.2) · [新库安装指南](docs/maintenance/r5-public-install.md) · [包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.2/R5-PACKAGE-CHECKSUMS.json)
 
-R5 映射补丁的三个精确版本已可从 nuget.org 获取。可以用固定模板在新 SQL Server 测试库安装 R5 组合。正式的 GitHub Release 将在公开消费验收完成后发布。[R5 新库安装指南](docs/maintenance/r5-public-install.md) · [R5 发行进度](openspec/changes/publish-r5-mapping-patch/tasks.md)
+首个稳定版 `v10.5.1` 的完整包组提供 R4 首发与回退对照。[R4 发行说明](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [R4 公开源验收](docs/maintenance/r4-release-candidate.md#公开源模板消费)
 
 ## 获取源码
 
@@ -27,11 +27,11 @@ git submodule update --init --recursive
 
 ## 当前阶段
 
-截至 2026-11-27，公开版为 `v10.5.1`（源码 `5758c81`），R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 应用迁往 `net10.0` 的指引已交付，迁移与增量审查变更已归档。两代四入口的公开源 Release 构建已复验，固定组合的同库业务沿用 R4 实测。增量审查记录了六条上游分支、依赖公告与两套共享运行时的续查结果。[存量迁移指引](docs/maintenance/r5-r4-net10-migration.md) · [增量审查](docs/maintenance/r5-runtime-migration-review.md) · [迁移与审查归档](openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/) · [R4 公开源同库升级记录](docs/maintenance/r4-release-candidate.md#公开源模板消费)
+R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 应用迁往 `net10.0` 的指引已交付，迁移与增量审查变更已归档。增量审查记录了六条上游分支、依赖公告与两套共享运行时的续查结果。[存量迁移指引](docs/maintenance/r5-r4-net10-migration.md) · [增量审查](docs/maintenance/r5-runtime-migration-review.md) · [迁移与审查归档](openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
 集合映射补丁的 7 项本地验收已完成，变更已归档。三个冻结候选与十个 R4 公开包通过固定模板的 `net10.0` 新库安装、`net9.0` 至 `net10.0` 同库接续。固定 `net10.0` 的公开 R4、候选、公开 R4 三阶段均读到首阶段通过应用写入的同一租户用户。公开发行设有独立交接条件。[固定模板结果与复跑](docs/maintenance/r5-automapper-template.md) · [三包冻结与独立消费](openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md)
 
-主仓 `cebc3e38` 固定了 `v10.5.2` 的生产组合，远端 R0 基线复验已通过。三个新包和调试符号已公开核验。[发行任务](openspec/changes/publish-r5-mapping-patch/tasks.md) · [R0 工作流](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
+主仓 `cebc3e38` 固定了 `v10.5.2` 的生产组合，R0 基线复验通过。三个新包、三个公开 PDB 和三项公开消费均已核验。[R5 发行验收记录](docs/maintenance/r5-public-release.md) · [R0 工作流](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
 
 ### 已归档的基线与迁移
 

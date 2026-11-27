@@ -21,7 +21,7 @@
   - 交付完整的 `docs/maintenance/r5-public-install.md`，使用匿名可取得的固定指南版本和模板提交 `2e9536872673a7ff1986a19e798c51684d16afe5`，从干净目录实跑独立的 `net10.0` 新装，全部输入均可公开取得或由消费者自行准备。
   - Core 精确引用 `Du.Abp.AutoMapper [10.5.2]`。模板中其余直接引用的 Du 维护包均沿用精确版本 `[10.5.1]`，例如 Core 的 `Du.Abp.ZeroCore.EntityFrameworkCore`。用独立空缓存、仅 nuget.org 还原并核对实际解析的 `Du.AutoMapper 14.0.1`、`Du.AutoMapper.Collection 11.0.1` 和 `Du.Abp.AutoMapper 10.5.2`。
   - 验证空 SQL Server 库的 Migrator 退出 0 并写入模板迁移记录，Web.Host 的 `/swagger/v1/swagger.json` 返回 HTTP 200。登记指南与模板版本、执行命令、还原图和运行结果。
-- [ ] 3.2 在三种实际公开消费均通过后完成发行说明和 `R5-PACKAGE-CHECKSUMS.json`，列明新发三主包、三符号包及三个 PDB 的核验结果、三包精确版本、十个沿用包、R5 本次公开实测及 R4 和本地同库回退证据的来源。移除该草稿的六份暂存附件，经相应授权公开同一个 GitHub Release 并引用已按公开固定版本验收的安装指南，回读 tag、Release 与附件字节，更新主仓公开安装入口并运行链接检查及 OpenSpec 严格校验。
+- [x] 3.2 在三种实际公开消费均通过后完成发行说明和 `R5-PACKAGE-CHECKSUMS.json`，列明新发三主包、三符号包及三个 PDB 的核验结果、三包精确版本、十个沿用包、R5 本次公开实测及 R4 和本地同库回退证据的来源。移除该草稿的六份暂存附件，经相应授权公开同一个 GitHub Release 并引用已按公开固定版本验收的安装指南，回读 tag、Release 与附件字节，更新主仓公开安装入口并运行链接检查及 OpenSpec 严格校验。[正式发行记录](../../../docs/maintenance/r5-public-release.md)
 
 ## Workflow follow-up
 

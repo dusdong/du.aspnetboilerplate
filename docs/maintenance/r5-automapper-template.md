@@ -1,5 +1,7 @@
 # R5 集合映射补丁的固定模板验收
 
+正式补丁已于 2026-11-27 公开。用户可按固定指南从 nuget.org 安装，查看两代同库实测和历史候选回退的来源。[R5 新库安装指南](r5-public-install.md) · [公开发行与验收记录](r5-public-release.md)
+
 本轮候选由 `Du.AutoMapper 14.0.1`、`Du.AutoMapper.Collection 11.0.1`、`Du.Abp.AutoMapper 10.5.2` 和十个 R4 公开维护包组成。三包冻结批次 SHA-256 是 `8d0d4dc762a3582327d8829e5952fadbd55b7448d7c2de85c32e6a76d6a3cf40`，模板固定在 `2e9536872673a7ff1986a19e798c51684d16afe5`。三个子仓的编译提交、实际生产树、冻结补丁、主包及符号包摘要见批次交接记录。[三包冻结与独立消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md#批次交接)
 
 公开旧引擎在有界普通 `Map` 用例中仅因预热顺序变化，就出现 3/6 与 6/6 的正式调用通过数。候选两侧均为 6/6。固定模板验收覆盖真实启动、迁移、租户授权与用户业务；回到完整 R4 时，仍须按独立映射对照评估旧引擎的集合限制。[共享集合计划对照](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/shared-collection-plan-observation.md)
@@ -76,11 +78,11 @@ python -B eng/r5_template_consumer.py switch \
 
 2026-11-26，主仓 `99f44b7` 固定了上述原冻结批次的三个生产提交。公开发行准备从新引擎 `54f6277a` 制备含公开安装说明的主包，独立登记新批次与受影响的复验。新引擎已交付到子仓，本次归档的协调提交固定了对应 gitlink。上述本地验收结果仍对应原冻结批次。[原批次源码树与编译提交](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md#批次交接) · [新批次实物与来源](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/source-and-engine-validation.md#三包待发批次) · [新批次模板验收](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/consumption-validation.md#固定模板与同库业务)
 
-交接记录六份待发归档、三个 PDB、十个沿用包、依赖放行和续作条件，并提供已演练的纯 nuget.org 消费命令。公开状态以当前发行记录为准。[待发交接](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md) · [发行前演练](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-rehearsal.md) · [公开发行规范](../../openspec/specs/public-package-release/spec.md) · [R4 发布者交接](r4-release-candidate.md#发布者交接)
+发行准备交接记录六份冻结归档、三个 PDB、十个沿用包、依赖放行和续作条件。正式发行在公开源上复验了两轮发布者消费与独立消费者新装。[公开发行与验收记录](r5-public-release.md) · [待发交接](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md) · [发行前演练](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-rehearsal.md) · [公开发行规范](../../openspec/specs/public-package-release/spec.md) · [R4 发布者交接](r4-release-candidate.md#发布者交接)
 
 #### 执行待发交接手册
 
-从主仓根目录启动 `/bin/sh`，在同一会话中定义下列函数。拟用 `v10.5.2` 对应 `cebc3e38a511783092963893bf5ad3161d0f0a19`。正式执行前复核四个 gitlink、远端 tag、三个 NuGet 版本、所有者和对应授权。获授权后使用归档手册的 tag 函数。NuGet 上传、续作和同一草稿的公开交付使用本节入口。[tag 核定](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#发行前核定-tag) · [正式发行计划](../../openspec/changes/publish-r5-mapping-patch/tasks.md)
+本节保存 `v10.5.2` 已执行的发行者命令。附注标签绑定 `cebc3e38a511783092963893bf5ad3161d0f0a19`。复核正式发行可用归档手册的 `r5_publish_release resume`。原 NuGet 上传、续作和同一草稿交付命令从主仓根目录启动 `/bin/sh`，在同一会话中定义。[公开发行与验收记录](r5-public-release.md) · [tag 核定](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#发行前核定-tag) · [正式发行任务](../../openspec/changes/publish-r5-mapping-patch/tasks.md)
 
 2026-11-27 用隔离命令替身复核了归档手册的 Shell 行为。`/bin/sh` 在本地 tag 缺失时进入预期分支，归档上传函数模拟失败时返回原退出码 17 并给出凭证路径。在 zsh 中，这两个分支给只读变量 `status` 赋值时均退出 1。[归档命令](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#发行前核定-tag)
 

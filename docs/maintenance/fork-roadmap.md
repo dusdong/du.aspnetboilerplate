@@ -4,7 +4,7 @@
 
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
-集合映射补丁的 7 项本地验收已完成，变更已归档。三包通过独立 ABP 消费及固定模板的 `net10.0` 新库安装、两代同库接续和固定运行时三阶段包切换。公开版为 `v10.5.1`，候选的实测范围和公开发行交接条件另行记录。[固定模板验收与交接](r5-automapper-template.md) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [归档任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)
+集合映射补丁已公开发行 `v10.5.2`。三个新主包、三个符号包、三个公开 PDB 和十个沿用包完成核验。发布者公开源安装与同库接续，以及独立消费者按固定公开指南新装，均通过实测。原冻结候选的本地三阶段同库包切换保留为历史回退依据。[R5 发行验收](r5-public-release.md) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [归档任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)
 
 - R0 已验收并归档。上游 `v10.5.1` 的首批五包源码基线记录了公共 API、还原图和三套回归，实测环境为 macOS ARM64、.NET 9，EF Core 关系型用例使用 SQLite。[R0 基线](release-baseline.json) · [R0 归档](../../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)
 - R0 统一复验已完成本地与 GitHub Actions 的独立配对验收并归档。两次执行均用 `python3 eng/verify.py --profile r0` 复验固定的原版 R0 源码。[复验手册](baseline-evidence/README.md#统一入口) · [配对验收记录](baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](../../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
@@ -284,7 +284,7 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 该提交交付时活动变更为零。本次规划前重新执行校验，稳定规范 15/15、归档任务检查 19/19。归档后 `net9.0`、`net10.0` 两份原始构建报告各有 9 个通过阶段、退出码 0，读取的九份归档制品均与交付提交逐字节对账。两轮输入是 **R4 已公开签名包**。其中 `net10.0` 外层记账脚本因 zsh 只读变量退出 1，构建子进程及报告已单独核对。R5 的六份归档通过本轮离线复核，真实 R5 公开回装仍待发行。[归档与发行前演练](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-rehearsal.md) · [批次与发行清单摘要](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#实物清单)
 
-截至此次复核，GitHub 最新 Release 为 `v10.5.1`，目标仓库没有 `v10.5.2` tag，NuGet 三个版本索引仅列出 `14.0.0`、`11.0.0` 和 `10.5.1`。[当前公开发行](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [引擎索引](https://api.nuget.org/v3-flatcontainer/du.automapper/index.json) · [Collection 索引](https://api.nuget.org/v3-flatcontainer/du.automapper.collection/index.json) · [适配器索引](https://api.nuget.org/v3-flatcontainer/du.abp.automapper/index.json)
+发行准备复核时，GitHub 最新 Release 为 `v10.5.1`，目标仓库没有 `v10.5.2` tag，NuGet 三个版本索引仅列出 `14.0.0`、`11.0.0` 和 `10.5.1`。[当时的公开发行](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [发行前版本核对](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/source-and-engine-validation.md#版本与原批次核对)
 
 #### 本轮缓存处置
 
@@ -294,8 +294,8 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 #### 下一轮工作计划
 
-1. **按发行决定接续。** 决定暂缓时保留待发批次。决定发行并获相应授权后，在固定协调提交上核定附注 tag，按引擎、Collection、适配器的依赖顺序上传并验签。完成三个公开 PDB 回读、仅用 nuget.org 的新装及同库回归后，再发布并回读 GitHub Release 与校验附件。缓存处置独立进行。[发行任务](../../openspec/changes/publish-r5-mapping-patch/tasks.md) · [执行手册的 shell 入口](r5-automapper-template.md#执行待发交接手册) · [待发交接](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md)
-2. **持续维护已公开的 R4。** 存量应用按迁移指引核对两代四入口和同库业务。上游六条分支、包公告或 .NET 服务基线有更新时从上次完整检查点续查；CVE-2026-56158 待原始组件范围可读后补核。消费者的平台、Provider 或客户端发生变化时，以隔离环境的实测结果更新支持范围。[存量迁移指引](r5-r4-net10-migration.md) · [公告与下轮检查点](r5-runtime-migration-review.md#共享运行时与下轮检查点)
+1. **沿用 R5 公开发行的证据链。** `v10.5.2` 的 tag、GitHub Release、校验附件和公开消费结果已关联。后续补丁沿用依赖放行、独立公开消费和发布后回读。缓存处置独立进行。[R5 发行验收](r5-public-release.md) · [执行手册](r5-automapper-template.md#执行待发交接手册)
+2. **持续维护公开版本。** 存量应用按迁移指引核对两代四入口和同库业务。上游六条分支、包公告或 .NET 服务基线有更新时从上次完整检查点续查。CVE-2026-56158 待原始组件范围可读后补核。消费者的平台、Provider 或客户端发生变化时，以隔离环境的实测结果更新支持范围。[存量迁移指引](r5-r4-net10-migration.md) · [公告与下轮检查点](r5-runtime-migration-review.md#共享运行时与下轮检查点)
 
 建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。
 
