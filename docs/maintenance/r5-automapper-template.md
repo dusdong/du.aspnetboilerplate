@@ -82,7 +82,7 @@ python -B eng/r5_template_consumer.py switch \
 
 #### 执行待发交接手册
 
-本节保存 `v10.5.2` 已执行的发行者命令。附注标签绑定 `cebc3e38a511783092963893bf5ad3161d0f0a19`。复核正式发行可用归档手册的 `r5_publish_release resume`。原 NuGet 上传、续作和同一草稿交付命令从主仓根目录启动 `/bin/sh`，在同一会话中定义。[公开发行与验收记录](r5-public-release.md) · [tag 核定](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#发行前核定-tag) · [正式发行任务](../../openspec/changes/publish-r5-mapping-patch/tasks.md)
+本节保存 `v10.5.2` 已执行的发行者命令。附注标签绑定 `cebc3e38a511783092963893bf5ad3161d0f0a19`。复核正式发行可用归档手册的 `r5_publish_release resume`。原 NuGet 上传、续作和同一草稿交付命令从主仓根目录启动 `/bin/sh`，在同一会话中定义。[公开发行与验收记录](r5-public-release.md) · [tag 核定](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#发行前核定-tag) · [已归档的正式发行任务](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/tasks.md)
 
 2026-11-27 用隔离命令替身复核了归档手册的 Shell 行为。`/bin/sh` 在本地 tag 缺失时进入预期分支，归档上传函数模拟失败时返回原退出码 17 并给出凭证路径。在 zsh 中，这两个分支给只读变量 `status` 赋值时均退出 1。[归档命令](../../openspec/changes/archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#发行前核定-tag)
 

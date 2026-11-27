@@ -31,7 +31,7 @@ R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 应用迁往 `net
 
 集合映射补丁的 7 项本地验收已完成，变更已归档。三个冻结候选与十个 R4 公开包通过固定模板的 `net10.0` 新库安装、`net9.0` 至 `net10.0` 同库接续。固定 `net10.0` 的公开 R4、候选、公开 R4 三阶段均读到首阶段通过应用写入的同一租户用户。公开发行设有独立交接条件。[固定模板结果与复跑](docs/maintenance/r5-automapper-template.md) · [三包冻结与独立消费](openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md)
 
-主仓 `cebc3e38` 固定了 `v10.5.2` 的生产组合，R0 基线复验通过。三个新包、三个公开 PDB 和三项公开消费均已核验。[R5 发行验收记录](docs/maintenance/r5-public-release.md) · [R0 工作流](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
+主仓 `cebc3e38` 固定了 `v10.5.2` 的生产组合，R0 基线复验通过。三个新包、三个公开 PDB 和三项公开消费均已核验。公开发行规范已同步，R5 发行变更已归档。[R5 发行验收记录](docs/maintenance/r5-public-release.md) · [发行归档](openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [R0 工作流](https://github.com/dusdong/du.aspnetboilerplate/actions/runs/45846709281)
 
 ### 已归档的基线与迁移
 

@@ -1,6 +1,6 @@
 # R5 固定模板公开消费验收
 
-2026-11-27，发布者在主仓 `ab4957bb0326a3754ffc5b50cdbdf1244f411dfd`、固定模板 `2e9536872673a7ff1986a19e798c51684d16afe5` 上通过正式验收入口执行 `install` 和 `upgrade`。两轮使用 macOS ARM64 `27.2.1`（`26B131`）、.NET SDK `10.0.404`、独占 SQL Server 2022 Developer `16.0.4236.2` 和 Chrome `158.0.8127.37`。两代应用使用同一 Angular production 产物，1,193 个冻结文件对账通过，仅修改服务副本的两个环回地址。[正式复跑入口](../archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#正式公开后的验收)
+2026-11-27，发布者在主仓 `ab4957bb0326a3754ffc5b50cdbdf1244f411dfd`、固定模板 `2e9536872673a7ff1986a19e798c51684d16afe5` 上通过正式验收入口执行 `install` 和 `upgrade`。两轮使用 macOS ARM64 `27.2.1`（`26B131`）、.NET SDK `10.0.404`、独占 SQL Server 2022 Developer `16.0.4236.2` 和 Chrome `158.0.8127.37`。两代应用使用同一 Angular production 产物，1,193 个冻结文件对账通过，仅修改服务副本的两个环回地址。[正式复跑入口](../2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md#正式公开后的验收)
 
 ## 实际包与入口
 
@@ -25,4 +25,4 @@ Web.Host 实际加载 11 个 ABP DLL 和 `AutoMapper.dll`，`AutoMapper.Collecti
 | `install` | `f636e66f04f57c14da54b5ca8b8e3ad8010c3fcdf98a3e4ca98950a389f0fdab` |
 | `upgrade` | `52d456199c6baf76a6ed27941a5b6bdd24ffe58eeeef868bc7e94f24bd339de8` |
 
-结论适用于上述 macOS ARM64、固定模板、SQL Server Developer 和 Angular 产物。`net9.0` 用于存量应用接续验证，新装使用 `net10.0`。本轮实际恢复升级前后备份。三包回退沿用此前固定 .NET 10 的本地候选同库切换证据，公开 R4 验证见其首发记录。[本地 R5 同库切换](../archive/2026-11-26-prepare-r5-mapping-patch-release/consumption-validation.md#固定运行时的公开-r4-同库切换) · [公开 R4 固定模板](../../../docs/maintenance/r4-release-candidate.md#公开源模板消费)
+结论适用于上述 macOS ARM64、固定模板、SQL Server Developer 和 Angular 产物。`net9.0` 用于存量应用接续验证，新装使用 `net10.0`。本轮实际恢复升级前后备份。三包回退沿用此前固定 .NET 10 的本地候选同库切换证据，公开 R4 验证见其首发记录。[本地 R5 同库切换](../2026-11-26-prepare-r5-mapping-patch-release/consumption-validation.md#固定运行时的公开-r4-同库切换) · [公开 R4 固定模板](../../../../docs/maintenance/r4-release-candidate.md#公开源模板消费)

@@ -2,7 +2,7 @@
 
 ## Why
 
-三个映射包已完成本地验收，主仓 `cebc3e38` 已交付待发实物的生产来源和发行手册。消费者仍只能从 nuget.org 取得 R4 版本，R5 的仓库签名、公开符号和真实公开安装需在维护者决定发行后取得。[待发交接](../archive/2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md)
+三个映射包已完成本地验收，主仓 `cebc3e38` 已交付待发实物的生产来源和发行手册。消费者仍只能从 nuget.org 取得 R4 版本，R5 的仓库签名、公开符号和真实公开安装需在维护者决定发行后取得。[待发交接](../2026-11-26-prepare-r5-mapping-patch-release/release-handoff.md)
 
 ## What Changes
 

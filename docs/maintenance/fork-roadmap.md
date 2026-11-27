@@ -4,7 +4,7 @@
 
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
-集合映射补丁已公开发行 `v10.5.2`。三个新主包、三个符号包、三个公开 PDB 和十个沿用包完成核验。发布者公开源安装与同库接续，以及独立消费者按固定公开指南新装，均通过实测。原冻结候选的本地三阶段同库包切换保留为历史回退依据。[R5 发行验收](r5-public-release.md) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [归档任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)
+集合映射补丁已公开发行 `v10.5.2`。三个新主包、三个符号包、三个公开 PDB 和十个沿用包完成核验。发布者公开源安装与同库接续，以及独立消费者按固定公开指南新装，均通过实测。公开发行规范已同步，发行变更已归档。原冻结候选的本地三阶段同库包切换保留为历史回退依据。[R5 发行验收](r5-public-release.md) · [公开发行稳定规范](../../openspec/specs/public-package-release/spec.md) · [发行归档](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [补丁候选任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)
 
 - R0 已验收并归档。上游 `v10.5.1` 的首批五包源码基线记录了公共 API、还原图和三套回归，实测环境为 macOS ARM64、.NET 9，EF Core 关系型用例使用 SQLite。[R0 基线](release-baseline.json) · [R0 归档](../../openspec/changes/archive/2026-11-24-establish-maintenance-baseline/)
 - R0 统一复验已完成本地与 GitHub Actions 的独立配对验收并归档。两次执行均用 `python3 eng/verify.py --profile r0` 复验固定的原版 R0 源码。[复验手册](baseline-evidence/README.md#统一入口) · [配对验收记录](baseline-evidence/README.md#统一入口验收记录) · [统一复验归档](../../openspec/changes/archive/2026-11-24-unify-r0-baseline-verification/)
@@ -288,13 +288,15 @@ R4 的交接基线是已公开的 `v10.5.1`。macOS ARM64、SQL Server Developer
 
 #### 本轮缓存处置
 
-建议在维护者确认后**全量清理清单中的 52 项**。26 个 `packages` 与 26 个 `http-cache` 在本次 `du -sk` 逐项目录复量中合计 13,842,736 KiB（13.20 GiB），52 项分配空间逐项与原清单一致。目录身份和两份清单摘要均已核对，52 项均在原处，与 66,068 条保留记录零交叉。冻结包、十个沿用包的签名回读、SQL 备份、原始报告、生产 ApiCompat 缓存均在清单外。旧运行目录在清理后如需复跑，应在新目录先还原再构建。
+2026-11-27，维护者确认清单后，52 个 NuGet 缓存目录已全部删除，逐项确认路径均已消失。26 个 `packages` 与 26 个 `http-cache` 在删除前经 `du -sk` 实测共占 13,842,736 KiB（13.20 GiB）。共享 APFS 卷的可用空间从 18,293,248 KiB 增至 30,575,380 KiB，观测净增 12,282,132 KiB（11.71 GiB）。
 
-验证机清单位于主仓 Git 目录的 `prepare-r5-mapping-patch-release/closeout/cache-inventory/cleanup-preview.tsv`，SHA-256 为 `994b59a1cd2b58d4c345c954d732a6dff870784cf4ca1e87666d05c13e6a2479`。本次审查未执行清理。执行时按选定清单重核路径、身份和占用，完成后回读保留证据、离线核验待发批次，并分别登记删除项和卷可用空间实测变化。上一轮已删除的 58 项见上节。
+清理前后独立重读的 66,068 项原登记证据均与原快照匹配，包括冻结包、十个沿用包的验签日志、15 份 SQL 介质（含演练副本）、原始报告及生产 ApiCompat 缓存。22 个日志软链仍指向 `/dev/null`。清理前已存在的 500 个收尾文件也已逐项对照，摘要一致。冻结批次通过离线核验。复跑旧验收时，在新目录先还原再构建。
+
+验证机的原始清单位于主仓 Git 目录的 `prepare-r5-mapping-patch-release/closeout/cache-inventory/cleanup-preview.tsv`，SHA-256 为 `994b59a1cd2b58d4c345c954d732a6dff870784cf4ca1e87666d05c13e6a2479`。逐项处置和复核证据见同一 Git 目录下的 `publish-r5-mapping-patch/close-cache/handoff.md`。上一轮已删除的 58 项见上节。
 
 #### 下一轮工作计划
 
-1. **沿用 R5 公开发行的证据链。** `v10.5.2` 的 tag、GitHub Release、校验附件和公开消费结果已关联。后续补丁沿用依赖放行、独立公开消费和发布后回读。缓存处置独立进行。[R5 发行验收](r5-public-release.md) · [执行手册](r5-automapper-template.md#执行待发交接手册)
+1. **沿用 R5 公开发行的证据链。** `v10.5.2` 的 tag、GitHub Release、校验附件和公开消费结果已关联。后续补丁沿用依赖放行、独立公开消费和发布后回读。[R5 发行验收](r5-public-release.md) · [执行手册](r5-automapper-template.md#执行待发交接手册)
 2. **持续维护公开版本。** 存量应用按迁移指引核对两代四入口和同库业务。上游六条分支、包公告或 .NET 服务基线有更新时从上次完整检查点续查。CVE-2026-56158 待原始组件范围可读后补核。消费者的平台、Provider 或客户端发生变化时，以隔离环境的实测结果更新支持范围。[存量迁移指引](r5-r4-net10-migration.md) · [公告与下轮检查点](r5-runtime-migration-review.md#共享运行时与下轮检查点)
 
 建议的维护活动包括定期检查上游 PR/发行、依赖公告、消费者回归和支持矩阵；频率由实际容量确定。外部支持期限、响应时间和商业 SLA 应在有能力兑现后明确发布，不能从“LTS”名称中推定。

@@ -4,6 +4,8 @@ GitHub Release `460000507` 于 2026-11-27 09:31:09（北京时间）公开，沿
 
 发行前移除了六份暂存归档。公开 Release 的唯一上传附件为 `R5-PACKAGE-CHECKSUMS.json`，匿名下载的 SHA-256 为 `be08d2d354d71dcb09802f8161496f213ebdd257826ed5adbf6af77fe9000dd5`。匿名回读确认标签、Release 正文和附件与已核定输入一致。[公开校验附件](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.2/R5-PACKAGE-CHECKSUMS.json)
 
+2026-11-27，公开发行规范已同步，发行的六项任务全部完成并归档。[公开发行稳定规范](../../openspec/specs/public-package-release/spec.md) · [归档任务清单](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/tasks.md) · [归档消费验收记录](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/consumption-validation.md)
+
 | 新包 | 精确版本 | 生产提交 |
 | --- | --- | --- |
 | `Du.AutoMapper` | `[14.0.1]` | `54f6277af80783e5d07e896f75df0dcc0c4b4502` |
