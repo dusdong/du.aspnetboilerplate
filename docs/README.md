@@ -9,6 +9,7 @@
 | 安装 R5 映射补丁，在新 SQL Server 测试库运行 `net10.0` 模板 | [R5 新库安装指南](maintenance/r5-public-install.md) · [发行说明](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.2) · [校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.2/R5-PACKAGE-CHECKSUMS.json) |
 | 安装 R4 稳定维护包，在新 SQL Server 测试库运行 `net10.0` 模板 | [发行说明与包链接](https://github.com/dusdong/du.aspnetboilerplate/releases/tag/v10.5.1) · [已实跑安装指南](maintenance/r4-public-install.md) · [公开包与符号校验清单](https://github.com/dusdong/du.aspnetboilerplate/releases/download/v10.5.1/R4-PACKAGE-CHECKSUMS.json) |
 | 查看各阶段目标、当前进度与发行条件 | [维护型 fork 路线](maintenance/fork-roadmap.md) |
+| 用公开 R4 与 R5 对照已有用户更新、按键集合与 SQLite 投影 | [逐项实测和公开复跑](maintenance/r5-public-mapping-behavior.md) · [对照计划](maintenance/r5-public-mapping-consumer-plan.md) |
 | 核对 R5 发行验收、交付和缓存处置 | [公开发行验收记录](maintenance/r5-public-release.md) · [收尾交付](maintenance/fork-roadmap.md#2026-11-27-公开发行收尾) · [52 项缓存处置](maintenance/fork-roadmap.md#本轮缓存处置) |
 | 查阅 R4 首发证据与决定制备 R5 映射补丁的依据 | [R4 归档后复核](maintenance/r4-release-candidate.md#首发归档后复核) · [R5 首轮维护审查](maintenance/r5-first-maintenance-review.md#本轮决定) |
 | 核对 `v10.5.2` 维护决定、四入口包图及公告续查 | [本轮决定](maintenance/r5-public-patch-review.md#本轮维护决定) · [四入口依赖清单](maintenance/r5-public-patch-dependencies.tsv) · [后续检查点](maintenance/r5-public-patch-review.md#下轮检查点与验证边界) |
@@ -89,6 +90,8 @@ git submodule status
 2026-11-27，`v10.5.2` 补丁后的维护审查已同步稳定规范并归档，覆盖跨公开版本的包图对照、上游未决事项和公告适用性。[跨公开补丁的审查要求](../openspec/specs/maintenance-release-review/spec.md#requirement-跨公开补丁的审查能说明既有结论的适用范围) · [审查任务归档](../openspec/changes/archive/2026-11-27-review-r5-public-patch-baseline/tasks.md)
 
 2026-11-27，公开 R4、R5 同库回退的五项任务已完成并归档，映射消费规范新增回退后的授权读回和失败判定场景。[同库回退稳定规范](../openspec/specs/automapper-package-consumption/spec.md#scenario-切回公开旧版后仍可查询新版写入) · [同库回退任务归档](../openspec/changes/archive/2026-11-27-validate-r5-public-package-rollback/tasks.md)
+
+2026-11-27，公开 R4、R5 映射业务对照的四项任务已完成并归档，同一 .NET 10 环境下的公开包业务对照要求已同步至稳定规范。[业务实测](maintenance/r5-public-mapping-behavior.md) · [对照验收规范](../openspec/specs/automapper-package-consumption/spec.md#requirement-消费者可在同一-net-10-环境对照两代公开映射包) · [任务归档](../openspec/changes/archive/2026-11-27-validate-r5-public-mapping-behavior/tasks.md)
 
 - 新能力、重大行为变化或跨子模块架构调整，先核对 `openspec/specs/` 和 `openspec/changes/`。可用 `openspec-cn list --specs` 和 `openspec-cn list` 查看。
 - 用 `openspec-cn new change <name>` 创建变更，在 `openspec/changes/<name>/` 中完成提案、增量规范、设计和任务清单。

@@ -6,6 +6,8 @@
 
 固定模板已按消费者指南用公开输入完成 `v10.5.1 → v10.5.2 → v10.5.1` 同库回退。保存的 R4 在一次管理员新登录后分别查回两版写入的用户，替换映射 DLL 的副本在启动迁移前被拒绝。[消费者指南](r5-consumer-package-rollback.md) · [独立验收与适用范围](r5-automapper-template.md#独立消费者验收) · [公开包同库回退历史](#公开包同库回退与后续检查)
 
+公开 R4 和 R5 已在同一 macOS ARM64、.NET 10 与 SQLite 环境下分别通过已有用户更新、按键集合更新和查询投影。两张原始还原图仅三个映射包有版本差异。[逐项实测与公开复跑](r5-public-mapping-behavior.md) · [对照计划](r5-public-mapping-consumer-plan.md)
+
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
 集合映射补丁已公开发行 `v10.5.2`。三个新主包、三个符号包、三个公开 PDB 和十个沿用包完成核验。发布者公开源安装与同库接续，以及独立消费者按固定公开指南新装，均通过实测。公开发行规范已同步，发行变更已归档。原冻结候选的本地三阶段同库包切换保留为历史回退依据。[R5 发行验收](r5-public-release.md) · [公开发行稳定规范](../../openspec/specs/public-package-release/spec.md) · [发行归档](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [补丁候选任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)

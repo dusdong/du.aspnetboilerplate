@@ -1,6 +1,12 @@
 # AutoMapper：兼容维护 Fork 评估与实施路线
 
-## 当前状态（2026-11-26）
+## 当前公开版本（2026-11-27）
+
+`v10.5.2` 已公开发行三份映射补丁包。固定模板已用公开 R4 与 R5 完成同库切换和用户查询。两代公开包在同一 macOS ARM64、.NET 10 与 SQLite 环境下各自通过已有用户更新、按键集合更新和查询投影。[发行记录](../maintenance/r5-public-release.md) · [同库回退实测](../maintenance/r5-automapper-template.md#独立消费者验收) · [逐项实测与公开复跑](../maintenance/r5-public-mapping-behavior.md)
+
+<a id="当前状态2026-11-26"></a>
+
+## R5 候选验收（2026-11-26）
 
 公开版 `v10.5.1` 使用 `Du.AutoMapper 14.0.0`、`Du.AutoMapper.Collection 11.0.0` 和 `Du.Abp.AutoMapper 10.5.1`。在共享集合执行计划的用例中，公开旧引擎仅交换预热顺序便得到不同结果，候选在两种顺序下均符合预期。本地补丁组合冻结为 `Du.AutoMapper 14.0.1`、`Du.AutoMapper.Collection 11.0.1` 和 `Du.Abp.AutoMapper 10.5.2`，内核仍为公开 `Du.Abp [10.5.1]`。独立消费者已验证已有对象更新、按键集合和 SQLite 投影。固定模板已通过 SQL Server 新库安装、两代同库接续及固定 `net10.0` 的公开 R4 → 候选 → 公开 R4 同库切换。候选结论适用于已记录的组合，公开发行需独立交接。[固定模板验收](../maintenance/r5-automapper-template.md) · [共享集合计划对照](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/shared-collection-plan-observation.md) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md)
 

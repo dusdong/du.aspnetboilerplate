@@ -18,15 +18,40 @@ internal static class Program
 {
     private static int Main(string[] args)
     {
-        if (args.Length != 1)
+        if (args.Length is < 1 or > 2)
         {
-            Console.Error.WriteLine("用法：AutoMapperProbe <结果文件>");
+            Console.Error.WriteLine("用法：AutoMapperProbe <结果文件> [预期取列 JSON]");
             return 2;
         }
 
+        var publicRun = args.Length == 2;
+        var stages = new Dictionary<string, string>
+        {
+            ["user"] = "not_run",
+            ["collection"] = "not_run",
+            ["projection"] = "not_run"
+        };
+        var report = new Dictionary<string, object?>
+        {
+            ["environment"] = new
+            {
+                RuntimeInformation.FrameworkDescription,
+                RuntimeInformation.ProcessArchitecture,
+                RuntimeInformation.RuntimeIdentifier,
+                processArchitectureName = RuntimeInformation.ProcessArchitecture.ToString(),
+                coreRuntimePath = typeof(object).Assembly.Location,
+                processId = Environment.ProcessId
+            }
+        };
+        if (publicRun)
+            report["scenarios"] = stages;
+
         var stage = "模块启动及 Castle 解析";
+        Exception? failure = null;
         try
         {
+            var expectedColumns = publicRun ? JsonSerializer.Deserialize<string[]>(File.ReadAllText(args[1])) : null;
+            Require(!publicRun || expectedColumns is { Length: > 0 }, "缺少预期 SQLite 取列");
             using var ioc = new IocManager();
             using var bootstrapper = AbpBootstrapper.Create<ProbeModule>(options => options.IocManager = ioc);
             bootstrapper.Initialize();
@@ -34,63 +59,77 @@ internal static class Program
             var mapper = scope.Resolve<IObjectMapper>();
             var configuration = scope.Resolve<AutoMapper.IConfigurationProvider>();
             Require(mapper.GetType() == typeof(AutoMapperObjectMapper), "Castle 应解析真实 AutoMapper 适配器");
+            report["configuration"] = new
+            {
+                mapper = mapper.GetType().FullName,
+                provider = configuration.GetType().FullName,
+                profile = typeof(UserMapProfile).FullName,
+                bootstrapped = true
+            };
 
             // 固定模板保留重复 CreateMap，走真实的运行映射入口。
-            stage = "模板配置扫描和用户更新";
-            var user = VerifyUserUpdate(mapper);
-            stage = "按键集合";
-            var collection = VerifyCollection(mapper);
-            stage = "SQLite 查询投影";
-            var projection = Projection.Verify(mapper);
-            stage = "程序集运行证据";
-            var names = new HashSet<string>(StringComparer.Ordinal)
-            {
-                "Abp", "Abp.AutoMapper", "Abp.Zero.Common", "Abp.ZeroCore", "AutoMapper", "AutoMapper.Collection",
-                "Microsoft.EntityFrameworkCore", "Microsoft.EntityFrameworkCore.Relational",
-                "Microsoft.EntityFrameworkCore.Sqlite", "Microsoft.Data.Sqlite"
-            };
-            var loaded = AssemblyLoadContext.All
-                .SelectMany(context => context.Assemblies.Where(a => names.Contains(a.GetName().Name!)))
-                .OrderBy(a => a.GetName().Name, StringComparer.Ordinal)
-                .Select(DescribeAssembly)
-                .ToArray();
-            Require(loaded.Count(a => a.Name == "AutoMapper") == 1, "全进程应仅加载一个 AutoMapper 实例");
-            foreach (var name in new[] { "Abp.AutoMapper", "AutoMapper.Collection", "Abp.Zero.Common",
-                         "Microsoft.EntityFrameworkCore.Sqlite", "Microsoft.Data.Sqlite" })
-                Require(loaded.Count(a => a.Name == name) == 1, $"全进程应加载一个 {name} 实例");
-
-            using var output = File.Open(args[0], FileMode.CreateNew);
-            JsonSerializer.Serialize(output, new
-            {
-                environment = new
-                {
-                    RuntimeInformation.FrameworkDescription,
-                    RuntimeInformation.ProcessArchitecture,
-                    RuntimeInformation.RuntimeIdentifier,
-                    processId = Environment.ProcessId
-                },
-                configuration = new
-                {
-                    mapper = mapper.GetType().FullName,
-                    provider = configuration.GetType().FullName,
-                    profile = typeof(UserMapProfile).FullName,
-                    bootstrapped = true
-                },
-                user,
-                collection,
-                projection,
-                assemblies = loaded
-            }, new JsonSerializerOptions { WriteIndented = true });
-            return 0;
+            RunScenario("user", capture => VerifyUserUpdate(mapper, capture));
+            RunScenario("collection", capture => VerifyCollection(mapper, capture));
+            RunScenario("projection", capture => Projection.Verify(mapper, capture, expectedColumns));
         }
         catch (Exception error)
         {
+            failure = error;
+            if (stages.ContainsKey(stage))
+                stages[stage] = "failed";
+            report["failure"] = new { stage, error = error.ToString() };
             Console.Error.WriteLine($"{stage}失败\n{error}");
-            return 1;
+        }
+
+        if (failure is null || publicRun)
+        {
+            try
+            {
+                var loaded = DescribeLoadedAssemblies();
+                report["assemblies"] = loaded;
+                foreach (var name in new[] { "AutoMapper", "Abp.AutoMapper", "AutoMapper.Collection", "Abp.Zero.Common",
+                             "Microsoft.EntityFrameworkCore.Sqlite", "Microsoft.Data.Sqlite" })
+                    Require(loaded.Count(a => a.Name == name) == 1, $"全进程应加载一个 {name} 实例");
+            }
+            catch (Exception error)
+            {
+                failure ??= error;
+                report["assemblyFailure"] = error.ToString();
+                Console.Error.WriteLine($"程序集运行证据失败\n{error}");
+            }
+        }
+
+        if (failure is null || publicRun)
+        {
+            using var output = File.Open(args[0], FileMode.CreateNew);
+            JsonSerializer.Serialize(output, report, new JsonSerializerOptions { WriteIndented = true });
+        }
+        return failure is null ? 0 : 1;
+
+        void RunScenario(string name, Action<Action<object>> execute)
+        {
+            stage = name;
+            execute(actual => report[name] = actual);
+            stages[name] = "passed";
         }
     }
 
-    private static object VerifyUserUpdate(IObjectMapper mapper)
+    private static LoadedAssembly[] DescribeLoadedAssemblies()
+    {
+        var names = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "Abp", "Abp.AutoMapper", "Abp.Zero.Common", "Abp.ZeroCore", "AutoMapper", "AutoMapper.Collection",
+            "Microsoft.EntityFrameworkCore", "Microsoft.EntityFrameworkCore.Relational",
+            "Microsoft.EntityFrameworkCore.Sqlite", "Microsoft.Data.Sqlite"
+        };
+        return AssemblyLoadContext.All
+            .SelectMany(context => context.Assemblies.Where(a => names.Contains(a.GetName().Name!)))
+            .OrderBy(a => a.GetName().Name, StringComparer.Ordinal)
+            .Select(DescribeAssembly)
+            .ToArray();
+    }
+
+    private static void VerifyUserUpdate(IObjectMapper mapper, Action<object> capture)
     {
         const int tenantId = 4;
         const long userId = 27;
@@ -106,6 +145,7 @@ internal static class Program
             Surname = "Surname",
             UserName = "previous",
             EmailAddress = "previous@example.invalid",
+            IsActive = false,
             Roles = roles,
             CreationTime = creation
         };
@@ -120,17 +160,10 @@ internal static class Program
             CreationTime = creation.AddYears(2),
             RoleNames = ["DifferentRole"]
         };
+        var initialIsActive = destination.IsActive;
         var result = mapper.Map(dto, destination);
         var targetRetained = ReferenceEquals(destination, result);
         var rolesRetained = ReferenceEquals(roles, result.Roles);
-        Require(targetRetained, "UserDto 更新应返回已有 User 实例");
-        Require(rolesRetained && result.Roles.Count == 1 && ReferenceEquals(result.Roles.Single(), assignment)
-                && (assignment.Id, assignment.UserId, assignment.RoleId, assignment.TenantId) ==
-                    (46L, userId, role.Id, (int?)tenantId), "Roles 引用、原成员和角色键应保持");
-        Require(result.CreationTime == creation, "CreationTime 应保持已有值");
-        Require((result.Id, result.Name, result.Surname, result.UserName, result.EmailAddress, result.IsActive) ==
-                (userId, dto.Name, dto.Surname, dto.UserName, dto.EmailAddress, dto.IsActive), "普通字段应映射到已有用户");
-
         var created = mapper.Map<User>(new CreateUserDto
         {
             Name = "Created",
@@ -141,14 +174,14 @@ internal static class Program
             Password = "local-fixture",
             RoleNames = ["DifferentRole"]
         });
-        Require((created.Name, created.Surname, created.UserName, created.EmailAddress, created.IsActive) ==
-                ("Created", "FromDto", "created", "create@example.invalid", true) && created.Roles is null,
-            "CreateUserDto 重复声明应保持普通映射并忽略 Roles");
-        return new
+        var roleMemberRetained = result.Roles is { Count: 1 } && ReferenceEquals(result.Roles.Single(), assignment);
+        capture(new
         {
             targetRetained,
             rolesRetained,
-            roleMemberRetained = ReferenceEquals(result.Roles.Single(), assignment),
+            roleMemberRetained,
+            initialIsActive,
+            requestedIsActive = dto.IsActive,
             result.Id,
             result.Name,
             result.Surname,
@@ -158,12 +191,23 @@ internal static class Program
             result.CreationTime,
             requestedCreationTime = dto.CreationTime,
             requestedRoles = dto.RoleNames,
-            roles = result.Roles.Select(r => new { r.Id, r.UserId, r.RoleId, r.TenantId }),
+            roles = result.Roles?.Select(r => new { r.Id, r.UserId, r.RoleId, r.TenantId }),
             createUser = new { created.UserName, created.IsActive, ignoresRoles = created.Roles is null }
-        };
+        });
+        Require(!initialIsActive && result.IsActive, "已有用户的 IsActive 应从 false 更新为 true");
+        Require(targetRetained, "UserDto 更新应返回已有 User 实例");
+        Require(rolesRetained && roleMemberRetained
+                && (assignment.Id, assignment.UserId, assignment.RoleId, assignment.TenantId) ==
+                    (46L, userId, role.Id, (int?)tenantId), "Roles 引用、原成员和角色键应保持");
+        Require(result.CreationTime == creation, "CreationTime 应保持已有值");
+        Require((result.Id, result.Name, result.Surname, result.UserName, result.EmailAddress, result.IsActive) ==
+                (userId, dto.Name, dto.Surname, dto.UserName, dto.EmailAddress, dto.IsActive), "普通字段应映射到已有用户");
+        Require((created.Name, created.Surname, created.UserName, created.EmailAddress, created.IsActive) ==
+                ("Created", "FromDto", "created", "create@example.invalid", true) && created.Roles is null,
+            "CreateUserDto 重复声明应保持普通映射并忽略 Roles");
     }
 
-    private static object VerifyCollection(IObjectMapper mapper)
+    private static void VerifyCollection(IObjectMapper mapper, Action<object> capture)
     {
         var retained = new CollectionItem { Key = 10, Value = "previous" };
         var removed = new CollectionItem { Key = 20, Value = "remove" };
@@ -175,15 +219,15 @@ internal static class Program
         };
         var result = mapper.Map(input, destination);
         var targetRetained = ReferenceEquals(result, destination);
-        var matchingItemRetained = ReferenceEquals(result.Single(item => item.Key == 10), retained);
-        var added = result.Single(item => item.Key == 30);
-        var newItemCreated = !ReferenceEquals(added, removed) && !ReferenceEquals(added, retained);
+        var matchingItemRetained = ReferenceEquals(result.FirstOrDefault(item => item.Key == 10), retained);
+        var added = result.FirstOrDefault(item => item.Key == 30);
+        var newItemCreated = added is not null && !ReferenceEquals(added, removed) && !ReferenceEquals(added, retained);
         var oldItemRemoved = result.All(item => item.Key != 20 && !ReferenceEquals(item, removed));
+        capture(new { targetRetained, matchingItemRetained, newItemCreated, oldItemRemoved, items = result });
         Require(targetRetained && matchingItemRetained && newItemCreated && oldItemRemoved,
             "集合应保留集合与匹配项引用，逐键新增及移除");
         Require(result.Select(item => (item.Key, item.Value)).SequenceEqual([(10, "updated"), (30, "inserted")]),
             "集合的实际键值及顺序应符合原版");
-        return new { targetRetained, matchingItemRetained, newItemCreated, oldItemRemoved, items = result };
     }
 
     private static LoadedAssembly DescribeAssembly(Assembly assembly)

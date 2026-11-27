@@ -28,7 +28,8 @@ TEMPLATE_FILES = (
     f"{CORE_PROJECT}/Authorization/Users/User.cs",
     f"{CORE_PROJECT}/Authorization/Roles/Role.cs",
 )
-CONSUMER_FILES = (f"{APP}.csproj", "global.json", "ProbeModule.cs", "Program.cs", "Projection.cs")
+CONSUMER_FILES = (f"{APP}.csproj", "global.json", "ProbeModule.cs", "Program.cs", "Projection.cs",
+                  "projection-columns.json")
 STAGES = ("inputs", "restore", "packages", "build", "process", "acceptance")
 DIRECT = {"Abp.AutoMapper": "10.2.0", "Abp.ZeroCore": "10.2.0", "Microsoft.EntityFrameworkCore.Sqlite": "9.0.18"}
 ORIGINAL = DIRECT | {"Abp": "10.2.0", "Abp.Zero.Common": "10.2.0", "AutoMapper": "14.0.0",
@@ -122,6 +123,7 @@ class OriginalBusinessRun(R0Run):
     profile = PROFILE
     app = APP
     properties = ()
+    target_framework = TFM
 
     def __init__(self, evidence, dotnet):
         self.repo, self.evidence, self.dotnet = ROOT, evidence, dotnet
@@ -129,7 +131,7 @@ class OriginalBusinessRun(R0Run):
         self.work = evidence / "consumer"
         self.project = self.work / f"{self.app}.csproj"
         self.assets = self.work / "obj/project.assets.json"
-        self.output = self.work / "bin/Release" / TFM
+        self.output = self.work / "bin/Release" / self.target_framework
         self.env = {**environment(self.work, dotnet), "MSBUILDDISABLENODEREUSE": "1",
                     "NUGET_SCRATCH": str(self.work / "nuget-scratch")}
         self.report = {
@@ -185,7 +187,7 @@ class OriginalBusinessRun(R0Run):
                          "-p:UseSharedCompilation=false", f"-bl:{self.evidence_file('build.binlog')}",
                          *self.properties], "build.log")
         require(sha256(self.assets) == self.assets_sha, "Release 构建改写了原始还原图")
-        self.evidence_file(f"consumer/bin/Release/{TFM}/{self.app}.deps.json")
+        self.evidence_file(f"consumer/bin/Release/{self.target_framework}/{self.app}.deps.json")
 
     def run_probe(self, folder="process", arguments=(), reporter=None):
         reporter = reporter or self
@@ -193,9 +195,9 @@ class OriginalBusinessRun(R0Run):
         directory.mkdir()
         result = reporter.evidence_file(f"{folder}/probe.json")
         log = reporter.evidence_file(f"{folder}/process.log")
-        argv = [str(self.dotnet), str(self.output / f"{self.app}.dll"), str(result), *arguments]
+        argv = [str(arg) for arg in (self.dotnet, self.output / f"{self.app}.dll", result, *arguments)]
         record = {"argv": argv, "cwd": str(directory), "log": str(log), "timeoutSeconds": 60,
-                  "exitCode": None, "timedOut": False}
+                  "exitCode": None, "timedOut": False, "environmentOverrides": self.env}
         reporter.stage["commands"].append(record)
         reporter.save()
         with log.open("wb") as stream:

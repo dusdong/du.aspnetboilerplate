@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net9.0</TargetFramework>
     <UseAppHost>false</UseAppHost>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>annotations</Nullable>
@@ -9,10 +9,12 @@
     <AdapterVersion Condition="'$(AdapterVersion)' == ''">10.2.0</AdapterVersion>
     <ZeroPackage Condition="'$(ZeroPackage)' == ''">Abp.ZeroCore</ZeroPackage>
     <ZeroVersion Condition="'$(ZeroVersion)' == ''">10.2.0</ZeroVersion>
+    <SqliteVersion Condition="'$(SqliteVersion)' == ''">9.0.18</SqliteVersion>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="projection-columns.json" LogicalName="projection-columns.json" />
     <PackageReference Include="$(AdapterPackage)" Version="[$(AdapterVersion)]" />
     <PackageReference Include="$(ZeroPackage)" Version="[$(ZeroVersion)]" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="[9.0.18]" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="[$(SqliteVersion)]" />
   </ItemGroup>
 </Project>
