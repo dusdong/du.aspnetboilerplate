@@ -158,7 +158,6 @@ PY
   export ASPNETCORE_ENVIRONMENT=Development DOTNET_ENVIRONMENT=Development
   (
     cd "src/$prefix.Migrator/bin/Release/net10.0"
-    printf 'Migrator PID %s\n' "$BASHPID"
     exec dotnet "$prefix.Migrator.dll" -q
   ) | tee "$work/migrator.log"
   printf 'Migrator exit 0\n'
