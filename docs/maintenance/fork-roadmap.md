@@ -10,6 +10,8 @@
 
 公开 R4 与 R5 已分别在固定模板及独立 SQL Server 新库实测用户更新。各版的保留、替换和清空三步都通过，回执、独立 GET 和 SQL 一致，创建时间保持原值。对应需求已同步到稳定规范，OpenSpec 已归档。[实测结果与复跑](r5-template-user-role-update.md) · [验收计划](r5-template-user-role-update-plan.md) · [稳定规范](../../openspec/specs/automapper-package-consumption/spec.md#requirement-两代公开映射包可对照固定模板的用户角色更新提交) · [归档](../../openspec/changes/archive/2026-11-27-validate-r5-template-user-role-update/)
 
+同一冻结 Angular production 构建已对照公开 R4、R5 的真实用户编辑窗口。两侧保留、替换和清空直接角色的三步均通过，实际 PUT、保存触发的列表刷新、重新打开的勾选和 SQL 一致。对应要求已同步至稳定规范，OpenSpec 已归档。[实测结果与复跑](r5-angular-user-role-edit.md) · [对照计划](r5-angular-user-role-edit-plan.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-两代公开包可通过固定-angular-模板对照用户角色编辑) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-27-validate-r5-angular-user-role-edit/)
+
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
 集合映射补丁已公开发行 `v10.5.2`。三个新主包、三个符号包、三个公开 PDB 和十个沿用包完成核验。发布者公开源安装与同库接续，以及独立消费者按固定公开指南新装，均通过实测。公开发行规范已同步，发行变更已归档。原冻结候选的本地三阶段同库包切换保留为历史回退依据。[R5 发行验收](r5-public-release.md) · [公开发行稳定规范](../../openspec/specs/public-package-release/spec.md) · [发行归档](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [补丁候选任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)

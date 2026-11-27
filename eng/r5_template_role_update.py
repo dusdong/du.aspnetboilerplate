@@ -499,7 +499,7 @@ FROM sys.columns WHERE object_id = OBJECT_ID(N'dbo.AbpUsers') AND name = N'Creat
     def authenticate(self, evidence):
         self.headers = {"Abp-TenantId": str(self.tenant_id)}
         # 固定模板在独占环回新实例上创建的临时种子管理员。
-        password = "123qwe"
+        password = self.admin_password = "123qwe"
         self.run.secrets.append(password)
         evidence["authenticate"], auth = self.http(AUTH, auth=True,
                                                  body={"userNameOrEmailAddress": "admin", "password": password})
@@ -570,17 +570,18 @@ FROM dbo.AbpPermissions WHERE RoleId = %s AND IsGranted = 1""", (role_id,))
         check_dto(result(evidence["get"]), expected)
         evidence["status"] = "passed"
 
-    def execute(self, port):
-        self.migrate()
+    @contextmanager
+    def host(self, port, frontend=None, **overrides):
         require(available(port), f"Host 环回端口已被使用：{port}")
         self.base = f"http://127.0.0.1:{port}"
+        frontend = frontend or self.base
         loaded = self.root / "Web.Host-assemblies.json"
         with self.process("Web.Host", R3_TEMPLATE_OBSERVER_MODE="host", R3_TEMPLATE_OBSERVER_EVIDENCE=str(loaded),
                           R5_ROLE_REQUEST_EVIDENCE=str(self.events), R5_ROLE_INITIAL_REQUEST=self.initial_id,
                           R5_ROLE_INITIAL_ASSEMBLIES=str(self.snapshot), Kestrel__Endpoints__Http__Url=self.base,
-                          App__ServerRootAddress=self.base + "/", App__ClientRootAddress=self.base + "/",
-                          App__CorsOrigins=self.base, Logging__LogLevel__Default="Warning",
-                          Logging__LogLevel__Microsoft__Hosting__Lifetime="Information") as (child, launch, log):
+                          App__ServerRootAddress=self.base + "/", App__ClientRootAddress=frontend + "/",
+                          App__CorsOrigins=frontend, Logging__LogLevel__Default="Warning",
+                          Logging__LogLevel__Microsoft__Hosting__Lifetime="Information", **overrides) as (child, launch, log):
             self.pid = child.pid
             deadline = time.monotonic() + 75
             while time.monotonic() < deadline:
@@ -591,16 +592,20 @@ FROM dbo.AbpPermissions WHERE RoleId = %s AND IsGranted = 1""", (role_id,))
                 time.sleep(0.2)
             else:
                 raise VerificationError(f"Host 未在 {self.base} 启动，详见 {log}")
-            launch.update(address=self.base, environment="Development", sharedRuntime=shared_runtime_trace(log, "Host"))
+            launch.update(address=self.base, corsOrigin=frontend, environment="Development", sharedRuntime=shared_runtime_trace(log, "Host"))
             require(all(item["version"] == RUNTIME for item in launch["sharedRuntime"].values()), "Host 共享运行时不符")
             require(self.db.identify(self.name) == self.identity, "Host 建种前的数据库身份不一致")
             self.seed_business()
             self.record["hostInitialAssets"] = self.assets("Web.Host", launch, self.snapshot)
-            outcome = run_phases(self, self.record)
+            yield
             require(child.poll() is None, f"Web.Host 在场景完成前退出 {child.returncode}")
         require(launch["exitCode"] == 0, f"Web.Host 未正常停止，退出 {launch['exitCode']}，详见 {log}")
         self.record["hostAssets"] = self.assets("Web.Host", launch, loaded)
-        return outcome
+
+    def execute(self, port):
+        self.migrate()
+        with self.host(port):
+            return run_phases(self, self.record)
 
 
 def process_env(home):
@@ -763,28 +768,34 @@ SELECT CONVERT(nvarchar(128), SERVERPROPERTY('ServerName')) AS serverName,
             if hasattr(self, "database"):
                 write_json(self.root / "sql-commands.json", self.database.commands)
 
+    def execute_sides(self, launches):
+        for label, port in zip(RELEASES, (self.args.r4_port, self.args.r5_port)):
+            item = self.report["sides"][label]
+            if label not in launches:
+                continue
+            try:
+                item["status"] = LiveSide(self, label, launches[label], item).execute(port)
+            except (self.database.client.Error, *CHECK_ERRORS) as failure:
+                item.update(status="input_incomparable", reason=self.redact(str(failure)))
+            print(f"{label} {item['status']}" + (f" · {item['reason']}" if item.get("reason") else ""), flush=True)
+            self.save()
+
+    def input_failed(self, failure):
+        self.report["inputError"] = self.redact(str(failure))
+
     def execute(self):
         try:
             launches = self.verify_inputs()
             self.build_observer()
             with self.sql_server():
-                for label, port in zip(RELEASES, (self.args.r4_port, self.args.r5_port)):
-                    item = self.report["sides"][label]
-                    if label not in launches:
-                        continue
-                    try:
-                        item["status"] = LiveSide(self, label, launches[label], item).execute(port)
-                    except (self.database.client.Error, *CHECK_ERRORS) as failure:
-                        item.update(status="input_incomparable", reason=self.redact(str(failure)))
-                    print(f"{label} {item['status']}" + (f" · {item['reason']}" if item.get("reason") else ""), flush=True)
-                    self.save()
+                self.execute_sides(launches)
             rechecked = {}
             for label in launches:
                 rechecked.update(verify_prepared(self.prepared, self.args.report_sha256, only_release=label))
             require(rechecked == launches, "执行后的封存入口已改变")
             self.report["sealedOutputsUnchanged"] = list(rechecked)
         except (ImportError, *CHECK_ERRORS) as failure:
-            self.report["inputError"] = self.redact(str(failure))
+            self.input_failed(failure)
         finally:
             finish(self.report)
             self.save()

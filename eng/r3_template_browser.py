@@ -1,5 +1,6 @@
 """用真实浏览器验收固定 Angular 产物的租户登录与授权搜索。"""
 
+from contextlib import contextmanager, nullcontext
 import hashlib
 from urllib.parse import parse_qs, urlsplit
 
@@ -58,6 +59,14 @@ def response_json(response, origin=None, *, wrapped=True):
 
 
 def browser_round(config, browser_output, baseline, password, report, *, before_login=None, search_request_id=None, searches=None):
+    with browser_session(config, browser_output, baseline, password, report, before_login=before_login,
+                         search_request_id=search_request_id, searches=searches):
+        pass
+
+
+@contextmanager
+def browser_session(config, browser_output, baseline, password, report, *, before_login=None,
+                    search_request_id=None, searches=None, driver=None, on_page=None, on_client=None):
     from playwright.sync_api import Error, TimeoutError, expect, sync_playwright
 
     frontend, host = config["frontend"], config["host"]
@@ -65,7 +74,7 @@ def browser_round(config, browser_output, baseline, password, report, *, before_
     report["steps"] = {}
     steps = report["steps"]
     try:
-        with sync_playwright() as playwright:
+        with (nullcontext(driver) if driver else sync_playwright()) as playwright:
             launch_config = {"headless": True}
             if config["chrome"]:
                 launch_config["executable_path"] = config["chrome"]
@@ -75,6 +84,8 @@ def browser_round(config, browser_output, baseline, password, report, *, before_
                                      "executable": config["chrome"] or playwright.chromium.executable_path}
                 with browser.new_context() as context:
                     page = context.new_page()
+                    if on_page:
+                        on_page(page, browser)
                     page.set_default_timeout(20000)
                     main_script = next(browser_output.glob("main-*.js"))
                     action = "加载当轮 Angular production 页面与应用配置"
@@ -92,6 +103,8 @@ def browser_round(config, browser_output, baseline, password, report, *, before_
                             and client_config.get("appBaseUrl") == frontend,
                             "浏览器取得的 production 配置与本轮前后端地址不符")
                     response_json(config_response.value, frontend)
+                    if on_client:
+                        on_client(index, script.value, asset.value)
                     steps["client"] = {"entryPath": "/account/login", "status": index.status,
                                        "script": main_script.name, "scriptSha256": sha256(main_script),
                                        "configPath": APP_CONFIG, "configStatus": asset.value.status,
@@ -165,6 +178,7 @@ def browser_round(config, browser_output, baseline, password, report, *, before_
                         for label, (expected, request_id) in searches.items():
                             action = f"搜索并核对 {label} 的用户"
                             search_users(page, host, frontend, rows, expected, results, label, request_id, expect)
+                    yield page, rows
             finally:
                 browser.close()
     except (TimeoutError, AssertionError) as error:
