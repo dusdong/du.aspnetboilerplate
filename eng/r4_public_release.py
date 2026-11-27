@@ -417,8 +417,9 @@ class Progress:
             pdb_name = debug["name"]
             require(pdb_name == Path(symbol_asset).name, f"CodeView 符号文件名不符：{pdb_name}")
             record["debug"] = debug
-            pdb_key = quote(pdb_name)
-            readback, data = self.nuget.get(f"{SYMBOLS}/{pdb_key}/{debug['guid']}FFFFFFFF/{pdb_key}",
+            # 官方客户端使用小写文件名和 GUID，Portable PDB 的键固定以 FFFFFFFF 结尾。
+            pdb_key = quote(pdb_name.lower())
+            readback, data = self.nuget.get(f"{SYMBOLS}/{pdb_key}/{debug['guid'].lower()}FFFFFFFF/{pdb_key}",
                                            headers={"SymbolChecksum": debug["checksum"]})
             record["readback"] = readback
             if readback["httpStatus"] != 200:

@@ -232,13 +232,16 @@ class PublicReleaseTests(unittest.TestCase):
             dll = self.work / "AutoMapper.dll"
             dll.write_bytes(archive.read("lib/net8.0/AutoMapper.dll"))
         debug = self.progress.dotnet.symbol(self.work, dll)
-        url = f"{release.SYMBOLS}/AutoMapper.pdb/{debug['guid']}FFFFFFFF/AutoMapper.pdb"
-        return main, archive_path, pdb, dll, url
+        return main, archive_path, pdb, dll, debug
 
     def test_symbol_is_checked_against_its_target_and_frozen_digest(self):
-        main, archive_path, pdb, dll, url = self.engine_symbol_fixture()
+        main, archive_path, pdb, dll, debug = self.engine_symbol_fixture()
+        url = f"{release.SYMBOLS}/automapper.pdb/{debug['guid'].lower()}FFFFFFFF/automapper.pdb"
         self.observed_symbols("accepted")
         self.assertEqual(["pending"], self.progress.check_symbols(ENGINE, main))
+        self.nuget.get.assert_called_with(url, headers={"SymbolChecksum": debug["checksum"]})
+        rows = self.progress.state["packages"][ENGINE]["symbols"]["lib/net8.0/AutoMapper.dll"]
+        self.assertEqual(404, rows[-1]["readback"]["httpStatus"])
         self.downloads[url] = b"different portable PDB"
         self.assertEqual(["failed"], self.progress.check_symbols(ENGINE, main))
         row = self.progress.state["packages"][ENGINE]["symbols"]["lib/net8.0/AutoMapper.dll"][-1]
@@ -249,15 +252,28 @@ class PublicReleaseTests(unittest.TestCase):
         with self.assertRaises(VerificationError):
             self.progress.dotnet.symbol(self.work, dll, pdb_file)
         self.downloads[url] = pdb
+        with patch.object(self.progress.dotnet, "symbol", side_effect=[debug, debug | {"age": 2}]):
+            self.assertEqual(["failed"], self.progress.check_symbols(ENGINE, main))
+        self.assertIn("PDB 调试标识复核不符", rows[-1]["reason"])
         self.assertEqual(["verified"], self.progress.check_symbols(ENGINE, main))
         history = self.progress.state["packages"][ENGINE]["symbols"]["lib/net8.0/AutoMapper.dll"][:]
+        self.assertEqual(debug, history[-1]["debug"])
+        self.assertEqual(200, history[-1]["readback"]["httpStatus"])
+        self.assertEqual(release.bytes_sha256(pdb), history[-1]["downloadSha256"])
+        readback = history[-1]["readback"]
+        readback["url"] = readback["effectiveUrl"] = (
+            f"{release.SYMBOLS}/AutoMapper.pdb/{debug['guid']}FFFFFFFF/AutoMapper.pdb"
+        )
+        self.progress.save()
         self.progress = self.resume()
-        self.downloads[url] = AssertionError("已确认的符号不应再次请求")
+        self.nuget.get.reset_mock()
         self.assertEqual(["verified"], self.progress.check_symbols(ENGINE, main))
+        self.nuget.get.assert_not_called()
         self.assertEqual(history, self.progress.state["packages"][ENGINE]["symbols"]["lib/net8.0/AutoMapper.dll"])
 
     def test_full_verification_requires_symbol_receipt_even_with_cached_matching_pdb(self):
-        _, _, pdb, _, url = self.engine_symbol_fixture()
+        _, _, pdb, _, debug = self.engine_symbol_fixture()
+        url = f"{release.SYMBOLS}/automapper.pdb/{debug['guid'].lower()}FFFFFFFF/automapper.pdb"
         self.downloads[url] = pdb
         self.assertEqual(2, self.progress.verify([ENGINE], main_only=False))
         symbols = self.progress.state["packages"][ENGINE]["symbols"]
@@ -333,7 +349,8 @@ class RealProtocolTests(unittest.TestCase):
             dll.write_bytes(archive.read("lib/net8.0/Serilog.dll"))
         debug = tool.symbol(work, dll)
         symbol_name = debug["name"]
-        response, symbol = nuget.get(f"{release.SYMBOLS}/{symbol_name}/{debug['guid']}FFFFFFFF/{symbol_name}",
+        pdb_key = symbol_name.lower()
+        response, symbol = nuget.get(f"{release.SYMBOLS}/{pdb_key}/{debug['guid'].lower()}FFFFFFFF/{pdb_key}",
                                      headers={"SymbolChecksum": debug["checksum"]})
         self.assertEqual(200, response["httpStatus"])
         self.assertNotIn("?", response["effectiveUrl"])

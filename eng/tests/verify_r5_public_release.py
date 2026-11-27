@@ -624,7 +624,7 @@ r5_oidc.time.sleep = lambda seconds: None
         self.assertEqual(1, self.upload_count())
         proof = self.proof(receipt, "confirmed", "nuget.org-publisher")
         self.resolve_upload(1, "symbols", receipt, "confirmed", proof)
-        symbol = f"{SYMBOLS}/AutoMapper.pdb/{DEBUG_GUID}FFFFFFFF/AutoMapper.pdb"
+        symbol = f"{SYMBOLS}/automapper.pdb/{DEBUG_GUID.lower()}FFFFFFFF/automapper.pdb"
         self.protocol.responses[symbol] = b"wrong pdb"
         self.resolve_upload(1, "symbols", receipt, "confirmed", proof)
         with ZipFile(self.archive(progress, ENGINE, "symbols")[0]) as frozen:
@@ -670,7 +670,7 @@ r5_oidc.time.sleep = lambda seconds: None
         original = self.intent("symbols")["receipt"]
         self.resolve_upload(1, "symbols", original, "not-accepted", self.work / original)
         _, reference = self.check_non_acceptance_evidence("symbols", original)
-        symbol = f"{SYMBOLS}/AutoMapper.pdb/{DEBUG_GUID}FFFFFFFF/AutoMapper.pdb"
+        symbol = f"{SYMBOLS}/automapper.pdb/{DEBUG_GUID.lower()}FFFFFFFF/automapper.pdb"
         self.protocol.responses[symbol] = b"visible PDB blocks another upload"
         self.assert_cli(2, "r5_publish_symbols", ENGINE)
         self.assertEqual(1, self.upload_count())
@@ -843,7 +843,7 @@ r5_oidc.time.sleep = lambda seconds: None
         self.sample_main(progress, ENGINE)
         self.accept_main(progress, ENGINE)
         archive, _ = self.archive(progress, ENGINE, "symbols")
-        symbol_url = f"{SYMBOLS}/AutoMapper.pdb/{DEBUG_GUID}FFFFFFFF/AutoMapper.pdb"
+        symbol_url = f"{SYMBOLS}/automapper.pdb/{DEBUG_GUID.lower()}FFFFFFFF/automapper.pdb"
         with ZipFile(archive) as symbols:
             self.protocol.responses[symbol_url] = symbols.read("lib/net8.0/AutoMapper.pdb")
         result = self.assert_gate(progress, ENGINE, 2, own="verified", blocked=None, kind="symbols")
