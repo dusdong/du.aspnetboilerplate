@@ -42,7 +42,7 @@ GLOBAL = "scripts-4V6IZ3AB.js"
 PACKAGES = {
     ADAPTER: ("12.1.0", "e7f2c37f8604742720f58484fb51b018291f08db",
               "c583e5e383987b2120acab39f263664c3ffa3376930dd4c29b99fea9791b7b24",
-              "b8939f43e0c05afafcb8371c99646006565dc4a613698fd39b6c6b4aa3a2bd"),
+              "b8939f43e0c05afafcbfb8371c99646006565dc4a613698fd39b6c6b4aa3a2bd"),
     RESOURCES: ("6.1.0", "23775b92f2c6dd01b7402adcc0cbf5d2b92fa39b",
                 "65cc604418a9dd2867676114ca39ced8edd4a0382deea207aa55f0940ddfe4a4",
                 "93c66026539a1c22740b893f4ff8b6213b80e5a9ccbee247c79f651e2648a126"),
