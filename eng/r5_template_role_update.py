@@ -571,16 +571,14 @@ FROM dbo.AbpPermissions WHERE RoleId = %s AND IsGranted = 1""", (role_id,))
         evidence["status"] = "passed"
 
     @contextmanager
-    def host(self, port, frontend=None, **overrides):
+    def host_process(self, port, frontend, cors_origins, **overrides):
         require(available(port), f"Host 环回端口已被使用：{port}")
         self.base = f"http://127.0.0.1:{port}"
-        frontend = frontend or self.base
         loaded = self.root / "Web.Host-assemblies.json"
         with self.process("Web.Host", R3_TEMPLATE_OBSERVER_MODE="host", R3_TEMPLATE_OBSERVER_EVIDENCE=str(loaded),
-                          R5_ROLE_REQUEST_EVIDENCE=str(self.events), R5_ROLE_INITIAL_REQUEST=self.initial_id,
-                          R5_ROLE_INITIAL_ASSEMBLIES=str(self.snapshot), Kestrel__Endpoints__Http__Url=self.base,
+                          Kestrel__Endpoints__Http__Url=self.base,
                           App__ServerRootAddress=self.base + "/", App__ClientRootAddress=frontend + "/",
-                          App__CorsOrigins=frontend, Logging__LogLevel__Default="Warning",
+                          App__CorsOrigins=cors_origins, Logging__LogLevel__Default="Warning",
                           Logging__LogLevel__Microsoft__Hosting__Lifetime="Information", **overrides) as (child, launch, log):
             self.pid = child.pid
             deadline = time.monotonic() + 75
@@ -592,15 +590,24 @@ FROM dbo.AbpPermissions WHERE RoleId = %s AND IsGranted = 1""", (role_id,))
                 time.sleep(0.2)
             else:
                 raise VerificationError(f"Host 未在 {self.base} 启动，详见 {log}")
-            launch.update(address=self.base, corsOrigin=frontend, environment="Development", sharedRuntime=shared_runtime_trace(log, "Host"))
+            launch.update(address=self.base, corsOrigin=cors_origins, environment="Development", sharedRuntime=shared_runtime_trace(log, "Host"))
             require(all(item["version"] == RUNTIME for item in launch["sharedRuntime"].values()), "Host 共享运行时不符")
-            require(self.db.identify(self.name) == self.identity, "Host 建种前的数据库身份不一致")
-            self.seed_business()
-            self.record["hostInitialAssets"] = self.assets("Web.Host", launch, self.snapshot)
+            require(self.db.identify(self.name) == self.identity, "Host 启动时的数据库身份不一致")
             yield
             require(child.poll() is None, f"Web.Host 在场景完成前退出 {child.returncode}")
         require(launch["exitCode"] == 0, f"Web.Host 未正常停止，退出 {launch['exitCode']}，详见 {log}")
         self.record["hostAssets"] = self.assets("Web.Host", launch, loaded)
+
+    @contextmanager
+    def host(self, port, frontend=None, **overrides):
+        frontend = frontend or f"http://127.0.0.1:{port}"
+        with self.host_process(port, frontend, frontend, R5_ROLE_REQUEST_EVIDENCE=str(self.events),
+                               R5_ROLE_INITIAL_REQUEST=self.initial_id,
+                               R5_ROLE_INITIAL_ASSEMBLIES=str(self.snapshot), **overrides):
+            self.seed_business()
+            launch = self.record["processes"]["Web.Host"]
+            self.record["hostInitialAssets"] = self.assets("Web.Host", launch, self.snapshot)
+            yield
 
     def execute(self, port):
         self.migrate()
@@ -614,7 +621,7 @@ def process_env(home):
 
 
 class LiveRun:
-    def __init__(self, args):
+    def __init__(self, args, *, sides=None):
         self.args = args
         self.root = args.output.resolve()
         self.prepared = args.prepared.resolve()
@@ -623,7 +630,8 @@ class LiveRun:
         self.run_id = secrets.token_hex(8)
         self.report = {"schemaVersion": 1, "source": "live", "runId": self.run_id,
                        "prepared": str(self.prepared), "preparedReportSha256": args.report_sha256,
-                       "status": "running", "sides": {label: side_report() for label in RELEASES}}
+                       "status": "running", "sides": sides if sides is not None else {
+                           label: side_report() for label in RELEASES}}
         self.root.mkdir(mode=0o700)
         self.save()
 

@@ -179,6 +179,7 @@ diff -u "$work/original.lock" "$work/frozen/source/angular/yarn.lock" || test "$
 const fs = require('node:fs');
 const files = require('node:fs/promises');
 const crypto = require('node:crypto');
+const path = require('node:path');
 const read = files.readFile;
 files.readFile = async function (file, encoding, ...rest) {
   const caller = new Error().stack.split('\n')[2];
@@ -186,8 +187,11 @@ files.readFile = async function (file, encoding, ...rest) {
     return read.call(this, file, encoding, ...rest);
   }
   const bytes = await read.call(this, file, undefined, ...rest);
+  const cwd = process.cwd();
+  const realpath = fs.realpathSync(file);
   fs.appendFileSync(process.env.ABP_GLOBAL_READS, JSON.stringify({
-    file: fs.realpathSync(file), bytes: bytes.length,
+    pid: process.pid, cwd, path: path.relative(cwd, file), realpath,
+    file: realpath, bytes: bytes.length,
     sha256: crypto.createHash('sha256').update(bytes).digest('hex'), caller
   }) + '\n');
   return bytes.toString('utf-8');

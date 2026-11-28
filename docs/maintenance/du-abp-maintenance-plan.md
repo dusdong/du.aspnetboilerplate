@@ -271,6 +271,8 @@ API 相同不能单独证明完整业务行为相同。
 
 同一固定模板已在 macOS ARM64 同时冻结安装适配器与资源候选，两份包均可追溯至同次 production 输出。对照完整浏览器目录及本轮静态观察通过。验收要求已同步到稳定规范，六项任务已归档。[双包实测与复跑](r5-angular19-package-pair.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可同时验收两份本地-npm-候选) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-package-pair/tasks.md)
 
+双包候选和全公开冻结前端已在同一 R5 Web.Host 与专用 SQL 新库实测匿名首次启动。两侧从根路径直接加载 production index，在同一文档内到达空登录表单，匿名初始化与可见文案一致。四项任务已归档。[实测与复跑](r5-angular19-anonymous-bootstrap.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可对照双包候选的匿名首次启动) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-anonymous-bootstrap/tasks.md)
+
 组合证据记录 Node、包管理器、锁文件、Angular、适配器及资源包版本、源码提交和实际结果。
 
 ### 8.3 Web Resources

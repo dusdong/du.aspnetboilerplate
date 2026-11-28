@@ -56,7 +56,7 @@ V7 仍使用登记的公开冻结前端。共用离线入口验证了公开清�
 
 在主仓根目录打开 Bash，准备上述工具版本和固定 Git 对象。按两个单包指南制包，将候选文件的绝对路径分别设置为 `ADAPTER_TGZ`、`RESOURCES_TGZ`，将已核验的 Node.js、Yarn Classic 可执行文件的绝对路径设置为 `NODE22`、`YARN1`。先核对实际版本、归档 SHA-256、SHA-512 SRI 和逐文件原字节。如重新打包的摘要不同，逐项与封存清单核对，按设计登记实际归档身份后再安装。[适配器制包](r5-angular19-adapter-package-plan.md#从普通克隆复跑) · [资源制包](r5-angular19-web-resources-plan.md#制包与归档对照) · [输入验收设计](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-package-pair/design.md#1-核对已有实包及可比对照)
 
-下列命令可在 macOS 自带的 Bash 3.2 执行，分别建立仅换资源对照和双包候选。每组从模板原锁生成临时锁，然后从另一份 Git 导出和独立空缓存冻结复装。在运行前将资源单包指南的脚本读取观测另存为 `OBSERVE_CJS` 指向的绝对路径。保留两组原始 production 产物及执行日志。在该观测文件末尾追加以下代码以保留 Angular 实际获取的字体响应。[脚本读取观测](r5-angular19-web-resources-plan.md#production-与浏览器)
+下列命令可在 macOS 自带的 Bash 3.2 执行，分别建立仅换资源对照和双包候选。每组从模板原锁生成临时锁，然后从另一份 Git 导出和独立空缓存冻结复装。在运行前将资源单包指南的脚本读取观测完整另存为 `OBSERVE_CJS` 指向的绝对路径。它会记录构建器 PID、工作目录、相对路径、实装路径和读取字节。保留两组原始 production 产物及执行日志。匿名启动入口取 `pair-frozen/global-reads.jsonl` 原件，与同目录下的 `source/angular` 配对。在观测脚本末尾追加以下代码以保留 Angular 实际获取的字体响应。[脚本读取观测](r5-angular19-web-resources-plan.md#production-与浏览器)
 
 ```javascript
 {

@@ -20,6 +20,10 @@ Web Resources 单包验证在主仓 `4e1aabc` 交付。固定模板搭配公开�
 
 固定 Angular `19.2.1` 模板已完成两份本地候选的冻结实装、同次 production 来源核对和完整目录比较。仅换资源的对照与本次输出 1193 个文件逐字节相同，最小页已用本轮产物重新观察。验收要求已同步到稳定规范，六项任务已归档。[双包实测与复跑](r5-angular19-package-pair.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可同时验收两份本地-npm-候选) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-package-pair/tasks.md)
 
+2026-11-28 收尾复审确认本机 `HEAD`、`origin/main` 与 GitHub `main` 同为 `4815b36225a5d6b7364380f1ff38ddc68ecbab43`。交付文件 11/11、归档任务 6/6，稳定规范已逐字同步一项要求及四个场景。独立离线复算两份 tarball、两套各 1193 个原始 production 文件及最小页的三份 Chrome 实收正文，均与登记匹配。基线全仓及归档严格校验分别通过 15/15 和 30/30。GitHub 查询未见该提交的 Actions run，所改路径未命中自动触发过滤。本次复审使用原始证据，构建及 Chrome 未重跑。该次 Chrome 实测覆盖最小页。[GitHub 交付提交](https://github.com/dusdong/du.aspnetboilerplate/commit/4815b36225a5d6b7364380f1ff38ddc68ecbab43) · [双包原始证据](r5-angular19-package-pair.md#原始证据及边界)
+
+双包 production 与全公开冻结前端已在同一 `v10.5.2` Web.Host 和专用 SQL 新库完成真实匿名首次启动对照。两侧从根路径直接加载实际 index，在同一文档内导航到登录页。两条匿名初始化 API、当前语言、登录文案与应用元数据相符。[实测和复跑](r5-angular19-anonymous-bootstrap.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可对照双包候选的匿名首次启动) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-anonymous-bootstrap/tasks.md)
+
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 
 集合映射补丁已公开发行 `v10.5.2`。三个新主包、三个符号包、三个公开 PDB 和十个沿用包完成核验。发布者公开源安装与同库接续，以及独立消费者按固定公开指南新装，均通过实测。公开发行规范已同步，发行变更已归档。原冻结候选的本地三阶段同库包切换保留为历史回退依据。[R5 发行验收](r5-public-release.md) · [公开发行稳定规范](../../openspec/specs/public-package-release/spec.md) · [发行归档](../../openspec/changes/archive/2026-11-27-publish-r5-mapping-patch/) · [三包冻结与消费](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/three-package-validation.md) · [补丁候选任务](../../openspec/changes/archive/2026-11-26-fix-r5-automapper-collection-context/tasks.md)
