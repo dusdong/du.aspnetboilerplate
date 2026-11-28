@@ -163,3 +163,7 @@ printf '%s\n' "$work"
 ```
 
 执行结束后，用两套冻结目录的锁与实装按双包设计核对全部非目标选择器及实际解析图。候选包要逐文件与归档核对，并用同次构建的 TypeScript 解析结果、九条脚本读取、`dist/stats.json`、`index.html` 和资产建立来源链。比较两侧原始 `dist/browser/` 的全部路径与字节，用模板 Git 原件核对应用配置，记录生产构建中实际收到的 Source Sans Pro 样式表 URL、状态与正文，并核对各自原 HTML 内联块摘要及规则数。从本轮双包目录按资源单包指南重跑最小页。保留全局脚本和两份 SignalR 资产的三份实际响应正文，用 `cmp` 与产物逐项核对，保存 HTTP 状态、函数返回和页面异常记录。[完整比较及静态判定](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-package-pair/design.md#4-比较完整产物并决定静态浏览器证据来源) · [静态浏览器复跑](r5-angular19-web-resources-plan.md#production-与浏览器)
+
+## 后续消费验收
+
+- **TENANT-01 匿名租户切换。** 双侧正式实跑通过，比较为 `equal`，命令退出 `0`。每侧通过模板弹窗完成宿主 → `Default` → 宿主，三个主文档的导航类型为 `navigate → reload → reload`，应用配置、GetAll 和 Session 都由各自文档取得。初始及返回宿主的当前语言均为 `en`。独立离线复核每侧拒绝六个反例，共 12 次拒绝。正式报告 SHA-256 为 `6b9d7fb77c8af3904a9dcf3c1c1366eac5be277b5f9435b573707b20f9a140ae`。四项任务已在本地归档，五个场景已同步至稳定规范。[正式实测及复跑命令](r5-angular19-anonymous-bootstrap.md#tenant-01-匿名租户切换) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-anonymous-tenant-switch/tasks.md)

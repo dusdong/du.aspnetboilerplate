@@ -449,6 +449,10 @@ def run_browser(browser, frontend, host, original, files, expected, label, evide
 
 
 class BootstrapRun(LiveRun):
+    observe_browser = staticmethod(run_browser)
+    finish_report = staticmethod(finish_bootstrap)
+    static_server = ThreadingHTTPServer
+
     def __init__(self, args):
         super().__init__(args, sides={label: {"status": "not_run"} for label in LABELS})
         self.report.update(workflow="angular19-anonymous-bootstrap", browserOptions=BROWSER_OPTIONS,
@@ -508,14 +512,14 @@ SELECT name FROM sys.databases WHERE database_id > 4 ORDER BY name
             write_json(manifest, files)
             record["frontend"] = {"address": frontend, "original": str(original), "served": artifact(manifest, self.root),
                                   "inventorySha256": files["sha256"], "configChanges": changes}
-            with ThreadingHTTPServer(("127.0.0.1", port), partial(SpaHandler, directory=str(output))) as server:
+            with self.static_server(("127.0.0.1", port), partial(SpaHandler, directory=str(output))) as server:
                 self.owned_ports.append(port)
                 thread = Thread(target=server.serve_forever, daemon=True)
                 thread.start()
                 record["phase"] = "browser"
                 try:
-                    run_browser(browser, frontend, host, output, files["files"], selected, label,
-                                record.setdefault("observation", {}))
+                    self.observe_browser(browser, frontend, host, output, files["files"], selected, label,
+                                         record.setdefault("observation", {}))
                     require(inventory(output, include_app_data=True) == files, "运行时服务副本改变")
                 finally:
                     server.shutdown()
@@ -527,6 +531,7 @@ SELECT name FROM sys.databases WHERE database_id > 4 ORDER BY name
         shared = self.report["shared"] = {}
         side = LiveSide(self, "r5", launches, shared)
         side.migrate()
+        shared["databaseBeforeBrowser"] = self.database_state(side)
         shared["connectionTarget"] = {"endpoint": self.report["sqlResource"]["endpoint"], "database": side.name}
         static = side.root / "api-only.staticwebassets.runtime.json"
         write_json(static, {"ContentRoots": [], "Root": {"Children": {}}})
@@ -535,6 +540,7 @@ SELECT name FROM sys.databases WHERE database_id > 4 ORDER BY name
         with side.host_process(self.args.host_port, origins[0], ",".join(origins),
                                ASPNETCORE_STATICWEBASSETS=str(static)):
             self.owned_ports.append(self.args.host_port)
+            self.verify_host_database(side, shared)
             with sync_playwright() as driver:
                 browser = driver.chromium.launch(executable_path=str(self.args.chrome), headless=True)
                 try:
@@ -546,12 +552,13 @@ SELECT name FROM sys.databases WHERE database_id > 4 ORDER BY name
                     self.report["browser"] = {"version": browser.version, "pid": pid[0],
                                               "executable": str(self.args.chrome)}
                     for label, source in sources.items():
-                        current = self.database.identify(side.name)
-                        require(current == side.identity, "浏览器启动前共享库身份改变")
+                        current = self.database_state(side)
+                        require(current == shared["databaseBeforeBrowser"], "浏览器启动前共享库状态改变")
                         record = self.report["sides"][label]
-                        record.update(hostPid=side.pid, databaseIdentity=current, phase="serve")
+                        record.update(hostPid=side.pid, databaseIdentity=side.identity, phase="serve")
                         try:
                             self.observe_side(browser, label, source, side.base, record)
+                            self.verify_host_database(side, record)
                             record.update(status="passed", phase="complete")
                         except (Error, *CHECK_ERRORS) as failure:
                             record.update(status="failed" if record["phase"] == "browser" else "input_incomparable",
@@ -562,6 +569,14 @@ SELECT name FROM sys.databases WHERE database_id > 4 ORDER BY name
                     browser.close()
             shared["finalIdentity"] = self.database.identify(side.name)
             require(shared["finalIdentity"] == side.identity, "浏览器运行后共享库身份改变")
+            shared["databaseAfterBrowser"] = self.database_state(side)
+            require(shared["databaseAfterBrowser"] == shared["databaseBeforeBrowser"], "浏览器运行后共享库状态改变")
+
+    def database_state(self, side):
+        return self.database.identify(side.name)
+
+    def verify_host_database(self, side, record):
+        pass
 
     def cleanup(self):
         resource = self.report.get("sqlResource", {})
@@ -635,14 +650,14 @@ SELECT name FROM sys.databases WHERE database_id > 4 ORDER BY name
                 self.cleanup()
             except CHECK_ERRORS as failure:
                 self.report["cleanupError"] = self.redact(str(failure))
-            finish_bootstrap(self.report)
+            self.finish_report(self.report)
             self.save()
         print(f"{self.report['status']} · {self.root / 'report.json'}")
         return self.report["exitCode"]
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+def parse_arguments(description):
+    parser = argparse.ArgumentParser(description=description)
     for name in ("output", "prepared", "chrome", "public-source", "pair-build", "pair-inputs", "global-reads"):
         parser.add_argument(f"--{name}", type=Path, required=True)
     for name in ("host-port", "public-port", "pair-port"):
@@ -659,7 +674,11 @@ def main():
     if args.output.exists() or args.output.is_symlink() or any(
             args.output.resolve().is_relative_to(getattr(args, name)) for name in inputs):
         parser.error("证据目录必须尚不存在且位于输入目录之外")
-    return BootstrapRun(args).execute()
+    return args
+
+
+def main():
+    return BootstrapRun(parse_arguments(__doc__)).execute()
 
 
 if __name__ == "__main__":

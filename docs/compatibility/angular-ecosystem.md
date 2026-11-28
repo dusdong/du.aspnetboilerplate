@@ -404,7 +404,7 @@ src/assets/abp-web-resources/abp.freeze-ui.js
 | CONF-01 | 加载用户配置 | 会话、权限、设置与本地化按原约定建立 |
 | AUTH-01 | 正常请求与已有认证头 | 保持约定认证行为，不误覆盖业务主动设置 |
 | AUTH-02 | 多请求同时 401 | 刷新成功时请求正确恢复；失败或异常时等待请求结束且状态可恢复 |
-| TENANT-01 | 宿主、租户与切换 | 上下文及请求信息一致；不沿用错误租户状态 |
+| TENANT-01 | 宿主、租户与切换 | 上下文及请求信息一致；不沿用错误租户状态。[匿名路径实测](../maintenance/r5-angular19-anonymous-bootstrap.md#tenant-01-匿名租户切换) |
 | LANG-01 | 切换语言并刷新页面 | Cookie、请求头、界面与后端响应按预期一致 |
 | ERROR-01 | 普通与 Blob JSON 错误 | 错误可以被业务处理；提示、重定向和传播符合约定 |
 | UI-01 | 消息、确认和加载状态 | 模板本地适配脚本与资源包协同，操作可以正常结束 |
@@ -414,6 +414,8 @@ src/assets/abp-web-resources/abp.freeze-ui.js
 | OS-01 | 计划支持的原生环境 | 构建和部署结果有明确记录，不把平台能力当作实测结论 |
 
 NSwag 在 Zero 中用于基于服务端 API 描述生成客户端代理。应将代理生成与消费纳入契约验证，而不是手工修改生成文件来掩盖不兼容。[R21]
+
+TENANT-01 已在本机通过匿名租户切换实测。两种固定 production 前端用真实弹窗走完宿主 → `Default` → 宿主，页面、Cookie、GetAll、Session 和三份主文档逐阶段对应。BOOT-01 首次访问仍止于未选择租户的登录页。[匿名切换实测及复跑](../maintenance/r5-angular19-anonymous-bootstrap.md#tenant-01-匿名租户切换) · [BOOT-01 历史实测](../maintenance/r5-angular19-anonymous-bootstrap.md)
 
 ### 7.3 验证方法与边界
 
