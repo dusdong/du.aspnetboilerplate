@@ -269,13 +269,15 @@ API 相同不能单独证明完整业务行为相同。
 
 适配器本地候选已通过编译消费，五项任务已归档，稳定规范已同步。GitHub `main` 已回读交付提交 `fbf3a4740e2a432409e14298ae292f43e6aed88a`。正式升级组合另行评估。[适配器验收](r5-angular19-adapter-package-plan.md#实测结果) · [交付提交](https://github.com/dusdong/du.aspnetboilerplate/commit/fbf3a4740e2a432409e14298ae292f43e6aed88a)
 
+同一固定模板已在 macOS ARM64 同时冻结安装适配器与资源候选，两份包均可追溯至同次 production 输出。对照完整浏览器目录及本轮静态观察通过。验收要求已同步到稳定规范，六项任务已归档。[双包实测与复跑](r5-angular19-package-pair.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可同时验收两份本地-npm-候选) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-package-pair/tasks.md)
+
 组合证据记录 Node、包管理器、锁文件、Angular、适配器及资源包版本、源码提交和实际结果。
 
 ### 8.3 Web Resources
 
 2026-11-28，从框架生产 gitlink `7933e71` 的 40 个资源原字节制成 `abp-web-resources 6.1.0` 本地候选，包装源自 `aspnetboilerplate/bower-abp-resources` 固定提交。在 Angular `19.2.1` 免费模板和公开适配器 `12.1.0` 环境中，仅替换资源包即通过冻结安装、声明解析和 production 新构建。浏览器验证了实收全局脚本、`formatString` 返回值与两个 SignalR 静态 URL 的原字节。验收要求已同步到稳定规范，六项任务已归档。候选供本地复验。[Web Resources 实测](r5-angular19-web-resources-plan.md#实测结果) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收从经典框架-git-制成的资源包) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-web-resources/tasks.md)
 
-是否新增分发子仓取决于实际交付需要。`Du.` 前缀只约束 NuGet，npm 包名另行确定。
+分发 fork 的固定快照、候选包装身份及第七子模块的接入条件见 Angular 指南。`Du.` 前缀只约束 NuGet，npm 包名另行确定。[Web Resources 分发维护登记](../compatibility/angular-ecosystem.md#web-resources-分发维护登记)
 
 ### 8.4 Samples
 

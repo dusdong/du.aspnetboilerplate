@@ -1,6 +1,6 @@
 # 参考 Silo：一条适合维护型 fork 的路线
 
-## 当前阶段（2026-11-27）
+## 当前阶段（2026-11-28）
 
 公开版 `v10.5.2` 已在 `0d42db5` 完成收尾。2026-11-27 已按四张公开消费依赖图完成补丁后维护审查，决定为**维护包无需补丁**。存量 .NET 9 部署继续迁往受支持的 .NET 10 组合。遇到适用的上游变动、依赖变更或新服务公告时，从本次记录续查。[收尾交付](#2026-11-27-公开发行收尾) · [维护决定与行动](r5-public-patch-review.md#本轮维护决定) · [下轮检查点](r5-public-patch-review.md#下轮检查点与验证边界)
 
@@ -15,6 +15,10 @@
 公开固定模板在 macOS ARM64 从空缓存重建了冻结 Angular 前端，1193 个文件及两个清单摘要均匹配。隔离读回、单静态文件篡改、错误清单拒绝和有效副本复验均达到预期。构建后的字体诊断已按 `font-family` 定位内联块，四份静态副本回放通过独立复核。稳定规范已同步，七项任务已归档。[字体诊断实测](r5-public-angular-rebuild.md#字体诊断修正实测) · [公开复跑和实测](r5-public-angular-rebuild.md) · [固定基线与计划](r5-public-angular-rebuild-plan.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-公开消费者可独立准备冻结-angular-前端) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-27-prepare-r5-public-angular-rebuild/)
 
 2026-11-28，Angular 19 适配器 `12.1.0` 的发布参考提交 `afbd23e` 冻结安装失败。后续提交 `a8ca4b3` 的同一库源码成功制包，固定免费模板通过候选包 production 编译。实测覆盖 macOS ARM64 的制包与编译消费。五项验收任务已归档。[实测及复跑](r5-angular19-adapter-package-plan.md#实测结果) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收源码制成的适配器包) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-adapter-package/tasks.md)
+
+Web Resources 单包验证在主仓 `4e1aabc` 交付。固定模板搭配公开适配器，已从经典框架 Git 原字节制成 `abp-web-resources 6.1.0` 并完成冻结实装及 production 构建。浏览器复核覆盖 `formatString` 和两份 SignalR 的 HTTP 200 静态响应原字节。对应一项要求及五个场景已同步，六项任务已归档。[实测及复跑](r5-angular19-web-resources-plan.md#实测结果) · [交付提交](https://github.com/dusdong/du.aspnetboilerplate/commit/4e1aabc7d63a8db7cac13762b435c14c45dff285) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收从经典框架-git-制成的资源包) · [OpenSpec 归档](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-web-resources/tasks.md)
+
+固定 Angular `19.2.1` 模板已完成两份本地候选的冻结实装、同次 production 来源核对和完整目录比较。仅换资源的对照与本次输出 1193 个文件逐字节相同，最小页已用本轮产物重新观察。验收要求已同步到稳定规范，六项任务已归档。[双包实测与复跑](r5-angular19-package-pair.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可同时验收两份本地-npm-候选) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-package-pair/tasks.md)
 
 R5 首轮维护审查已在 `4d051e8` 归档。存量 `net9.0` 消费者的迁移指引和增量审查已交付，变更已归档。本轮通过两代四入口公开源 Release 构建，并回读 R4 固定组合的同库实测。[存量迁移指引](r5-r4-net10-migration.md) · [增量审查](r5-runtime-migration-review.md) · [迁移与审查归档](../../openspec/changes/archive/2026-11-26-review-r5-runtime-migration-readiness/)
 

@@ -5,10 +5,18 @@
 ## 当前状态（2026-11-28）
 
 - 适配器与免费启动模板已接入主仓。主仓 `8dcdca6f5aaa892225bcef74846eefce24f4f0d0` 固定的适配器源码声明 `13.0.0`、Angular peer `^21.0.0`。固定模板声明 Angular `^19.2.1`、适配器 `12.1.0` 和资源包 `^6.1.0`。已为模板选定适配器 `12.1.0` 的独立参考提交，其 peer 为 `^19.1.7`。[组件参考与模板依赖](../maintenance/release-baseline.json) · [gitlink 核对方法](../README.md#子模块分工)
-- Web Resources 源码随框架子模块维护，位于 `src/Abp.Web.Resources/Abp/Framework`。历史分发快照声明 npm `abp-web-resources 6.1.0`，旧提取配置指向 NuGet `Abp.Web.Resources 5.1.0`。[资源分发清单][R10] · [旧提取配置][R11]
 - 固定免费模板已在 macOS ARM64 从空缓存安装公开 `abp-ng2-module 12.1.0` 和 `abp-web-resources 6.1.0`，并以 Angular `19.2.1` 重建冻结 production 前端。公开 R4 和 R5 的浏览器角色编辑另有同一冻结前端下的实测记录。[公开冷构建](../maintenance/r5-public-angular-rebuild.md#实测结果) · [角色编辑实测](../maintenance/r5-angular-user-role-edit.md)
 - macOS ARM64 实测中，适配器 `12.1.0` 发布参考提交 `afbd23e` 的根锁冻结安装失败。相同库源码在后续提交 `a8ca4b3` 成功制包，固定 Angular `19.2.1` 模板只替换适配器后通过 production 编译，并从新浏览器 JS 追溯到候选 FESM。资源包沿用公开 `6.1.0`。[适配器制包与消费实测](../maintenance/r5-angular19-adapter-package-plan.md#实测结果) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收源码制成的适配器包)
 - 独立资源包试验从框架 Git 原字节制成 `abp-web-resources 6.1.0`，同一模板沿用公开适配器 `12.1.0`。macOS ARM64 冻结安装、Angular `19.2.1` production 新构建、两个声明和静态资源的消费已通过。Chrome 实收全局脚本并运行 `formatString`，两个 SignalR 资产 URL 返回 HTTP 200 且原字节逐项匹配候选。验收要求已同步，六项任务已归档。[Web Resources 实测与复跑](../maintenance/r5-angular19-web-resources-plan.md#实测结果) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收从经典框架-git-制成的资源包) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-web-resources/tasks.md)
+- 两份本地候选在固定 Angular `19.2.1` 模板同时通过 macOS ARM64 冻结实装和 production 构建。同阶段与仅换资源的 1193 个浏览器产物逐字节一致。本轮最小页复跑获得三个 HTTP 200、匹配正文及精确 `formatString` 返回。验收要求已同步到稳定规范，六项任务已归档。[双包实测与复跑](../maintenance/r5-angular19-package-pair.md) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可同时验收两份本地-npm-候选) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-package-pair/tasks.md)
+
+### Web Resources 分发维护登记
+
+- **权威资源。** 资源实现随经典框架子模块维护。本轮固定框架提交 `7933e71f5646d2447af3502ecbea9a3f1aba8184` 下的 `src/Abp.Web.Resources/Abp/Framework`，本地实包的 40 个资源从该提交的 Git blob 取得。[框架资源树](https://github.com/dusdong/aspnetboilerplate/tree/7933e71f5646d2447af3502ecbea9a3f1aba8184/src/Abp.Web.Resources/Abp/Framework)
+- **分发参考。** 登记 `dusdong/bower-abp-resources`。2026-11-28 回读时 fork 与上游 `master` 均指向 `8084a3756221b966693d17458faca7f8e8ebdcd0`，GitHub Compare 显示领先和落后均为 0。固定分发快照的 `Abp/Framework` 与框架资源树逐路径相对照，40/40 个路径及 blob 一致。旧 Gulp 用 NuGet `Abp.Web.Resources 5.1.0` 提取资源，属于历史流程。[分发 fork](https://github.com/dusdong/bower-abp-resources) · [fork 固定快照](https://github.com/dusdong/bower-abp-resources/tree/8084a3756221b966693d17458faca7f8e8ebdcd0) · [上游固定快照](https://github.com/aspnetboilerplate/bower-abp-resources/tree/8084a3756221b966693d17458faca7f8e8ebdcd0) · [旧提取配置][R11]
+- **候选包装。** 当前 `abp-web-resources 6.1.0` 候选的 `package.json` 与 `LICENSE` 取自上游固定提交 `fb79b7d44bc9dfce0ae600c8170961f182b05e76`，fork 可按同一提交读取两份相同 blob。复跑继续固定该提交和两份 blob，按已验步骤将包装清单的版本改为 `6.1.0`。[上游包装提交](https://github.com/aspnetboilerplate/bower-abp-resources/tree/fb79b7d44bc9dfce0ae600c8170961f182b05e76) · [fork 包装提交](https://github.com/dusdong/bower-abp-resources/tree/fb79b7d44bc9dfce0ae600c8170961f182b05e76) · [包装原件和摘要](../maintenance/r5-angular19-web-resources-plan.md#候选归档与包契约)
+
+当分发 fork 实际承担独立制包、校验或分发职责，且主仓需要同时固定框架资源与分发工具的提交时，再把它接入为第七个子模块。本地 tarball 的制包和验收也可能需要同时固定这两个提交，公开 npm 发行另行决定。
 
 **下文保留原调研证据和当时的组合判断。**
 
