@@ -8,6 +8,7 @@
 - Web Resources 源码随框架子模块维护，位于 `src/Abp.Web.Resources/Abp/Framework`。历史分发快照声明 npm `abp-web-resources 6.1.0`，旧提取配置指向 NuGet `Abp.Web.Resources 5.1.0`。[资源分发清单][R10] · [旧提取配置][R11]
 - 固定免费模板已在 macOS ARM64 从空缓存安装公开 `abp-ng2-module 12.1.0` 和 `abp-web-resources 6.1.0`，并以 Angular `19.2.1` 重建冻结 production 前端。公开 R4 和 R5 的浏览器角色编辑另有同一冻结前端下的实测记录。[公开冷构建](../maintenance/r5-public-angular-rebuild.md#实测结果) · [角色编辑实测](../maintenance/r5-angular-user-role-edit.md)
 - macOS ARM64 实测中，适配器 `12.1.0` 发布参考提交 `afbd23e` 的根锁冻结安装失败。相同库源码在后续提交 `a8ca4b3` 成功制包，固定 Angular `19.2.1` 模板只替换适配器后通过 production 编译，并从新浏览器 JS 追溯到候选 FESM。资源包沿用公开 `6.1.0`。[适配器制包与消费实测](../maintenance/r5-angular19-adapter-package-plan.md#实测结果) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收源码制成的适配器包)
+- 独立资源包试验从框架 Git 原字节制成 `abp-web-resources 6.1.0`，同一模板沿用公开适配器 `12.1.0`。macOS ARM64 冻结安装、Angular `19.2.1` production 新构建、两个声明和静态资源的消费已通过。Chrome 实收全局脚本并运行 `formatString`，两个 SignalR 资产 URL 返回 HTTP 200 且原字节逐项匹配候选。验收要求已同步，六项任务已归档。[Web Resources 实测与复跑](../maintenance/r5-angular19-web-resources-plan.md#实测结果) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收从经典框架-git-制成的资源包) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-web-resources/tasks.md)
 
 **下文保留原调研证据和当时的组合判断。**
 
@@ -238,7 +239,7 @@ README 明确说，资源是经典 ABP 主仓库 `src/Abp.Web.Resources/Abp/Fram
 
 这里的 `net461` 是旧 NuGet 提取配置中的标记，**不表示这些浏览器 JavaScript 必须运行在 .NET Framework 4.6.1 上**。
 
-上述事实也不证明已发布 npm 6.1.0 使用了错误资源。发布者可能采用过其他流程；本次尚未下载并逐文件比对该发行包。正确结论是：**仅凭现有仓库脚本，无法证明能够从指定输入重建当前声明版本的发行物。**
+2026-11-28，公开 npm `6.1.0` 实包已和框架生产 gitlink `7933e71` 的 40 个资源逐路径比较，18 个文件原字节一致，22 个差异仅为换行。本地候选直接使用这些 Git blob 与固定的两份分发包装，已通过消费验收。历史公开包的实际生产过程仍未确认。[归档与包契约](../maintenance/r5-angular19-web-resources-plan.md#候选归档与包契约)
 
 ### 5.3 建议建立的发行流程
 
@@ -252,7 +253,7 @@ README 明确说，资源是经典 ABP 主仓库 `src/Abp.Web.Resources/Abp/Fram
 6. 生成待验收包，在干净模板与实际应用中安装。
 7. 记录文件清单、摘要、源提交、构建工具及发行版本，再发布。
 
-这是一条拟议流程，本文没有实现或执行它。可以使用简单的 Node 脚本完成必要文件操作，不必为了少量资源引入复杂构建平台。
+本地候选已验证 Git 来源、归档、冻结安装及静态浏览器消费。发行流程仍在拟议阶段。[本地复跑](../maintenance/r5-angular19-web-resources-plan.md#从普通克隆复跑)
 
 若决定继续从 NuGet 包提取，应将“输入 NuGet 版本、输出 npm 版本、输入包摘要和复制规则”显式记录，并验证它们对应同一套资源；不要只修改 npm 的版本号。
 

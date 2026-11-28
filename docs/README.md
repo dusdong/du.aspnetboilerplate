@@ -35,7 +35,7 @@
 | 核对 GitHub Actions 向 NuGet 发布补丁的权限和实际运行 | [R5 受信任发布与续作记录](maintenance/r5-public-release.md#nuget-受信任发布) · [发行手册](maintenance/r5-automapper-template.md#执行待发交接手册) |
 | 比较第三方 fork 的迁移、补丁与独立发包实践 | [ASP.NET Boilerplate fork 调研](maintenance/fork-references.md) |
 | 复验 R3 映射候选、Collection 依赖与模板业务投影 | [AutoMapper 兼容维护](compatibility/automapper.md) · [原版基线](maintenance/r3-automapper-baseline.md) · [引擎验收](maintenance/r3-automapper-engine.md) · [独立消费者验收与复跑](maintenance/r3-automapper-downstream.md#主仓实包消费与复验) · [Git 交付](maintenance/r3-automapper-downstream.md#git-交付) |
-| 核对 Angular 适配器、Web Resources 与模板的版本组合 | [Angular 生态维护](compatibility/angular-ecosystem.md) |
+| 核对 Angular 适配器、Web Resources 与模板的版本组合 | [Angular 生态维护](compatibility/angular-ecosystem.md) · [Web Resources 实测与复跑](maintenance/r5-angular19-web-resources-plan.md#实测结果) · [稳定规范](../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收从经典框架-git-制成的资源包) · [归档任务](../openspec/changes/archive/2026-11-28-validate-r5-angular19-web-resources/tasks.md) |
 | 选择多 DbContext、拦截器等专项消费验收场景 | [Samples 取舍与兼容验收](validation/samples.md) |
 
 ## 权威来源

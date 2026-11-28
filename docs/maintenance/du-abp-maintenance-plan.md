@@ -259,28 +259,23 @@ API 相同不能单独证明完整业务行为相同。
 
 ### 8.2 Angular 组合
 
+2026-11-28 更新。固定免费模板已用公开适配器和资源包完成 Angular `19.2.1` production 冷构建，公开 R4 和 R5 已用该冻结前端完成角色编辑验收。[公开冷构建](r5-public-angular-rebuild.md#实测结果) · [角色编辑实测](r5-angular-user-role-edit.md)
+
 | 来源 | 声明 |
 | --- | --- |
-| 当前适配器 gitlink | 13.0.0；Angular peer `^21.0.0` |
-| 已选参考适配器 | 12.1.0；Angular peer `^19.1.7` |
-| 固定模板 | Angular `^19.2.1`；适配器 12.1.0；资源 `^6.1.0` |
+| 主仓适配器 gitlink `24adbe2` | 13.0.0，Angular peer `^21.0.0` |
+| Angular 19 适配器实包 | 12.1.0，Angular peer `^19.1.7` |
+| 固定免费模板 | 声明 Angular `^19.2.1`、适配器 12.1.0 和资源 `^6.1.0`，锁定 Angular 19.2.1 和资源 6.1.0 |
 
-建议先复现 Angular 19＋适配器 12.1 的模板行为对照；正式升级组合另立变更，成套处理适配器、模板、锁文件和验证。历史参考与正式发行支持线分别标明。[R4] [R18]
+适配器本地候选已通过编译消费，五项任务已归档，稳定规范已同步。GitHub `main` 已回读交付提交 `fbf3a4740e2a432409e14298ae292f43e6aed88a`。正式升级组合另行评估。[适配器验收](r5-angular19-adapter-package-plan.md#实测结果) · [交付提交](https://github.com/dusdong/du.aspnetboilerplate/commit/fbf3a4740e2a432409e14298ae292f43e6aed88a)
 
-组合证据至少记录 Node、包管理器、锁文件、Angular、适配器、资源包、源码提交和实际结果。
+组合证据记录 Node、包管理器、锁文件、Angular、适配器及资源包版本、源码提交和实际结果。
 
 ### 8.3 Web Resources
 
-资源实现位于框架子仓；历史分发仓库为 `aspnetboilerplate/bower-abp-resources`。现有六子模块结构不意味着漏 fork。[R18]
+2026-11-28，从框架生产 gitlink `7933e71` 的 40 个资源原字节制成 `abp-web-resources 6.1.0` 本地候选，包装源自 `aspnetboilerplate/bower-abp-resources` 固定提交。在 Angular `19.2.1` 免费模板和公开适配器 `12.1.0` 环境中，仅替换资源包即通过冻结安装、声明解析和 production 新构建。浏览器验证了实收全局脚本、`formatString` 返回值与两个 SignalR 静态 URL 的原字节。验收要求已同步到稳定规范，六项任务已归档。候选供本地复验。[Web Resources 实测](r5-angular19-web-resources-plan.md#实测结果) · [稳定规范](../../openspec/specs/template-maintenance-package-consumption/spec.md#requirement-固定-angular-19-模板可验收从经典框架-git-制成的资源包) · [归档任务](../../openspec/changes/archive/2026-11-28-validate-r5-angular19-web-resources/tasks.md)
 
-先登记资源发行物：
-
-- 权威源码仓库、SHA 与目录。
-- 构建或提取方式。
-- npm 包名、版本与文件摘要。
-- 模板使用路径、类型声明和加载顺序的验收。
-
-是否增加独立分发子仓由实际发布流程决定。`Du.` 规则只约束 NuGet，不自动决定 npm 命名。
+是否新增分发子仓取决于实际交付需要。`Du.` 前缀只约束 NuGet，npm 包名另行确定。
 
 ### 8.4 Samples
 
